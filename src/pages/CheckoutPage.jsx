@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     return (
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold mb-2">Your Cart is Empty</h1>
-        <p className="text-gray-800">You can't checkout without any items.</p>
+        <p className="text-gray-400">You can't checkout without any items.</p>
       </div>
     );
   }
@@ -65,24 +65,24 @@ export default function CheckoutPage() {
         {/* Left Side: Address and Payment */}
         <div className="lg:col-span-2 space-y-8">
           {/* Shipping Address */}
-          <div className="bg-gray-200 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Shipping Address</h2>
-            <div className="bg-gray-300 p-4 rounded-md">
+            <div className="bg-gray-700 p-4 rounded-md">
               <p className="font-semibold">{user?.name}</p>
               <p>{user?.address}</p>
               <p>{user?.phone}</p>
             </div>
           </div>
           {/* Payment Method */}
-          <div className="bg-gray-200 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
             <div className="space-y-4">
-              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'UPI' ? 'border-teal-500 bg-gray-300' : 'border-gray-250'}`}>
-                <input type="radio" name="payment" value="UPI" checked={paymentMethod === 'UPI'} onChange={() => setPaymentMethod('UPI')} className="h-5 w-5 text-teal-600 bg-gray-300 border-gray-500 focus:ring-teal-500" />
+              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'UPI' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'}`}>
+                <input type="radio" name="payment" value="UPI" checked={paymentMethod === 'UPI'} onChange={() => setPaymentMethod('UPI')} className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500" />
                 <span className="ml-4 text-lg font-semibold">UPI</span>
               </label>
-              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'COD' ? 'border-teal-500 bg-gray-300' : 'border-gray-250'}`}>
-                <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="h-5 w-5 text-teal-600 bg-gray-300 border-gray-500 focus:ring-teal-500" />
+              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'COD' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'}`}>
+                <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500" />
                 <span className="ml-4 text-lg font-semibold">Cash on Delivery</span>
               </label>
             </div>
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
 
         {/* Right Side: Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-gray-200 rounded-lg p-6 sticky top-24">
+          <div className="bg-gray-800 rounded-lg p-6 sticky top-24">
             <h2 className="text-2xl font-bold border-b border-gray-700 pb-4 mb-4">Order Summary</h2>
             <div className="space-y-2">
               {cart.map(item => (
@@ -118,7 +118,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 text-lg disabled:bg-gray-500 disabled:cursor-not-allowed"
             >
               {isProcessing ? 'Placing Order...' : `Place Order ${formatPrice(cartTotal)}`}
             </button>

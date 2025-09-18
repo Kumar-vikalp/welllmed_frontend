@@ -85,7 +85,7 @@ export default function LocationDetector({ onLocationDetected }) {
                 <button
                   onClick={handleDetectLocation}
                   disabled={detecting}
-                  className="flex-1 bg-gray-400 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50"
+                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50"
                 >
                   {detecting ? 'Detecting...' : 'Auto Detect'}
                 </button>

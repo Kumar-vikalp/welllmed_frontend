@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global background gradient */
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
 /* Custom scrollbar styles */
 .scrollbar-hide {
   -ms-overflow-style: none;

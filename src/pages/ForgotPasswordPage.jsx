@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-400 text-white p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-teal-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-teal-900">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,13 +45,13 @@ export default function ForgotPasswordPage() {
               Vello<span className="text-teal-400">.</span>
             </Link>
             <h2 className="mt-6 text-center text-2xl font-extrabold text-white">Forgot Your Password?</h2>
-            <p className="text-gray-800 mt-2">No problem. Enter your email address below and we'll send you an OTP to reset it.</p>
+            <p className="text-gray-400 mt-2">No problem. Enter your email address below and we'll send you an OTP to reset it.</p>
         </div>
 
-        <div className="bg-gray-200/50 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-2xl p-8">
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email Address</label>
               <input
                 id="email"
                 name="email"
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
+                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
             
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 disabled:bg-gray-500"
               >
                 {loading ? 'Sending...' : 'Send Reset OTP'}
               </button>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
           </form>
         </div>
 
-        <p className="mt-8 text-center text-sm text-gray-800">
+        <p className="mt-8 text-center text-sm text-gray-400">
           Remembered your password?{' '}
           <Link to="/login" className="font-medium text-teal-400 hover:text-teal-300">
             Back to Login

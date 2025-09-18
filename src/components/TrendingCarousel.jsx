@@ -2,24 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
-export default function TrendingCarousel({ products, title = "Trending Products" }) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+export default function TrendingCarousel({ products, title = "Trending Products", showTitle = true }) {
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
   const carouselRef = useRef(null)
   const navigate = useNavigate()
-
-  const itemsPerView = 4
-  const maxIndex = Math.max(0, products.length - itemsPerView)
-
-  const nextSlide = () => {
-    setCurrentIndex(prev => Math.min(prev + 1, maxIndex))
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex(prev => Math.max(prev - 1, 0))
-  }
 
   const handleMouseDown = (e) => {
     setIsDragging(true)
@@ -82,34 +70,16 @@ export default function TrendingCarousel({ products, title = "Trending Products"
   if (!products || products.length === 0) return null
 
   return (
-    <div className="relative mb-12">
-        <div className="flex justify-between items-center mb-4 md:mb-6">
-          <h2 className="text-lg md:text-2xl font-bold text-gray-900">{title}</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={nextSlide}
-            disabled={currentIndex >= maxIndex}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+    <div className="relative mb-8">
+      {showTitle && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">{title}</h2>
         </div>
-      </div>
+      )}
 
       <div 
         ref={carouselRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+        className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-2"
         style={{ 
           scrollBehavior: 'smooth',
           userSelect: 'none'
@@ -118,34 +88,36 @@ export default function TrendingCarousel({ products, title = "Trending Products"
         {products.map((product, index) => (
           <motion.div
             key={product.product_id}
-            className="flex-shrink-0 w-40 md:w-64"
+            className="flex-shrink-0 w-40 md:w-56"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
             onClick={() => !isDragging && navigate(`/product/${product.slug}`)}
           >
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer border border-gray-100">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100">
               <div className="relative">
                 <img 
                   src={product.images[0]} 
                   alt={product.name} 
-                  className="w-full h-24 md:h-40 object-cover"
+                  className="w-full h-28 md:h-40 object-cover"
                   draggable={false}
                 />
                 {product.trending && (
-                  <span className="absolute top-1 right-1 md:top-2 md:right-2 bg-orange-500 text-white text-xs font-bold px-1 py-0.5 md:px-2 md:py-1 rounded">
-                    Trending
+                  <span className="absolute top-2 right-2 bg-gradient-to-r from-orange-400 to-red-400 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    🔥
                   </span>
                 )}
                 {product.discount > 0 && (
-                  <span className="absolute top-1 left-1 md:top-2 md:left-2 bg-red-500 text-white text-xs font-bold px-1 py-0.5 md:px-2 md:py-1 rounded">
+                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                     {product.discount}% OFF
                   </span>
                 )}
               </div>
-              <div className="p-2 md:p-4">
-                <p className="text-xs text-gray-500">{product.company}</p>
-                <h3 className="text-xs md:text-sm font-semibold text-gray-900 mt-1 line-clamp-2 h-8 md:h-10">{product.name}</h3>
+              <div className="p-3 md:p-4">
+                <p className="text-xs text-gray-500 font-medium">{product.company}</p>
+                <h3 className="text-xs md:text-sm font-semibold text-gray-900 mt-1 line-clamp-2 h-8 md:h-10 leading-tight">
+                  {product.name}
+                </h3>
                 <div className="mt-3 flex justify-between items-center">
                   <div>
                     <p className="text-sm md:text-lg font-bold text-gray-900">₹{product.discounted_price.toFixed(2)}</p>
@@ -153,23 +125,13 @@ export default function TrendingCarousel({ products, title = "Trending Products"
                       <p className="text-xs text-gray-500 line-through">₹{product.mrp.toFixed(2)}</p>
                     )}
                   </div>
-                  <span className="text-xs text-primary-600 font-medium">{product.discount}% OFF</span>
+                  <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full">
+                    {product.discount}% OFF
+                  </span>
                 </div>
               </div>
             </div>
           </motion.div>
-        ))}
-      </div>
-
-      <div className="flex justify-center mt-4 gap-2">
-        {Array(Math.ceil(products.length / itemsPerView)).fill(0).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index * itemsPerView)}
-            className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-colors ${
-              Math.floor(currentIndex / itemsPerView) === index ? 'bg-primary-500' : 'bg-gray-300'
-            }`}
-          />
         ))}
       </div>
     </div>

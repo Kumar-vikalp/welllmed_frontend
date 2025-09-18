@@ -46,9 +46,7 @@ export function UserProvider({ children }) {
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await api.put('/profile/update/', profileData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await api.put('/profile/update/', profileData);
       setProfile(response.data.profile);
       return response.data;
     } catch (error) {
@@ -78,22 +76,12 @@ export function UserProvider({ children }) {
   };
 
   const signup = async (email, password) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-    await api.post('/signup/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    await api.post('/signup/', { email, password });
     await login(email, password);
   };
 
   const login = async (email, password) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-    const response = await api.post('/login/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.post('/login/', { email, password });
     const { access, refresh } = response.data;
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
@@ -111,43 +99,28 @@ export function UserProvider({ children }) {
 
   const logout = async () => {
     const refreshToken = localStorage.getItem('refresh_token');
-    const formData = new FormData();
     if (refreshToken) {
-        formData.append('refresh', refreshToken);
+        try {
+            await api.post('/logout/', { refresh: refreshToken });
+        } catch (error) {
+            console.error("Logout failed, proceeding to clear local data.", error);
+        }
     }
-    try {
-        await api.post('/logout/', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-    } catch (error) {
-        console.error("Logout failed, proceeding to clear local data.", error);
-    } finally {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        setUser(null);
-        setProfile(null);
-        window.location.href = '/login';
-    }
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    setUser(null);
+    setProfile(null);
+    window.location.href = '/login';
   };
   
   const forgotPassword = async (email) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    const response = await api.post('/forgot-password/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.post('/forgot-password/', { email });
     return response.data;
   };
 
   const resetPassword = async (email, otp, new_password) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('otp', otp);
-    formData.append('new_password', new_password);
-    const response = await api.post('/reset-password/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.post('/reset-password/', { email, otp, new_password });
     return response.data;
   };
 

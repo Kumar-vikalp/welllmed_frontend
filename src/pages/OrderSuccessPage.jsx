@@ -29,8 +29,8 @@ export default function OrderSuccessPage() {
             <svg className="w-40 h-40 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
         </div>
         <h1 className="text-4xl font-extrabold mb-3">Order Placed Successfully!</h1>
-        <p className="text-gray-800 text-lg mb-2">Thank you for your purchase.</p>
-        <p className="text-gray-700 font-semibold mb-8">Your Order ID is: <span className="text-teal-400">{orderId}</span></p>
+        <p className="text-gray-400 text-lg mb-2">Thank you for your purchase.</p>
+        <p className="text-gray-300 font-semibold mb-8">Your Order ID is: <span className="text-teal-400">{orderId}</span></p>
         <div className="space-x-4">
           <Link
             to="/orders"
@@ -40,7 +40,7 @@ export default function OrderSuccessPage() {
           </Link>
           <Link
             to="/"
-            className="bg-gray-300 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg"
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg"
           >
             Continue Shopping
           </Link>

@@ -82,7 +82,7 @@ export default function GenericInfoPage() {
               Shop Generic Medicines
             </Link>
           </div>
-          <div className="bg-gray-200 rounded-lg p-8">
+          <div className="bg-gray-800 rounded-lg p-8">
             <h3 className="text-2xl font-bold mb-4 text-teal-400">Key Facts</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
@@ -116,11 +116,11 @@ export default function GenericInfoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-200 rounded-lg p-6 text-center"
+              className="bg-gray-800 rounded-lg p-6 text-center"
             >
               <div className="text-4xl mb-4">{benefit.icon}</div>
               <h3 className="text-xl font-bold mb-3 text-teal-400">{benefit.title}</h3>
-              <p className="text-gray-700">{benefit.description}</p>
+              <p className="text-gray-300">{benefit.description}</p>
             </motion.div>
           ))}
         </div>
@@ -130,7 +130,7 @@ export default function GenericInfoPage() {
       <div className="mb-16">
         <h2 className="text-4xl font-bold mb-8 text-center">Generic vs Branded Medicines</h2>
         <div className="overflow-x-auto">
-          <table className="w-full bg-gray-200 rounded-lg overflow-hidden">
+          <table className="w-full bg-gray-800 rounded-lg overflow-hidden">
             <thead className="bg-teal-600">
               <tr>
                 <th className="px-6 py-4 text-left">Aspect</th>
@@ -179,10 +179,10 @@ export default function GenericInfoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-200 rounded-lg p-6"
+              className="bg-gray-800 rounded-lg p-6"
             >
               <h3 className="text-xl font-bold mb-3 text-teal-400">{faq.question}</h3>
-              <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
             </motion.div>
           ))}
         </div>

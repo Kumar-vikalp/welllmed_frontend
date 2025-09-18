@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-400 text-white p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-teal-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-teal-900">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -43,13 +43,13 @@ export default function Login() {
             <Link to="/" className="text-white font-bold text-5xl">
               Vello<span className="text-teal-400">.</span>
             </Link>
-            <p className="text-gray-800 mt-2">Welcome back! Please sign in to your account.</p>
+            <p className="text-gray-400 mt-2">Welcome back! Please sign in to your account.</p>
         </div>
 
-        <div className="bg-gray-200/50 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-2xl p-8">
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email Address</label>
               <input
                 id="email"
                 name="email"
@@ -58,12 +58,12 @@ export default function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
+                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
             <div>
                 <div className="flex justify-between items-center">
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
                     <Link to="/forgot-password" className="text-sm text-teal-400 hover:text-teal-300">
                         Forgot Password?
                     </Link>
@@ -76,7 +76,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
+                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-3 px-4 text-white focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
             
@@ -86,7 +86,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 focus:ring-offset-gray-900 transition-colors disabled:bg-gray-400"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 focus:ring-offset-gray-900 transition-colors disabled:bg-gray-500"
               >
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </button>
@@ -94,7 +94,7 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="mt-8 text-center text-sm text-gray-800">
+        <p className="mt-8 text-center text-sm text-gray-400">
           Not a member?{' '}
           <Link to="/signup" className="font-medium text-teal-400 hover:text-teal-300">
             Sign up now

@@ -59,7 +59,7 @@ export default function CartPage() {
       <div className="text-center py-20">
         {/* <Lottie animationData={emptyCartAnimation} loop={true} className="w-64 h-64 mx-auto" /> */}
         <h1 className="text-3xl font-bold mt-8 mb-2">Your Cart is Empty</h1>
-        <p className="text-gray-800 mb-8">Looks like you haven't added anything to your cart yet.</p>
+        <p className="text-gray-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
         <Link 
           to="/"
           className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300"
@@ -84,7 +84,7 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Cart Items */}
-          <div className="lg:col-span-2 bg-gray-200 rounded-lg p-6">
+          <div className="lg:col-span-2 bg-gray-800 rounded-lg p-6">
             <AnimatePresence>
               {cart.map(item => (
                 <motion.div
@@ -99,7 +99,7 @@ export default function CartPage() {
                     <img src={item.images[0]} alt={item.name} className="w-20 h-20 object-cover rounded-md mr-4" />
                     <div>
                       <h3 className="font-semibold text-lg">{item.name}</h3>
-                      <p className="text-sm text-gray-800">{item.company}</p>
+                      <p className="text-sm text-gray-400">{item.company}</p>
                       <button onClick={() => handleRemoveFromCart(item.product_id)} className="text-red-500 hover:text-red-400 text-sm font-semibold mt-1">
                         Remove
                       </button>
@@ -126,15 +126,15 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-200 rounded-lg p-6 sticky top-24">
+            <div className="bg-gray-800 rounded-lg p-6 sticky top-24">
               <h2 className="text-2xl font-bold border-b border-gray-700 pb-4 mb-4">Order Summary</h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-800">Subtotal ({cartCount} items)</span>
+                  <span className="text-gray-400">Subtotal ({cartCount} items)</span>
                   <span className="font-semibold">{formatPrice(cartTotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-800">Shipping</span>
+                  <span className="text-gray-400">Shipping</span>
                   <span className="font-semibold text-green-400">FREE</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold border-t border-gray-600 pt-4 mt-4">

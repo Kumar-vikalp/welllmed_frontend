@@ -56,12 +56,9 @@ export function CartProvider({ children }) {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('product_id', product.product_id);
-      formData.append('quantity', qty.toString());
-      
-      await api.post('/cart/add/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      await api.post('/cart/add/', {
+        product_id: product.product_id,
+        quantity: qty
       });
       
       // Refresh cart after adding
@@ -98,11 +95,8 @@ export function CartProvider({ children }) {
     try {
       const cartItem = cart.find(item => item.product_id === productId);
       if (cartItem && cartItem.cart_item_id) {
-        const formData = new FormData();
-        formData.append('quantity', qty.toString());
-        
-        await api.put(`/cart/update/${cartItem.cart_item_id}/`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+        await api.put(`/cart/update/${cartItem.cart_item_id}/`, {
+          quantity: qty
         });
         
         await fetchCart();

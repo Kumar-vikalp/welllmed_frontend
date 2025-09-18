@@ -203,7 +203,7 @@ export default function ProductsPage() {
             <h2 className="text-2xl font-bold">
               {filters.trending ? 'Trending Products' : 'All Products'}
             </h2>
-            <p className="text-gray-800">{filtered.length} products found</p>
+            <p className="text-gray-400">{filtered.length} products found</p>
           </div>
           
           {/* Product Grid */}

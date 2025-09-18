@@ -182,7 +182,7 @@ export default function ProductDetails() {
           <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
             <span className="text-teal-400 font-semibold">{product.company}</span>
             <h1 className="text-4xl font-extrabold my-2">{product.name}</h1>
-            <p className="text-gray-800 text-lg mb-4">{product.disease_category}</p>
+            <p className="text-gray-400 text-lg mb-4">{product.disease_category}</p>
 
             <div className="my-4">
               <span className="text-4xl font-bold text-teal-400">₹{discountedPrice.toFixed(2)}</span>
@@ -197,23 +197,23 @@ export default function ProductDetails() {
             <p className="leading-relaxed my-6">{product.description}</p>
             
             {/* Stock and Expiry Info */}
-            <div className="bg-gray-200 rounded-lg p-4 mb-6">
+            <div className="bg-gray-800 rounded-lg p-4 mb-6">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-800">Stock:</span>
+                  <span className="text-gray-400">Stock:</span>
                   <span className={`ml-2 font-semibold ${product.available_stock > 0 ? 'text-green-400' : 'text-red-400'}`}>
                     {product.available_stock > 0 ? `${product.available_stock} available` : 'Out of Stock'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-800">Returnable:</span>
+                  <span className="text-gray-400">Returnable:</span>
                   <span className={`ml-2 font-semibold ${product.returnable ? 'text-green-400' : 'text-red-400'}`}>
                     {product.returnable ? 'Yes' : 'No'}
                   </span>
                 </div>
                 {product.expiry_date && (
                   <div className="col-span-2">
-                    <span className="text-gray-800">Expiry Date:</span>
+                    <span className="text-gray-400">Expiry Date:</span>
                     <span className="ml-2 font-semibold text-yellow-400">{formatDate(product.expiry_date)}</span>
                   </div>
                 )}
@@ -245,7 +245,7 @@ export default function ProductDetails() {
         </div>
 
         {/* Product Details Tabs */}
-        <div className="mt-16 bg-gray-200 rounded-lg p-8">
+        <div className="mt-16 bg-gray-800 rounded-lg p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Benefits */}
             {product.benefits.length > 0 && (
@@ -255,7 +255,7 @@ export default function ProductDetails() {
                   {product.benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start">
                       <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-700">{benefit}</span>
+                      <span className="text-gray-300">{benefit}</span>
                     </li>
                   ))}
                 </ul>
@@ -268,7 +268,7 @@ export default function ProductDetails() {
                 <h3 className="text-xl font-bold mb-4 text-teal-400">Key Ingredients</h3>
                 <ul className="space-y-2">
                   {product.key_ingredients.map((ingredient, index) => (
-                    <li key={index} className="text-gray-700">• {ingredient}</li>
+                    <li key={index} className="text-gray-300">• {ingredient}</li>
                   ))}
                 </ul>
               </div>
@@ -280,7 +280,7 @@ export default function ProductDetails() {
                 <h3 className="text-xl font-bold mb-4 text-teal-400">Dosage</h3>
                 <ul className="space-y-2">
                   {product.dosage.map((dose, index) => (
-                    <li key={index} className="text-gray-700">• {dose}</li>
+                    <li key={index} className="text-gray-300">• {dose}</li>
                   ))}
                 </ul>
               </div>
@@ -290,7 +290,7 @@ export default function ProductDetails() {
             {product.directions_for_use && (
               <div className="md:col-span-2 lg:col-span-3">
                 <h3 className="text-xl font-bold mb-4 text-teal-400">Directions for Use</h3>
-                <p className="text-gray-700 leading-relaxed">{product.directions_for_use}</p>
+                <p className="text-gray-300 leading-relaxed">{product.directions_for_use}</p>
               </div>
             )}
 
@@ -302,7 +302,7 @@ export default function ProductDetails() {
                   {product.cautions.map((caution, index) => (
                     <li key={index} className="flex items-start">
                       <span className="text-yellow-400 mr-2">⚠</span>
-                      <span className="text-gray-700">{caution}</span>
+                      <span className="text-gray-300">{caution}</span>
                     </li>
                   ))}
                 </ul>
@@ -315,7 +315,7 @@ export default function ProductDetails() {
                 <h3 className="text-xl font-bold mb-4 text-red-400">Side Effects</h3>
                 <ul className="space-y-2">
                   {product.side_effects.map((effect, index) => (
-                    <li key={index} className="text-gray-700">• {effect}</li>
+                    <li key={index} className="text-gray-300">• {effect}</li>
                   ))}
                 </ul>
               </div>
@@ -326,13 +326,13 @@ export default function ProductDetails() {
               <h3 className="text-xl font-bold mb-4 text-teal-400">Manufacturer Info</h3>
               <div className="space-y-2 text-sm">
                 {product.manufactured_by && (
-                  <p><span className="text-gray-800">Manufactured by:</span> <span className="text-gray-700">{product.manufactured_by}</span></p>
+                  <p><span className="text-gray-400">Manufactured by:</span> <span className="text-gray-300">{product.manufactured_by}</span></p>
                 )}
                 {product.packed_by && (
-                  <p><span className="text-gray-800">Packed by:</span> <span className="text-gray-700">{product.packed_by}</span></p>
+                  <p><span className="text-gray-400">Packed by:</span> <span className="text-gray-300">{product.packed_by}</span></p>
                 )}
                 {product.seller_information && (
-                  <p><span className="text-gray-800">Seller:</span> <span className="text-gray-700">{product.seller_information}</span></p>
+                  <p><span className="text-gray-400">Seller:</span> <span className="text-gray-300">{product.seller_information}</span></p>
                 )}
               </div>
             </div>

@@ -47,24 +47,24 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-400 text-white p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create a new account</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {/* Note: name, address, phone inputs are here for UI, but not sent in signup API call */}
-          <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full p-3 bg-gray-300 rounded-md" />
-          <input type="email" name="email" placeholder="Email Address" required value={form.email} onChange={handleChange} className="w-full p-3 bg-gray-300 rounded-md" />
-          <input type="password" name="password" placeholder="Password" required value={form.password} onChange={handleChange} className="w-full p-3 bg-gray-300 rounded-md" />
-          <input type="text" name="address" placeholder="Address" value={form.address} onChange={handleChange} className="w-full p-3 bg-gray-300 rounded-md" />
-          <input type="text" name="phone" placeholder="Phone Number" value={form.phone} onChange={handleChange} className="w-full p-3 bg-gray-300 rounded-md" />
+          <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full p-3 bg-gray-700 rounded-md" />
+          <input type="email" name="email" placeholder="Email Address" required value={form.email} onChange={handleChange} className="w-full p-3 bg-gray-700 rounded-md" />
+          <input type="password" name="password" placeholder="Password" required value={form.password} onChange={handleChange} className="w-full p-3 bg-gray-700 rounded-md" />
+          <input type="text" name="address" placeholder="Address" value={form.address} onChange={handleChange} className="w-full p-3 bg-gray-700 rounded-md" />
+          <input type="text" name="phone" placeholder="Phone Number" value={form.phone} onChange={handleChange} className="w-full p-3 bg-gray-700 rounded-md" />
           
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 disabled:bg-gray-500"
             >
               {loading ? 'Signing Up...' : 'Sign Up'}
             </button>

@@ -15,7 +15,7 @@ export default function Modal({ isOpen, onClose, children }) {
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="bg-gray-200 text-white rounded-lg shadow-xl p-8 max-w-md w-full"
+            className="bg-gray-800 text-white rounded-lg shadow-xl p-8 max-w-md w-full"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
           >
             {children}

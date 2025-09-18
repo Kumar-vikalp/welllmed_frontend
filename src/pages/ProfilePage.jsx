@@ -72,13 +72,7 @@ export default function ProfilePage() {
     e.preventDefault();
     
     try {
-      // Create FormData for multipart form data
-      const profileFormData = new FormData();
-      profileFormData.append('name', formData.name || '');
-      profileFormData.append('address', formData.address || '');
-      profileFormData.append('phone', formData.phone || '');
-      
-      await updateProfile(profileFormData);
+      await updateProfile(formData);
       setToast({ message: 'Profile updated successfully!', type: 'success' });
       setIsEditing(false);
     } catch (error) {
@@ -155,16 +149,16 @@ export default function ProfilePage() {
         <h1 className="text-4xl font-extrabold mb-8">My Profile</h1>
         
         {/* Profile Section */}
-        <div className="bg-gray-200 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-8">
+        <div className="bg-gray-800 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-8">
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <div className="relative">
               <img src={profileImageUrl} alt="Profile" className="w-32 h-32 rounded-full mb-4 ring-4 ring-teal-500" />
-              <button className="absolute bottom-2 right-2 bg-gray-300 rounded-full p-2 hover:bg-teal-600">
+              <button className="absolute bottom-2 right-2 bg-gray-700 rounded-full p-2 hover:bg-teal-600">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z"></path></svg>
               </button>
             </div>
             <h2 className="text-2xl font-bold">{profile?.name || 'Not set'}</h2>
-            <p className="text-gray-800">{user?.email}</p>
+            <p className="text-gray-400">{user?.email}</p>
             {activeTime && (
               <p className="text-sm text-teal-400">Active time: {activeTime.hours}h {activeTime.minutes}m</p>
             )}
@@ -174,15 +168,15 @@ export default function ProfilePage() {
             {!isEditing ? (
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-800">Full Name / Username</label>
+                  <label className="text-sm text-gray-400">Full Name / Username</label>
                   <p className="text-lg">{profile?.name || 'Not set'}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-800">Address</label>
+                  <label className="text-sm text-gray-400">Address</label>
                   <p className="text-lg">{profile?.address || 'Not set'}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-800">Phone</label>
+                  <label className="text-sm text-gray-400">Phone</label>
                   <p className="text-lg">{profile?.phone || 'Not set'}</p>
                 </div>
                 <button onClick={() => setIsEditing(true)} className="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg">Edit Profile</button>
@@ -190,20 +184,20 @@ export default function ProfilePage() {
             ) : (
               <form onSubmit={handleProfileUpdate} className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
-                  <input type="text" name="name" id="name" value={formData.name || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-300">Full Name</label>
+                  <input type="text" name="name" id="name" value={formData.name || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
                 </div>
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                  <input type="text" name="address" id="address" value={formData.address || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-300">Address</label>
+                  <input type="text" name="address" id="address" value={formData.address || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                  <input type="text" name="phone" id="phone" value={formData.phone || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-300 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-300">Phone</label>
+                  <input type="text" name="phone" id="phone" value={formData.phone || ''} onChange={handleInputChange} className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white" />
                 </div>
                 <div className="flex gap-4">
                   <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Save Changes</button>
-                  <button type="button" onClick={() => { setIsEditing(false); setFormData({...profile}); }} className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                  <button type="button" onClick={() => { setIsEditing(false); setFormData({...profile}); }} className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
                 </div>
               </form>
             )}
@@ -211,7 +205,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Addresses Section */}
-        <div className="bg-gray-200 rounded-lg p-8">
+        <div className="bg-gray-800 rounded-lg p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">My Addresses</h2>
             <button 
@@ -227,12 +221,12 @@ export default function ProfilePage() {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="bg-gray-300 rounded-lg p-6 mb-6"
+              className="bg-gray-700 rounded-lg p-6 mb-6"
             >
               <h3 className="text-xl font-bold mb-4">Add New Address</h3>
               <form onSubmit={handleAddAddress} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Receiver's Name</label>
+                  <label className="block text-sm font-medium text-gray-300">Receiver's Name</label>
                   <input 
                     type="text" 
                     name="recievers_name" 
@@ -243,7 +237,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-300">Phone Number</label>
                   <input 
                     type="tel" 
                     name="recievers_phone" 
@@ -254,7 +248,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Address Type</label>
+                  <label className="block text-sm font-medium text-gray-300">Address Type</label>
                   <select 
                     name="address_type" 
                     value={addressForm.address_type} 
@@ -267,7 +261,7 @@ export default function ProfilePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Pincode</label>
+                  <label className="block text-sm font-medium text-gray-300">Pincode</label>
                   <input 
                     type="text" 
                     name="pincode" 
@@ -279,12 +273,12 @@ export default function ProfilePage() {
                 </div>
                 <div className="md:col-span-2">
                   <div className="flex justify-between items-center mb-2">
-                    <label className="block text-sm font-medium text-gray-700">Address Line</label>
+                    <label className="block text-sm font-medium text-gray-300">Address Line</label>
                     <button
                       type="button"
                       onClick={handleDetectLocation}
                       disabled={detectingLocation}
-                      className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded disabled:bg-gray-400"
+                      className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded disabled:bg-gray-500"
                     >
                       {detectingLocation ? 'Detecting...' : 'Detect Location'}
                     </button>
@@ -299,7 +293,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">City</label>
+                  <label className="block text-sm font-medium text-gray-300">City</label>
                   <input 
                     type="text" 
                     name="city" 
@@ -310,7 +304,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">State</label>
+                  <label className="block text-sm font-medium text-gray-300">State</label>
                   <input 
                     type="text" 
                     name="state" 
@@ -328,7 +322,7 @@ export default function ProfilePage() {
                     onChange={handleAddressInputChange}
                     className="mr-2"
                   />
-                  <label className="text-sm text-gray-700">Set as default address</label>
+                  <label className="text-sm text-gray-300">Set as default address</label>
                 </div>
                 <div className="md:col-span-2 flex gap-4">
                   <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">
@@ -337,7 +331,7 @@ export default function ProfilePage() {
                   <button 
                     type="button" 
                     onClick={() => setIsAddingAddress(false)}
-                    className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg"
+                    className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                   >
                     Cancel
                   </button>
@@ -349,21 +343,21 @@ export default function ProfilePage() {
           {/* Address List */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {addresses.map(address => (
-              <div key={address.id} className="bg-gray-300 rounded-lg p-4 relative">
+              <div key={address.id} className="bg-gray-700 rounded-lg p-4 relative">
                 {address.is_default && (
                   <span className="absolute top-2 right-2 bg-teal-500 text-white text-xs px-2 py-1 rounded">
                     Default
                   </span>
                 )}
                 <div className="mb-2">
-                  <span className="bg-gray-600 text-gray-700 text-xs px-2 py-1 rounded">
+                  <span className="bg-gray-600 text-gray-300 text-xs px-2 py-1 rounded">
                     {address.address_type}
                   </span>
                 </div>
                 <h4 className="font-bold text-lg">{address.recievers_name}</h4>
-                <p className="text-gray-700">{address.address_line}</p>
-                <p className="text-gray-700">{address.city}, {address.state} - {address.pincode}</p>
-                <p className="text-gray-800 text-sm">Phone: {address.recievers_phone}</p>
+                <p className="text-gray-300">{address.address_line}</p>
+                <p className="text-gray-300">{address.city}, {address.state} - {address.pincode}</p>
+                <p className="text-gray-400 text-sm">Phone: {address.recievers_phone}</p>
                 <div className="mt-4 flex gap-2">
                   <button 
                     onClick={() => handleDeleteAddress(address.id)}
@@ -377,7 +371,7 @@ export default function ProfilePage() {
           </div>
 
           {addresses.length === 0 && !isAddingAddress && (
-            <div className="text-center py-8 text-gray-800">
+            <div className="text-center py-8 text-gray-400">
               <p>No addresses added yet.</p>
               <button 
                 onClick={() => setIsAddingAddress(true)}

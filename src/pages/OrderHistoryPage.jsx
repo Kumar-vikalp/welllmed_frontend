@@ -34,7 +34,7 @@ export default function OrderHistoryPage() {
     return (
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold">No Orders Yet</h1>
-        <p className="text-gray-800 mt-2">You haven't placed any orders with us.</p>
+        <p className="text-gray-400 mt-2">You haven't placed any orders with us.</p>
       </div>
     );
   }
@@ -53,14 +53,14 @@ export default function OrderHistoryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-gray-200 rounded-lg p-6"
+            className="bg-gray-800 rounded-lg p-6"
           >
             <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 pb-4 border-b border-gray-700">
               <div className="mb-4 sm:mb-0">
                 <p className="text-lg font-bold">Order ID: {order.orderId}</p>
-                <p className="text-sm text-gray-800">Placed on {formatDate(order.date)}</p>
+                <p className="text-sm text-gray-400">Placed on {formatDate(order.date)}</p>
                 {order.paymentMethod && (
-                  <p className="text-sm text-gray-800">Payment: {order.paymentMethod}</p>
+                  <p className="text-sm text-gray-400">Payment: {order.paymentMethod}</p>
                 )}
               </div>
               <div className="text-left sm:text-right">
@@ -93,7 +93,7 @@ export default function OrderHistoryPage() {
                                 <img src={item.images[0]} alt={item.name} className="w-12 h-12 rounded-md mr-4" />
                                 <div>
                                     <p className="font-medium">{item.name}</p>
-                                    <p className="text-gray-800">Qty: {item.qty}</p>
+                                    <p className="text-gray-400">Qty: {item.qty}</p>
                                 </div>
                             </div>
                             <p className="font-semibold">{formatPrice((item.mrp - (item.mrp * item.discount / 100)) * item.qty)}</p>
@@ -102,11 +102,11 @@ export default function OrderHistoryPage() {
                 </div>
                 {/* Delivery Details */}
                 {order.deliveryDetails && (
-                    <div className="bg-gray-300/50 p-4 rounded-lg">
+                    <div className="bg-gray-700/50 p-4 rounded-lg">
                         <h4 className="font-semibold text-lg mb-2">Delivery Details</h4>
                         <p className="font-medium">{order.deliveryDetails.name}</p>
-                        <p className="text-sm text-gray-800">{order.deliveryDetails.address}</p>
-                        <p className="text-sm text-gray-800 mt-1">Phone: {order.deliveryDetails.phone}</p>
+                        <p className="text-sm text-gray-400">{order.deliveryDetails.address}</p>
+                        <p className="text-sm text-gray-400 mt-1">Phone: {order.deliveryDetails.phone}</p>
                         <div className="mt-4 pt-2 border-t border-gray-600">
                             <p className="text-sm font-semibold text-green-400">
                                 Estimated Delivery: {formatDate(order.deliveryDetails.estimatedDelivery)}
