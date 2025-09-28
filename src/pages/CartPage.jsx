@@ -40,8 +40,12 @@ export default function CartPage() {
   };
 
   const handleUpdateQty = (productId, newQty) => {
-    dispatch(updateQtyLocal({ productId, qty: newQty }));
-    dispatch(debouncedSyncCart());
+    if (newQty <= 0) {
+      handleRemoveItem(productId);
+    } else {
+      dispatch(updateQtyLocal({ productId, qty: newQty }));
+      dispatch(debouncedSyncCart());
+    }
   };
 
   const handleRemoveItem = (productId) => {

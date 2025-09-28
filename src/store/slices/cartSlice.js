@@ -44,7 +44,7 @@ export const syncCartWithServer = createAsyncThunk(
       // Batch update cart items
       const promises = cartItems.map(item => {
         if (item.needsSync) {
-          if (item.qty === 0) {
+          if (item.qty === 0 && item.cart_item_id) {
             return api.delete(`/cart/remove/${item.cart_item_id}/`)
           } else if (item.cart_item_id) {
             return api.put(`/cart/update/${item.cart_item_id}/`, { quantity: item.qty })
@@ -56,7 +56,25 @@ export const syncCartWithServer = createAsyncThunk(
       })
       
       await Promise.all(promises)
-      return true
+      
+      // After successful sync, fetch fresh cart data
+      const response = await api.get('/cart/')
+      const cartItems = Array.isArray(response.data) ? response.data : [response.data]
+      return cartItems.map(item => ({
+        product_id: item.product.product_id,
+        cart_item_id: item.cart_item_id,
+        name: item.product.name,
+        company: item.product.company,
+        disease_category: item.product.disease_category,
+        mrp: parseFloat(item.product.mrp),
+        discount: item.product.discount,
+        images: item.product.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
+        trending: item.product.trending,
+        slug: item.product.slug,
+        qty: item.quantity,
+        available_stock: item.product.available_stock || 0,
+        discounted_price: parseFloat(item.product.discounted_price)
+      }))
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to sync cart')
     }
@@ -106,7 +124,9 @@ const cartSlice = createSlice({
       
       if (item) {
         if (qty <= 0) {
-          state.items = state.items.filter(item => item.product_id !== productId)
+          // Mark for deletion but keep in state temporarily for sync
+          item.qty = 0
+          item.needsSync = true
         } else {
           item.qty = qty
           item.needsSync = true
@@ -121,6 +141,7 @@ const cartSlice = createSlice({
         item.qty = 0
         item.needsSync = true
       }
+      // Remove immediately from local state
       state.items = state.items.filter(item => item.product_id !== productId)
     },
     
@@ -161,7 +182,8 @@ const cartSlice = createSlice({
       .addCase(syncCartWithServer.fulfilled, (state) => {
         state.syncing = false
         state.lastSyncTime = Date.now()
-        cartSlice.caseReducers.markItemsSynced(state)
+        // Update cart with fresh data from server
+        state.items = action.payload
       })
       .addCase(syncCartWithServer.rejected, (state, action) => {
         state.syncing = false
