@@ -64,6 +64,7 @@ export default function Footer() {
               <li><Link to="/generic-info" className="text-gray-300 hover:text-white transition-colors text-sm">Generic Medicines</Link></li>
               <li><Link to="/products?category=Vitamins" className="text-gray-300 hover:text-white transition-colors text-sm">Vitamins & Supplements</Link></li>
               <li><Link to="/orders" className="text-gray-300 hover:text-white transition-colors text-sm">Track Order</Link></li>
+              <li><Link to="/how-to-order" className="text-gray-300 hover:text-white transition-colors text-sm">How to Order</Link></li>
               <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors text-sm">About Us</Link></li>
             </ul>
           </div>

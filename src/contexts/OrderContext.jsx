@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../api/axiosConfig';
 import { useUser } from './UserContext';
 
@@ -9,24 +9,15 @@ export function OrderProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
-  // Fetch orders from API when user is available
-  useEffect(() => {
-    if (user) {
-      fetchOrders();
-    } else {
-      setOrders([]);
-    }
-  }, [user]);
-
-  const fetchOrders = async () => {
+  // Memoize fetchOrders to prevent unnecessary re-creations
+  const fetchOrders = useCallback(async () => {
     if (!user) return;
-    
+
     try {
       setLoading(true);
       const response = await api.get('/orders/');
       const ordersData = Array.isArray(response.data) ? response.data : [response.data];
-      
-      // Transform API response to match our order structure
+
       const transformedOrders = ordersData.map(order => ({
         orderId: order.order_id,
         date: order.created_at,
@@ -43,7 +34,7 @@ export function OrderProvider({ children }) {
           estimatedDelivery: order.estimated_delivery
         }
       }));
-      
+
       setOrders(transformedOrders);
     } catch (error) {
       console.error('Failed to fetch orders', error);
@@ -51,7 +42,16 @@ export function OrderProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  // Effect now depends on user and memoized fetchOrders
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    } else {
+      setOrders([]);
+    }
+  }, [user, fetchOrders]);
 
   const createOrder = async (orderData) => {
     if (!user) {
@@ -63,11 +63,11 @@ export function OrderProvider({ children }) {
         payment_method: orderData.paymentMethod || 'UPI',
         items: orderData.items || []
       };
-      
+
       const response = await api.post('/orders/create/', orderPayload, {
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       // Refresh orders after creating
       await fetchOrders();
       return response.data;
@@ -100,16 +100,16 @@ export function OrderProvider({ children }) {
       throw error;
     }
   };
-  
+
   // Keep addOrder for backward compatibility
   const addOrder = (order) => {
     setOrders(prevOrders => [order, ...prevOrders]);
   };
 
-  const value = { 
-    orders, 
+  const value = {
+    orders,
     loading,
-    addOrder, 
+    addOrder,
     createOrder,
     cancelOrder,
     getOrderById,

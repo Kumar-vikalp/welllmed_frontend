@@ -104,6 +104,7 @@ export default function HeroCarousel() {
                     src={slides[currentSlide].image}
                     alt={slides[currentSlide].title}
                     className="w-full h-64 object-cover rounded-2xl shadow-2xl"
+                    loading="lazy"
                   />
                 </div>
               </div>

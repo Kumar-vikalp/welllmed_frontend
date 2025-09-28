@@ -1,45 +1,56 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
-import { useUser } from '../contexts/UserContext';
-import { useOrders } from '../contexts/OrderContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCartItems, selectCartTotal, clearCart } from '../store/slices/cartSlice';
+import { selectUser } from '../store/slices/userSlice';
+import { createOrder } from "../store/slices/ordersSlice";
 import { motion } from 'framer-motion';
 
 export default function CheckoutPage() {
-  const { user } = useUser();
-  const { cart, cartTotal, clearCart } = useCart();
-  const { createOrder } = useOrders();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const cart = useSelector(selectCartItems);
+  const cartTotal = useSelector(selectCartTotal);
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [isProcessing, setIsProcessing] = useState(false);
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(price);
   };
-  
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
-    
+
     try {
-      // Prepare order items from cart
-      const orderItems = cart.map(item => ({
+      const orderItems = cart.map((item) => ({
         product: item.product_id,
-        quantity: item.qty
+        quantity: item.qty,
       }));
-      
+
       const orderData = {
         paymentMethod: paymentMethod,
-        items: orderItems
+        items: orderItems,
       };
-      
-      const newOrder = await createOrder(orderData);
-      clearCart();
-      navigate('/order-success', { state: { orderId: newOrder.order_id || `ORD-${Date.now()}` } });
+
+      const resultAction = await dispatch(createOrder(orderData));
+      const result = resultAction.payload;
+
+      if (result) {
+        dispatch(clearCart());
+        navigate('/order-success', {
+          state: {
+            orderId: result.order_id || `ORD-${Date.now()}`,
+          },
+        });
+      }
     } catch (error) {
       console.error('Failed to create order', error);
-      // Handle error - maybe show a toast
     } finally {
       setIsProcessing(false);
     }
@@ -62,7 +73,7 @@ export default function CheckoutPage() {
     >
       <h1 className="text-4xl font-extrabold mb-8 text-center">Checkout</h1>
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Side: Address and Payment */}
+        {/* Left Side */}
         <div className="lg:col-span-2 space-y-8">
           {/* Shipping Address */}
           <div className="bg-gray-800 rounded-lg p-6">
@@ -73,16 +84,39 @@ export default function CheckoutPage() {
               <p>{user?.phone}</p>
             </div>
           </div>
+
           {/* Payment Method */}
           <div className="bg-gray-800 rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
             <div className="space-y-4">
-              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'UPI' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'}`}>
-                <input type="radio" name="payment" value="UPI" checked={paymentMethod === 'UPI'} onChange={() => setPaymentMethod('UPI')} className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500" />
+              <label
+                className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${
+                  paymentMethod === 'UPI' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="UPI"
+                  checked={paymentMethod === 'UPI'}
+                  onChange={() => setPaymentMethod('UPI')}
+                  className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500"
+                />
                 <span className="ml-4 text-lg font-semibold">UPI</span>
               </label>
-              <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${paymentMethod === 'COD' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'}`}>
-                <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500" />
+              <label
+                className={`flex items-center p-4 rounded-lg border-2 cursor-pointer ${
+                  paymentMethod === 'COD' ? 'border-teal-500 bg-gray-700' : 'border-gray-600'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="COD"
+                  checked={paymentMethod === 'COD'}
+                  onChange={() => setPaymentMethod('COD')}
+                  className="h-5 w-5 text-teal-600 bg-gray-700 border-gray-500 focus:ring-teal-500"
+                />
                 <span className="ml-4 text-lg font-semibold">Cash on Delivery</span>
               </label>
             </div>
@@ -94,10 +128,14 @@ export default function CheckoutPage() {
           <div className="bg-gray-800 rounded-lg p-6 sticky top-24">
             <h2 className="text-2xl font-bold border-b border-gray-700 pb-4 mb-4">Order Summary</h2>
             <div className="space-y-2">
-              {cart.map(item => (
+              {cart.map((item) => (
                 <div key={item.product_id} className="flex justify-between text-sm">
-                  <span>{item.name} x {item.qty}</span>
-                  <span>{formatPrice((item.mrp - (item.mrp * item.discount / 100)) * item.qty)}</span>
+                  <span>
+                    {item.name} x {item.qty}
+                  </span>
+                  <span>
+                    {formatPrice((item.mrp - (item.mrp * item.discount) / 100) * item.qty)}
+                  </span>
                 </div>
               ))}
             </div>

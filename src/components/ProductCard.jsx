@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCartLocal, debouncedSyncCart, selectCartSyncing } from '../store/slices/cartSlice';
+import { useState, memo } from 'react';
+import LazyImage from './LazyImage';
 
-export default function ProductCard({ product }) {
-  const { addToCart } = useCart();
+const ProductCard = memo(function ProductCard({ product }) {
+  const dispatch = useDispatch();
+  const syncing = useSelector(selectCartSyncing);
   const [isAdding, setIsAdding] = useState(false);
   const discountedPrice = product.discounted_price;
 
@@ -16,11 +19,14 @@ export default function ProductCard({ product }) {
     
     setIsAdding(true);
     try {
-      await addToCart(product, 1);
+      // Add to local state immediately for instant UI update
+      dispatch(addToCartLocal({ product, qty: 1 }));
+      // Debounce server sync
+      dispatch(debouncedSyncCart());
     } catch (error) {
       console.error('Failed to add to cart:', error);
     } finally {
-      setIsAdding(false);
+      setTimeout(() => setIsAdding(false), 500); // Small delay for better UX
     }
   };
 
@@ -33,9 +39,9 @@ export default function ProductCard({ product }) {
       transition={{ duration: 0.3 }}
       className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col border border-gray-100"
     >
-      <Link to={`/product/${product.slug}`} className="block flex-grow">
+      <Link to={`/product/${product.slug}`} className="block flex-grow" onClick={(e) => e.stopPropagation()}>
         <div className="relative">
-          <img 
+          <LazyImage 
             src={product.images[0]} 
             alt={product.name} 
             className="w-full h-32 md:h-48 object-cover" 
@@ -78,20 +84,20 @@ export default function ProductCard({ product }) {
       <div className="p-3 md:p-4 pt-0">
         <button
           onClick={handleAddToCart}
-          disabled={product.available_stock <= 0 || isAdding}
+          disabled={product.available_stock <= 0 || isAdding || syncing}
           className={`w-full py-2 px-4 rounded-xl font-semibold text-sm transition-all ${
             product.available_stock > 0
               ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm hover:shadow-md'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {isAdding ? (
+          {isAdding || syncing ? (
             <div className="flex items-center justify-center">
               <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Adding...
+              {syncing ? 'Syncing...' : 'Adding...'}
             </div>
           ) : product.available_stock > 0 ? (
             <div className="flex items-center justify-center">
@@ -107,4 +113,6 @@ export default function ProductCard({ product }) {
       </div>
     </motion.div>
   );
-}
+});
+
+export default ProductCard;

@@ -94,13 +94,14 @@ export default function TrendingCarousel({ products, title = "Trending Products"
             transition={{ delay: index * 0.1 }}
             onClick={() => !isDragging && navigate(`/product/${product.slug}`)}
           >
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100"
+                 onMouseDown={(e) => e.preventDefault()}>
               <div className="relative">
                 <img 
                   src={product.images[0]} 
                   alt={product.name} 
                   className="w-full h-28 md:h-40 object-cover"
-                  draggable={false}
+                  loading="lazy"
                 />
                 {product.trending && (
                   <span className="absolute top-2 right-2 bg-gradient-to-r from-orange-400 to-red-400 text-white text-xs font-bold px-2 py-1 rounded-full">

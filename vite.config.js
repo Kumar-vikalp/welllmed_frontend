@@ -7,11 +7,22 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          motion: ['framer-motion'],
+          utils: ['axios', 'lottie-react'],
+          redux: ['@reduxjs/toolkit', 'react-redux', 'redux-persist']
+        },
       },
     },
+    chunkSizeWarningLimit: 1000,
   },
   server: {
-    historyApiFallback: true,
+    host: true,
+    port: 5173,
   },
+  optimizeDeps: {
+    include: ['@reduxjs/toolkit', 'react-redux', 'redux-persist']
+  }
 })

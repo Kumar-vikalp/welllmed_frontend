@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser as setReduxUser, logoutUser as logoutReduxUser } from '../store/slices/userSlice';
 import api from '../api/axiosConfig';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
+  const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +17,9 @@ export function UserProvider({ children }) {
       if (accessToken) {
         try {
           const response = await api.get('/me/');
-          setUser(response.data);
+          const userData = response.data;
+          setUser(userData);
+          dispatch(setReduxUser(userData));
           // Fetch profile data
           try {
             const profileResponse = await api.get('/profile/');
@@ -26,12 +31,16 @@ export function UserProvider({ children }) {
           console.error('Failed to fetch user on initial load', error);
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
+          localStorage.removeItem('user');
+          setUser(null);
+          setProfile(null);
+          dispatch(setReduxUser(null));
         }
       }
       setLoading(false);
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   const fetchProfile = async () => {
     try {
@@ -76,7 +85,12 @@ export function UserProvider({ children }) {
   };
 
   const signup = async (email, password) => {
-    await api.post('/signup/', { email, password });
+    await api.post('/signup/', { 
+      name: email.split('@')[0], // Use email prefix as default name
+      email, 
+      password,
+      confirmPassword: password 
+    });
     await login(email, password);
   };
 
@@ -87,6 +101,7 @@ export function UserProvider({ children }) {
     localStorage.setItem('refresh_token', refresh);
     const userResponse = await api.get('/me/');
     setUser(userResponse.data);
+    dispatch(setReduxUser(userResponse.data));
     // Try to fetch profile
     try {
       const profileResponse = await api.get('/profile/');
@@ -111,7 +126,7 @@ export function UserProvider({ children }) {
     localStorage.removeItem('user');
     setUser(null);
     setProfile(null);
-    window.location.href = '/login';
+    dispatch(logoutReduxUser());
   };
   
   const forgotPassword = async (email) => {

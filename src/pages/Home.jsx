@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import api from '../api/axiosConfig'
 import ProductCard from '../components/ProductCard'
 import Skeleton from '../components/Skeleton'
@@ -11,21 +11,71 @@ import HeroCarousel from '../components/HeroCarousel'
 export default function Home() {
   const [trendingProducts, setTrendingProducts] = useState([])
   const [featuredProducts, setFeaturedProducts] = useState([])
-  const [categories, setCategories] = useState([])
   const [trendingLoading, setTrendingLoading] = useState(true)
   const [featuredLoading, setFeaturedLoading] = useState(true)
   const navigate = useNavigate()
 
+  const categories = useMemo(() => [
+    { 
+      name: 'Fever & Pain', 
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 25,
+      color: 'bg-red-50 border-red-100'
+    },
+    { 
+      name: 'Allergy & Cold', 
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 18,
+      color: 'bg-blue-50 border-blue-100'
+    },
+    { 
+      name: 'Digestive Health', 
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 22,
+      color: 'bg-green-50 border-green-100'
+    },
+    { 
+      name: 'Heart & BP', 
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 15,
+      color: 'bg-purple-50 border-purple-100'
+    },
+    { 
+      name: 'Vitamins', 
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 30,
+      color: 'bg-yellow-50 border-yellow-100'
+    },
+    { 
+      name: 'Antibiotics', 
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 12,
+      color: 'bg-orange-50 border-orange-100'
+    },
+    { 
+      name: 'Skin Care', 
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 20,
+      color: 'bg-pink-50 border-pink-100'
+    },
+    { 
+      name: 'Women\'s Health', 
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+      count: 16,
+      color: 'bg-indigo-50 border-indigo-100'
+    }
+  ], [])
   useEffect(() => {
     fetchTrendingProducts()
     fetchFeaturedProducts()
-    fetchCategories()
   }, [])
 
   const fetchTrendingProducts = async () => {
     setTrendingLoading(true)
     try {
-      const response = await api.get('/products/?trending=true&page_size=10')
+      const response = await api.get('/products/?trending=true&page_size=10', {
+        timeout: 30000
+      })
       const data = response.data
       const productsData = data.results || (Array.isArray(data) ? data : [data])
       
@@ -43,7 +93,9 @@ export default function Home() {
   const fetchFeaturedProducts = async () => {
     setFeaturedLoading(true)
     try {
-      const response = await api.get('/products/?featured=true&page_size=8')
+      const response = await api.get('/products/?featured=true&page_size=8', {
+        timeout: 30000
+      })
       const data = response.data
       const productsData = data.results || (Array.isArray(data) ? data : [data])
       
@@ -58,58 +110,6 @@ export default function Home() {
     }
   }
 
-  const fetchCategories = async () => {
-    setCategories([
-      { 
-        name: 'Fever & Pain', 
-        icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 25,
-        color: 'bg-red-50 border-red-100'
-      },
-      { 
-        name: 'Allergy & Cold', 
-        icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 18,
-        color: 'bg-blue-50 border-blue-100'
-      },
-      { 
-        name: 'Digestive Health', 
-        icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 22,
-        color: 'bg-green-50 border-green-100'
-      },
-      { 
-        name: 'Heart & BP', 
-        icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 15,
-        color: 'bg-purple-50 border-purple-100'
-      },
-      { 
-        name: 'Vitamins', 
-        icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 30,
-        color: 'bg-yellow-50 border-yellow-100'
-      },
-      { 
-        name: 'Antibiotics', 
-        icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 12,
-        color: 'bg-orange-50 border-orange-100'
-      },
-      { 
-        name: 'Skin Care', 
-        icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 20,
-        color: 'bg-pink-50 border-pink-100'
-      },
-      { 
-        name: 'Women\'s Health', 
-        icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
-        count: 16,
-        color: 'bg-indigo-50 border-indigo-100'
-      }
-    ])
-  }
 
   const transformProduct = (product) => ({
     product_id: product.product_id,
@@ -363,10 +363,10 @@ export default function Home() {
               Start Shopping
             </Link>
             <Link 
-              to="/generic-info"
+              to="/how-to-order"
               className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-600 transition-colors inline-block"
             >
-              Learn More
+              How to Order
             </Link>
           </div>
         </div>

@@ -59,7 +59,11 @@ export default function SearchPage() {
 
   const handleSearch = (query) => {
     if (query.trim()) {
-      window.history.pushState({}, '', `/search?q=${encodeURIComponent(query.trim())}`)
+      const newUrl = `/search?q=${encodeURIComponent(query.trim())}`
+      window.history.pushState({}, '', newUrl)
+      // Update the search params to trigger useEffect
+      const newSearchParams = new URLSearchParams(newUrl.split('?')[1])
+      setSearchParams(newSearchParams)
       searchProducts(query.trim())
     }
   }

@@ -1,92 +1,59 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/axiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  fetchProductBySlug, 
+  fetchRelatedProducts, 
+  selectCurrentProduct, 
+  selectRelatedProducts, 
+  selectProductLoading,
+  clearCurrentProduct 
+} from '../store/slices/productsSlice';
+import { addToCartLocal, debouncedSyncCart } from '../store/slices/cartSlice';
 import { motion } from 'framer-motion';
-import { useCart } from '../contexts/CartContext';
 import ProductCard from '../components/ProductCard';
 import Skeleton from '../components/Skeleton';
 import Toast from '../components/Toast';
+import LazyImage from '../components/LazyImage';
 
 export default function ProductDetails() {
   const { slug } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const product = useSelector(selectCurrentProduct);
+  const relatedProducts = useSelector(selectRelatedProducts);
+  const loading = useSelector(selectProductLoading);
   const [qty, setQty] = useState(1);
-  const [related, setRelated] = useState([]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const { addToCart } = useCart();
   const navigate = useNavigate();
   const [toast, setToast] = useState({ message: '', type: 'info' });
 
   useEffect(() => {
-    setLoading(true);
+    // If no slug is provided, redirect to products page
+    if (!slug) {
+      navigate('/products');
+      return;
+    }
+    
     window.scrollTo(0, 0);
-
-    // Fetch product details
-    api.get(`/products/${slug}/`).then(res => {
-      const productData = {
-        product_id: res.data.product_id,
-        slug: res.data.slug,
-        name: res.data.name,
-        company: res.data.company,
-        disease_category: res.data.disease_category,
-        mrp: parseFloat(res.data.mrp),
-        discount: res.data.discount,
-        discounted_price: parseFloat(res.data.discounted_price),
-        images: res.data.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
-        trending: res.data.trending,
-        available_stock: res.data.available_stock || 0,
-        description: res.data.description || `${res.data.name} from ${res.data.company}. Effective treatment for ${res.data.disease_category}.`,
-        returnable: res.data.returnable,
-        expiry_date: res.data.expiry_date,
-        directions_for_use: res.data.directions_for_use,
-        seller_information: res.data.seller_information,
-        manufactured_by: res.data.manufactured_by,
-        packed_by: res.data.packed_by,
-        benefits: res.data.benefits || [],
-        suitable_for: res.data.suitable_for || [],
-        dosage: res.data.dosage || [],
-        cautions: res.data.cautions || [],
-        side_effects: res.data.side_effects || [],
-        key_ingredients: res.data.key_ingredients || []
-      };
-      
-      setProduct(productData);
-      
-      // Fetch related products
-      return api.get(`/products/${slug}/related/`);
-    }).then(relatedRes => {
-      if (relatedRes && relatedRes.data) {
-        const relatedData = Array.isArray(relatedRes.data) ? relatedRes.data : [relatedRes.data];
-        const transformedRelated = relatedData.map(item => ({
-          product_id: item.product_id,
-          slug: item.slug,
-          name: item.name,
-          company: item.company,
-          disease_category: item.disease_category,
-          mrp: parseFloat(item.mrp),
-          discount: item.discount,
-          discounted_price: parseFloat(item.discounted_price),
-          images: item.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
-          trending: item.trending,
-          available_stock: item.available_stock || 0
-        }));
-        setRelated(transformedRelated);
+    
+    // Clear previous product data
+    dispatch(clearCurrentProduct());
+    
+    // Fetch product and related products
+    dispatch(fetchProductBySlug(slug)).then((result) => {
+      if (result.type === 'products/fetchProductBySlug/rejected') {
+        navigate('/products');
+      } else {
+        dispatch(fetchRelatedProducts(slug));
       }
-      setLoading(false);
-    }).catch(err => {
-      console.error("Failed to load product data", err);
-      if (err.response?.status === 404) {
-        navigate('/'); // Product not found, redirect to home
-      }
-      setLoading(false);
     });
-  }, [slug, navigate]);
+  }, [slug, dispatch, navigate]);
   
   const handleAddToCart = async () => {
     if (product && product.available_stock > 0) {
       try {
-        await addToCart(product, qty);
+        dispatch(addToCartLocal({ product, qty }));
+        dispatch(debouncedSyncCart());
         setToast({ message: `${product.name} added to cart!`, type: 'success' });
       } catch (error) {
         setToast({ message: error.message || 'Failed to add to cart', type: 'error' });
@@ -143,7 +110,7 @@ export default function ProductDetails() {
           {/* Product Images */}
           <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="space-y-4">
             <div className="relative">
-              <img 
+              <LazyImage 
                 src={product.images[activeImageIndex]} 
                 alt={product.name} 
                 className="w-full h-96 object-cover rounded-lg shadow-2xl" 
@@ -171,7 +138,7 @@ export default function ProductDetails() {
                       activeImageIndex === index ? 'border-teal-500' : 'border-gray-600'
                     }`}
                   >
-                    <img src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                    <LazyImage src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -197,24 +164,40 @@ export default function ProductDetails() {
             <p className="leading-relaxed my-6">{product.description}</p>
             
             {/* Stock and Expiry Info */}
-            <div className="bg-gray-800 rounded-lg p-4 mb-6">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6 border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Product Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span className="text-gray-400">Stock:</span>
-                  <span className={`ml-2 font-semibold ${product.available_stock > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {product.available_stock > 0 ? `${product.available_stock} available` : 'Out of Stock'}
-                  </span>
+                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
+                    <div className={`w-3 h-3 rounded-full ${product.available_stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div>
+                      <p className="text-sm text-gray-600">Stock Status</p>
+                      <p className={`font-semibold ${product.available_stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {product.available_stock > 0 ? `${product.available_stock} Available` : 'Out of Stock'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <span className="text-gray-400">Returnable:</span>
-                  <span className={`ml-2 font-semibold ${product.returnable ? 'text-green-400' : 'text-red-400'}`}>
-                    {product.returnable ? 'Yes' : 'No'}
-                  </span>
+                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
+                    <div className={`w-3 h-3 rounded-full ${product.returnable ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div>
+                      <p className="text-sm text-gray-600">Return Policy</p>
+                      <p className={`font-semibold ${product.returnable ? 'text-green-600' : 'text-red-600'}`}>
+                        {product.returnable ? 'Returnable' : 'Non-Returnable'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 {product.expiry_date && (
-                  <div className="col-span-2">
-                    <span className="text-gray-400">Expiry Date:</span>
-                    <span className="ml-2 font-semibold text-yellow-400">{formatDate(product.expiry_date)}</span>
+                  <div className="md:col-span-2">
+                    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
+                      <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                      <div>
+                        <p className="text-sm text-gray-600">Expiry Date</p>
+                        <p className="font-semibold text-orange-600">{formatDate(product.expiry_date)}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -245,17 +228,25 @@ export default function ProductDetails() {
         </div>
 
         {/* Product Details Tabs */}
-        <div className="mt-16 bg-gray-800 rounded-lg p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-16 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">Product Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Benefits */}
             {product.benefits.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-teal-400">Benefits</h3>
-                <ul className="space-y-2">
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-lg font-bold mb-4 text-green-700 flex items-center">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  Benefits
+                </h3>
+                <ul className="space-y-3">
                   {product.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-300">{benefit}</span>
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm leading-relaxed">{benefit}</span>
                     </li>
                   ))}
                 </ul>
@@ -264,11 +255,21 @@ export default function ProductDetails() {
 
             {/* Key Ingredients */}
             {product.key_ingredients.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-teal-400">Key Ingredients</h3>
-                <ul className="space-y-2">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                <h3 className="text-lg font-bold mb-4 text-blue-700 flex items-center">
+                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
+                    </svg>
+                  </div>
+                  Key Ingredients
+                </h3>
+                <ul className="space-y-3">
                   {product.key_ingredients.map((ingredient, index) => (
-                    <li key={index} className="text-gray-300">• {ingredient}</li>
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm leading-relaxed">{ingredient}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -276,11 +277,21 @@ export default function ProductDetails() {
 
             {/* Dosage */}
             {product.dosage.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-teal-400">Dosage</h3>
-                <ul className="space-y-2">
+              <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-6 border border-purple-100">
+                <h3 className="text-lg font-bold mb-4 text-purple-700 flex items-center">
+                  <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  Dosage
+                </h3>
+                <ul className="space-y-3">
                   {product.dosage.map((dose, index) => (
-                    <li key={index} className="text-gray-300">• {dose}</li>
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm leading-relaxed">{dose}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -288,21 +299,37 @@ export default function ProductDetails() {
 
             {/* Directions for Use */}
             {product.directions_for_use && (
-              <div className="md:col-span-2 lg:col-span-3">
-                <h3 className="text-xl font-bold mb-4 text-teal-400">Directions for Use</h3>
-                <p className="text-gray-300 leading-relaxed">{product.directions_for_use}</p>
+              <div className="md:col-span-2 lg:col-span-3 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 border border-gray-200">
+                <h3 className="text-lg font-bold mb-4 text-gray-700 flex items-center">
+                  <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  Directions for Use
+                </h3>
+                <p className="text-gray-700 leading-relaxed">{product.directions_for_use}</p>
               </div>
             )}
 
+          {/* Warning Sections */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             {/* Cautions */}
             {product.cautions.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-yellow-400">Cautions</h3>
-                <ul className="space-y-2">
+              <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl p-6 border border-yellow-200">
+                <h3 className="text-lg font-bold mb-4 text-yellow-700 flex items-center">
+                  <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  </div>
+                  Cautions
+                </h3>
+                <ul className="space-y-3">
                   {product.cautions.map((caution, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-yellow-400 mr-2">⚠</span>
-                      <span className="text-gray-300">{caution}</span>
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm leading-relaxed">{caution}</span>
                     </li>
                   ))}
                 </ul>
@@ -311,41 +338,71 @@ export default function ProductDetails() {
 
             {/* Side Effects */}
             {product.side_effects.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-red-400">Side Effects</h3>
-                <ul className="space-y-2">
+              <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-xl p-6 border border-red-200">
+                <h3 className="text-lg font-bold mb-4 text-red-700 flex items-center">
+                  <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  Side Effects
+                </h3>
+                <ul className="space-y-3">
                   {product.side_effects.map((effect, index) => (
-                    <li key={index} className="text-gray-300">• {effect}</li>
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm leading-relaxed">{effect}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
             )}
+          </div>
 
+          {/* Manufacturer Info */}
+          <div className="mt-8">
             {/* Manufacturer Info */}
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-teal-400">Manufacturer Info</h3>
-              <div className="space-y-2 text-sm">
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border border-teal-100">
+              <h3 className="text-lg font-bold mb-4 text-teal-700 flex items-center">
+                <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center mr-2">
+                  <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                Manufacturer Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {product.manufactured_by && (
-                  <p><span className="text-gray-400">Manufactured by:</span> <span className="text-gray-300">{product.manufactured_by}</span></p>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-sm text-gray-600 mb-1">Manufactured by</p>
+                    <p className="font-semibold text-gray-900">{product.manufactured_by}</p>
+                  </div>
                 )}
                 {product.packed_by && (
-                  <p><span className="text-gray-400">Packed by:</span> <span className="text-gray-300">{product.packed_by}</span></p>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-sm text-gray-600 mb-1">Packed by</p>
+                    <p className="font-semibold text-gray-900">{product.packed_by}</p>
+                  </div>
                 )}
                 {product.seller_information && (
-                  <p><span className="text-gray-400">Seller:</span> <span className="text-gray-300">{product.seller_information}</span></p>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-sm text-gray-600 mb-1">Seller</p>
+                    <p className="font-semibold text-gray-900">{product.seller_information}</p>
+                  </div>
                 )}
               </div>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Related Products */}
-        {related.length > 0 && (
+        {relatedProducts.length > 0 && (
           <div className="mt-20">
             <h2 className="text-3xl font-bold mb-6">Related Products</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {related.map(p => (
-                <div key={p.product_id} onClick={() => navigate(`/product/${p.slug}`)} className="cursor-pointer">
+              {relatedProducts.map(p => (
+                <div key={p.product_id}>
                   <ProductCard product={p} />
                 </div>
               ))}
