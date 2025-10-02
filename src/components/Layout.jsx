@@ -19,10 +19,14 @@ const PageLoader = () => (
 
 export default function Layout() {
   const location = useLocation();
-  
-  // Don't show breadcrumbs on home page
-  const showBreadcrumbs = location.pathname !== '/';
-  
+
+  // Don't show breadcrumbs on home page or auth pages
+  const isAuthPage = location.pathname === '/login' ||
+                     location.pathname === '/signup' ||
+                     location.pathname === '/forgot-password' ||
+                     location.pathname === '/reset-password';
+  const showBreadcrumbs = location.pathname !== '/' && !isAuthPage;
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 pt-0 md:pt-16">
       <Navbar />

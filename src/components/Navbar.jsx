@@ -20,6 +20,7 @@ export default function Navbar() {
   const profileRef = useRef(null);
 
   const isHomePage = location.pathname === '/';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password' || location.pathname === '/reset-password';
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -203,10 +204,10 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile Header - Only show on non-home pages */}
+      {/* Mobile Header */}
       <div className="sm:hidden">
         {isHomePage ? (
-          /* Home page header */
+          /* Home page header with search and location */
           <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
             <div className="px-4 py-3">
               <div className="flex items-center justify-between">
@@ -216,7 +217,7 @@ export default function Navbar() {
                   </div>
                   <span className="text-xl font-bold text-gray-900">WellMed</span>
                 </Link>
-                
+
                 <div className="flex items-center space-x-4">
                   <Link to="/cart" className="relative p-2 text-gray-600 hover:text-purple-600">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,7 +229,7 @@ export default function Navbar() {
                       </span>
                     )}
                   </Link>
-                  
+
                   {user ? (
                     <Link to="/profile" className="p-2 text-gray-600 hover:text-purple-600">
                       <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
@@ -244,7 +245,7 @@ export default function Navbar() {
                   )}
                 </div>
               </div>
-              
+
               {/* Search Bar */}
               <div className="mt-3">
                 <form onSubmit={handleSearch} className="relative">
@@ -262,41 +263,54 @@ export default function Navbar() {
                   </button>
                 </form>
               </div>
-              
+
               {/* Location */}
               <div className="mt-3">
                 <LocationDetector />
               </div>
             </div>
           </nav>
-        ) : (
-          /* Other pages header */
-        <nav className="sm:hidden bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-          <div className="px-4">
-            {/* Search Bar */}
-            <div className="pb-3">
-              <form onSubmit={handleSearch} className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search medicines..."
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                />
-                <button type="submit" className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </form>
-            </div>
+        ) : !isAuthPage && (
+          /* Other pages - just a simple header, breadcrumbs will be shown below */
+          <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+            <div className="px-4 py-3">
+              <div className="flex items-center justify-between">
+                <Link to="/" className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">W</span>
+                  </div>
+                  <span className="text-xl font-bold text-gray-900">WellMed</span>
+                </Link>
 
-            {/* Location */}
-            <div className="pb-3">
-              <LocationDetector />
+                <div className="flex items-center space-x-4">
+                  <Link to="/cart" className="relative p-2 text-gray-600 hover:text-purple-600">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white font-medium">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+
+                  {user ? (
+                    <Link to="/profile" className="p-2 text-gray-600 hover:text-purple-600">
+                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span className="text-purple-600 font-medium text-sm">
+                          {user.email?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link to="/login" className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium text-sm">
+                      Login
+                    </Link>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </nav>
+          </nav>
         )}
       </div>
 
