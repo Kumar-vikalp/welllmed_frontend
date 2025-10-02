@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  selectCartItems, 
-  selectCartTotal, 
+import {
+  selectCartItems,
+  selectCartTotal,
   selectCartLoading,
-  updateQtyLocal, 
-  removeFromCartLocal,
+  updateQtyLocal,
+  removeCartItem,
   debouncedSyncCart,
   fetchCart
 } from '../store/slices/cartSlice';
@@ -49,8 +49,7 @@ export default function CartPage() {
   };
 
   const handleRemoveItem = (productId) => {
-    dispatch(removeFromCartLocal(productId));
-    dispatch(debouncedSyncCart());
+    dispatch(removeCartItem(productId));
   };
 
   // Show loading state while initializing

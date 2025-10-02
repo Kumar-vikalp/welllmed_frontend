@@ -54,9 +54,9 @@ export const syncCartWithServer = createAsyncThunk(
         }
         return Promise.resolve()
       })
-      
+
       await Promise.all(promises)
-      
+
       // After successful sync, fetch fresh cart data
       const response = await api.get('/cart/')
       const cartItems = Array.isArray(response.data) ? response.data : [response.data]
@@ -77,6 +77,24 @@ export const syncCartWithServer = createAsyncThunk(
       }))
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to sync cart')
+    }
+  }
+)
+
+export const removeCartItem = createAsyncThunk(
+  'cart/removeItem',
+  async (productId, { getState, rejectWithValue }) => {
+    try {
+      const { cart } = getState()
+      const item = cart.items.find(item => item.product_id === productId)
+
+      if (item && item.cart_item_id) {
+        await api.delete(`/cart/remove/${item.cart_item_id}/`)
+      }
+
+      return productId
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to remove item')
     }
   }
 )
@@ -136,12 +154,6 @@ const cartSlice = createSlice({
     
     removeFromCartLocal: (state, action) => {
       const productId = action.payload
-      const item = state.items.find(item => item.product_id === productId)
-      if (item) {
-        item.qty = 0
-        item.needsSync = true
-      }
-      // Remove immediately from local state
       state.items = state.items.filter(item => item.product_id !== productId)
     },
     
@@ -179,11 +191,21 @@ const cartSlice = createSlice({
       .addCase(syncCartWithServer.pending, (state) => {
         state.syncing = true
       })
-      .addCase(syncCartWithServer.fulfilled, (state) => {
+      .addCase(syncCartWithServer.fulfilled, (state, action) => {
         state.syncing = false
         state.lastSyncTime = Date.now()
-        // Update cart with fresh data from server
         state.items = action.payload
+      })
+      .addCase(removeCartItem.pending, (state) => {
+        state.syncing = true
+      })
+      .addCase(removeCartItem.fulfilled, (state, action) => {
+        state.syncing = false
+        state.items = state.items.filter(item => item.product_id !== action.payload)
+      })
+      .addCase(removeCartItem.rejected, (state, action) => {
+        state.syncing = false
+        state.error = action.payload
       })
       .addCase(syncCartWithServer.rejected, (state, action) => {
         state.syncing = false
