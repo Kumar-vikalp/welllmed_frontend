@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCartLocal, debouncedSyncCart, selectCartSyncing } from '../store/slices/cartSlice';
+import { addToCart, fetchCart, selectCartSyncing } from '../store/slices/cartSlice';
+import { selectUser } from '../store/slices/userSlice';
 import { useState, memo } from 'react';
 import LazyImage from './LazyImage';
 
 const ProductCard = memo(function ProductCard({ product }) {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const syncing = useSelector(selectCartSyncing);
   const [isAdding, setIsAdding] = useState(false);
   const discountedPrice = product.discounted_price;
@@ -15,18 +17,29 @@ const ProductCard = memo(function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     
+    if (!user) {
+      alert('Please login to add items to cart');
+      return;
+    }
+    
     if (product.available_stock <= 0) return;
     
     setIsAdding(true);
     try {
-      // Add to local state immediately for instant UI update
-      dispatch(addToCartLocal({ product, qty: 1 }));
-      // Debounce server sync
-      dispatch(debouncedSyncCart());
+      // Add to cart via API
+      await dispatch(addToCart({ 
+        product_id: product.product_id, 
+        quantity: 1 
+      })).unwrap();
+      
+      // Refresh cart to get updated data
+      await dispatch(fetchCart());
+      
     } catch (error) {
       console.error('Failed to add to cart:', error);
+      alert('Failed to add item to cart. Please try again.');
     } finally {
-      setTimeout(() => setIsAdding(false), 500); // Small delay for better UX
+      setIsAdding(false);
     }
   };
 
@@ -84,9 +97,9 @@ const ProductCard = memo(function ProductCard({ product }) {
       <div className="p-3 md:p-4 pt-0">
         <button
           onClick={handleAddToCart}
-          disabled={product.available_stock <= 0 || isAdding || syncing}
+          disabled={product.available_stock <= 0 || isAdding || syncing || !user}
           className={`w-full py-2 px-4 rounded-xl font-semibold text-sm transition-all ${
-            product.available_stock > 0
+            product.available_stock > 0 && user
               ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm hover:shadow-md'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
@@ -97,8 +110,10 @@ const ProductCard = memo(function ProductCard({ product }) {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {syncing ? 'Syncing...' : 'Adding...'}
+              Adding...
             </div>
+          ) : !user ? (
+            'Login to Add'
           ) : product.available_stock > 0 ? (
             <div className="flex items-center justify-center">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

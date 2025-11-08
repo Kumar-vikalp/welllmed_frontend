@@ -25,6 +25,8 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import HelpPage from './pages/HelpPage';
 import HowToOrderPage from './pages/HowToOrderPage';
+import LabTestsPage from './pages/LabTestsPage';
+import PrescriptionUploadPage from './pages/PrescriptionUploadPage';
 
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -65,6 +67,8 @@ export default function App() {
           <Route path="contact" element={<ContactPage />} />
           <Route path="help" element={<HelpPage />} />
           <Route path="how-to-order" element={<HowToOrderPage />} />
+          <Route path="lab" element={<LabTestsPage />} />
+          <Route path="upload-prescription" element={<PrescriptionUploadPage />} />
           <Route path="product/:slug" element={<ProductDetails />} />
           <Route path="cart" element={<CartPage />} />
           

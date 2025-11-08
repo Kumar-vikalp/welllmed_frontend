@@ -14,6 +14,7 @@ import ProductCard from '../components/ProductCard'
 import Skeleton from '../components/Skeleton'
 import { motion } from 'framer-motion'
 import SearchBar from '../components/SearchBar'
+import SEO from '../components/SEO'
 
 export default function ProductsPage() {
   const dispatch = useDispatch()
@@ -78,6 +79,14 @@ export default function ProductsPage() {
   const companies = [...new Set(products.map(p => p.company))]
 
   return (
+    <>
+      <SEO 
+        title="Buy Medicines Online - Best Prices & Fast Delivery | WellMed"
+        description="Buy medicines online at best prices with free home delivery. Authentic medicines from top brands. Order now for fast delivery."
+        keywords="buy medicine online, pharmacy, medicines, healthcare, online pharmacy, prescription drugs"
+        type="website"
+        link="https://wellmed.com/products"
+      />
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-50 min-h-screen">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white mx-4 rounded-2xl p-8 mb-8 text-center mt-4">
@@ -234,5 +243,6 @@ export default function ProductsPage() {
         </div>
       </div>
     </motion.div>
+    </>
   )
 }

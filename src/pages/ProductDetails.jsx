@@ -9,12 +9,14 @@ import {
   selectProductLoading,
   clearCurrentProduct 
 } from '../store/slices/productsSlice';
-import { addToCartLocal, debouncedSyncCart } from '../store/slices/cartSlice';
+import { addToCart, fetchCart } from '../store/slices/cartSlice';
+import { selectUser } from '../store/slices/userSlice';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 import Skeleton from '../components/Skeleton';
 import Toast from '../components/Toast';
 import LazyImage from '../components/LazyImage';
+import SEO from '../components/SEO';
 
 export default function ProductDetails() {
   const { slug } = useParams();
@@ -22,6 +24,7 @@ export default function ProductDetails() {
   const product = useSelector(selectCurrentProduct);
   const relatedProducts = useSelector(selectRelatedProducts);
   const loading = useSelector(selectProductLoading);
+  const user = useSelector(selectUser);
   const [qty, setQty] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const navigate = useNavigate();
@@ -50,10 +53,21 @@ export default function ProductDetails() {
   }, [slug, dispatch, navigate]);
   
   const handleAddToCart = async () => {
+    if (!user) {
+      setToast({ message: 'Please login to add items to cart', type: 'error' });
+      return;
+    }
+    
     if (product && product.available_stock > 0) {
       try {
-        dispatch(addToCartLocal({ product, qty }));
-        dispatch(debouncedSyncCart());
+        await dispatch(addToCart({ 
+          product_id: product.product_id, 
+          quantity: qty 
+        })).unwrap();
+        
+        // Refresh cart to get updated data
+        await dispatch(fetchCart());
+        
         setToast({ message: `${product.name} added to cart!`, type: 'success' });
       } catch (error) {
         setToast({ message: error.message || 'Failed to add to cart', type: 'error' });
@@ -99,6 +113,13 @@ export default function ProductDetails() {
 
   return (
     <>
+      <SEO 
+        title={product ? `${product.name} - Buy Online at Best Price | WellMed` : 'Product Details | WellMed'}
+        description={product ? `Buy ${product.name} by ${product.company} online at best price. ${product.description}. Free delivery, authentic medicines.` : 'Buy medicines online at best prices with free delivery'}
+        keywords={product ? `${product.name}, ${product.company}, ${product.disease_category}, buy medicine online, pharmacy` : 'medicine, pharmacy, online medicine'}
+        type="product"
+        link={`https://wellmed.com/product/${slug}`}
+      />
       <Toast message={toast.message} type={toast.type} />
       <motion.div
         initial={{ opacity: 0 }}

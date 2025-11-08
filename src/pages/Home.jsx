@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import TrendingCarousel from '../components/TrendingCarousel'
 import HeroCarousel from '../components/HeroCarousel'
+import TopBanner from '../components/TopBanner'
 
 export default function Home() {
   const [trendingProducts, setTrendingProducts] = useState([])
@@ -16,51 +17,51 @@ export default function Home() {
   const navigate = useNavigate()
 
   const categories = useMemo(() => [
-    { 
-      name: 'Fever & Pain', 
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Fever & Pain',
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 25,
       color: 'bg-red-50 border-red-100'
     },
-    { 
-      name: 'Allergy & Cold', 
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Allergy & Cold',
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 18,
       color: 'bg-blue-50 border-blue-100'
     },
-    { 
-      name: 'Digestive Health', 
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Digestive Health',
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 22,
       color: 'bg-green-50 border-green-100'
     },
-    { 
-      name: 'Heart & BP', 
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Heart & BP',
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 15,
       color: 'bg-purple-50 border-purple-100'
     },
-    { 
-      name: 'Vitamins', 
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Vitamins',
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 30,
       color: 'bg-yellow-50 border-yellow-100'
     },
-    { 
-      name: 'Antibiotics', 
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Antibiotics',
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 12,
       color: 'bg-orange-50 border-orange-100'
     },
-    { 
-      name: 'Skin Care', 
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Skin Care',
+      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 20,
       color: 'bg-pink-50 border-pink-100'
     },
-    { 
-      name: 'Women\'s Health', 
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop', 
+    {
+      name: 'Women\'s Health',
+      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       count: 16,
       color: 'bg-indigo-50 border-indigo-100'
     }
@@ -78,7 +79,7 @@ export default function Home() {
       })
       const data = response.data
       const productsData = data.results || (Array.isArray(data) ? data : [data])
-      
+
       const transformedProducts = productsData.map(transformProduct)
       setTrendingProducts(transformedProducts)
     } catch (error) {
@@ -98,7 +99,7 @@ export default function Home() {
       })
       const data = response.data
       const productsData = data.results || (Array.isArray(data) ? data : [data])
-      
+
       const transformedProducts = productsData.map(transformProduct)
       setFeaturedProducts(transformedProducts)
     } catch (error) {
@@ -133,10 +134,16 @@ export default function Home() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-50 min-h-screen">
       {/* Hero Carousel */}
+
       <HeroCarousel />
 
+
+
+      {/* Two Cards Section */}
+
+
       {/* Flash Sale Banner */}
-      <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-white">
+      {/* <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-white">
         <div className="px-4 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-center">
             <div className="flex items-center space-x-2 text-sm md:text-base font-bold">
@@ -146,9 +153,15 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      <TopBanner
+        title="FLASH SALE:"
+        message="Up to 30% OFF on medicines!"
+        ctaText="Explore Now"
+        ctaLink="/products"
+      />
 
-      {/* Categories Section */}
+      {/* Categories Section with Horizontal Scroll */}
       <div className="px-4 py-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-6">
@@ -157,14 +170,14 @@ export default function Home() {
               View All →
             </Link>
           </div>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3 md:gap-4">
+          <div className="md:grid md:grid-cols-8 md:gap-4 flex overflow-x-auto scrollbar-hide gap-3 pb-2">
             {categories.map(category => (
               <motion.div
                 key={category.name}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleCategoryClick(category.name)}
-                className={`${category.color} rounded-2xl p-3 md:p-4 text-center cursor-pointer hover:shadow-md transition-all border`}
+                className={`${category.color} rounded-2xl p-3 md:p-4 text-center cursor-pointer hover:shadow-md transition-all border flex-shrink-0 min-w-[100px]`}
               >
                 <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 rounded-xl overflow-hidden">
                   <img src={category.icon} alt={category.name} className="w-full h-full object-cover" />
@@ -176,6 +189,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+
 
       {/* Flash Deals Section */}
       <div className="px-4 py-6 bg-white">
@@ -201,7 +216,52 @@ export default function Home() {
           )}
         </div>
       </div>
+      {/* Lab Tests Section - Redesigned */}
+      <div className="relative min-h-screen w-full text-gray-800 overflow-hidden">
+        {/* 1️⃣ Gradient Base */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background: "radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)",
+          }}
+        />
 
+        {/* 2️⃣ Light Circuit Pattern Overlay */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none opacity-40"
+          style={{
+            backgroundImage: `
+            repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+            repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+            radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 2px),
+            radial-gradient(circle at 40px 40px, rgba(255,255,255,0.15) 2px, transparent 2px)
+          `,
+            backgroundSize: "40px 40px, 40px 40px, 40px 40px, 40px 40px",
+          }}
+        />
+
+        {/* 3️⃣ Hero Content */}
+        <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
+            Dr Das PathLabs
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-200 mb-8">
+            Tests you can trust — Advanced diagnostics at your doorstep
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/lab"
+              className="bg-white text-purple-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Book Lab Tests
+            </Link>
+            <button className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-700 transition-colors">
+              Home Collection
+            </button>
+          </div>
+        </div>
+      </div>
       {/* Featured Products */}
       <div className="px-4 py-6 bg-white">
         <div className="max-w-7xl mx-auto  bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 shadow-sm">
@@ -231,6 +291,40 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Health Conditions Section */}
+      <div className="px-4 py-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Browse by Health Conditions</h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {[
+              { name: 'Diabetes Care', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=100&h=100&fit=crop', link: '/products?condition=diabetes' },
+              { name: 'Cardiac Care', icon: 'https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=100&h=100&fit=crop', link: '/products?condition=cardiac' },
+              { name: 'Stomach Care', icon: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=100&h=100&fit=crop', link: '/products?condition=stomach' },
+              { name: 'Pain Relief', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&h=100&fit=crop', link: '/products?condition=pain' },
+              { name: 'Liver Care', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=100&h=100&fit=crop', link: '/products?condition=liver' },
+              { name: 'Oral Care', icon: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=100&h=100&fit=crop', link: '/products?condition=oral' },
+              { name: 'Respiratory', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&h=100&fit=crop', link: '/products?condition=respiratory' },
+              { name: 'Sexual Health', icon: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop', link: '/products?condition=sexual' },
+              { name: 'Elderly Care', icon: 'https://images.unsplash.com/photo-1581579186913-45ac3e648364?w=100&h=100&fit=crop', link: '/products?condition=elderly' },
+              { name: 'Cold & Immunity', icon: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=100&h=100&fit=crop', link: '/products?condition=immunity' }
+            ].map(condition => (
+              <Link
+                key={condition.name}
+                to={condition.link}
+                className="bg-white rounded-2xl p-4 hover:shadow-lg transition-all border border-gray-200 hover:border-purple-300"
+              >
+                <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden">
+                  <img src={condition.icon} alt={condition.name} className="w-full h-full object-cover" />
+                </div>
+                <h3 className="text-sm font-semibold text-gray-900 text-center">{condition.name}</h3>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Trending Products */}
       <div className="px-4 py-6 bg-white">
         <div className="max-w-7xl mx-auto bg-gray-50 rounded-2xl p-6">
@@ -246,6 +340,7 @@ export default function Home() {
           )}
         </div>
       </div>
+
 
       {/* How It Works Section */}
       <div className="px-4 py-8 bg-white">
@@ -266,7 +361,7 @@ export default function Home() {
               <h3 className="text-lg font-bold mb-2">Search & Order</h3>
               <p className="text-gray-600">Find your medicines and place your order in seconds</p>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -281,7 +376,7 @@ export default function Home() {
               <h3 className="text-lg font-bold mb-2">We Prepare</h3>
               <p className="text-gray-600">Our pharmacists carefully prepare your order</p>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -308,7 +403,7 @@ export default function Home() {
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Why Choose Generic Medicines?</h2>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  Generic medicines contain the same active ingredients as branded medicines and are equally effective. 
+                  Generic medicines contain the same active ingredients as branded medicines and are equally effective.
                   They undergo rigorous testing to ensure safety and efficacy while being significantly more affordable.
                 </p>
                 <div className="space-y-3 mb-6">
@@ -325,7 +420,7 @@ export default function Home() {
                     <span className="text-gray-700">FDA approved and rigorously tested</span>
                   </div>
                 </div>
-                <Link 
+                <Link
                   to="/generic-info"
                   className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-colors inline-block"
                 >
@@ -337,7 +432,7 @@ export default function Home() {
                   <div className="text-center">
                     <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <svg className="w-10 h-10 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
+                        <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold mb-2">Generic vs Branded</h3>
@@ -356,13 +451,13 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Your Health, Our Priority</h2>
           <p className="text-lg md:text-xl mb-8 opacity-90">Quality medicines, expert advice, doorstep delivery</p>
           <div className="space-x-4">
-            <Link 
+            <Link
               to="/products"
               className="bg-white text-purple-600 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors inline-block"
             >
               Start Shopping
             </Link>
-            <Link 
+            <Link
               to="/how-to-order"
               className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-600 transition-colors inline-block"
             >

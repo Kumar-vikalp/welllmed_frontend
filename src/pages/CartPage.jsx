@@ -5,9 +5,8 @@ import {
   selectCartItems,
   selectCartTotal,
   selectCartLoading,
-  updateQtyLocal,
+  updateCartItem,
   removeCartItem,
-  debouncedSyncCart,
   fetchCart
 } from '../store/slices/cartSlice';
 import { selectUser } from '../store/slices/userSlice';
@@ -39,17 +38,25 @@ export default function CartPage() {
     }).format(price);
   };
 
-  const handleUpdateQty = (productId, newQty) => {
+  const handleUpdateQty = async (cart_item_id, newQty) => {
     if (newQty <= 0) {
-      handleRemoveItem(productId);
+      handleRemoveItem(cart_item_id);
     } else {
-      dispatch(updateQtyLocal({ productId, qty: newQty }));
-      dispatch(debouncedSyncCart());
+      try {
+        await dispatch(updateCartItem({ cart_item_id, quantity: newQty })).unwrap();
+        dispatch(fetchCart()); // Refresh cart
+      } catch (error) {
+        console.error('Failed to update quantity:', error);
+      }
     }
   };
 
-  const handleRemoveItem = (productId) => {
-    dispatch(removeCartItem(productId));
+  const handleRemoveItem = async (cart_item_id) => {
+    try {
+      await dispatch(removeCartItem(cart_item_id)).unwrap();
+    } catch (error) {
+      console.error('Failed to remove item:', error);
+    }
   };
 
   // Show loading state while initializing
@@ -150,7 +157,7 @@ export default function CartPage() {
                       <p className="text-xs text-gray-400">{item.disease_category}</p>
                     </div>
                     <button
-                      onClick={() => handleRemoveItem(item.product_id)}
+                      onClick={() => handleRemoveItem(item.cart_item_id)}
                       className="text-red-500 hover:text-red-700 p-1"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,14 +170,14 @@ export default function CartPage() {
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center border border-gray-200 rounded-lg">
                         <button
-                          onClick={() => handleUpdateQty(item.product_id, Math.max(1, item.qty - 1))}
+                          onClick={() => handleUpdateQty(item.cart_item_id, Math.max(1, item.qty - 1))}
                           className="px-3 py-1 text-gray-600 hover:text-gray-800"
                         >
                           -
                         </button>
                         <span className="px-4 py-1 font-semibold">{item.qty}</span>
                         <button
-                          onClick={() => handleUpdateQty(item.product_id, Math.min(item.available_stock, item.qty + 1))}
+                          onClick={() => handleUpdateQty(item.cart_item_id, Math.min(item.available_stock, item.qty + 1))}
                           className="px-3 py-1 text-gray-600 hover:text-gray-800"
                           disabled={item.qty >= item.available_stock}
                         >

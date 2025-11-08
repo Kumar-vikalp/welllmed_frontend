@@ -24,7 +24,7 @@ export const fetchCart = createAsyncThunk(
         trending: item.product.trending,
         slug: item.product.slug,
         qty: item.quantity,
-        available_stock: item.product.available_stock || 0,
+        available_stock: item.product.available_stock || 100,
         discounted_price: parseFloat(item.product.discounted_price)
       }))
     } catch (error) {
@@ -37,62 +37,41 @@ export const fetchCart = createAsyncThunk(
   }
 )
 
-export const syncCartWithServer = createAsyncThunk(
-  'cart/syncWithServer',
-  async (cartItems, { rejectWithValue }) => {
+export const addToCart = createAsyncThunk(
+  'cart/addToCart',
+  async ({ product_id, quantity = 1 }, { rejectWithValue }) => {
     try {
-      // Batch update cart items
-      const promises = cartItems.map(item => {
-        if (item.needsSync) {
-          if (item.qty === 0 && item.cart_item_id) {
-            return api.delete(`/cart/remove/${item.cart_item_id}/`)
-          } else if (item.cart_item_id) {
-            return api.put(`/cart/update/${item.cart_item_id}/`, { quantity: item.qty })
-          } else {
-            return api.post('/cart/add/', { product_id: item.product_id, quantity: item.qty })
-          }
-        }
-        return Promise.resolve()
+      const response = await api.post('/cart/add/', {
+        product_id,
+        quantity
       })
-
-      await Promise.all(promises)
-
-      // After successful sync, fetch fresh cart data
-      const response = await api.get('/cart/')
-      const cartItems = Array.isArray(response.data) ? response.data : [response.data]
-      return cartItems.map(item => ({
-        product_id: item.product.product_id,
-        cart_item_id: item.cart_item_id,
-        name: item.product.name,
-        company: item.product.company,
-        disease_category: item.product.disease_category,
-        mrp: parseFloat(item.product.mrp),
-        discount: item.product.discount,
-        images: item.product.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
-        trending: item.product.trending,
-        slug: item.product.slug,
-        qty: item.quantity,
-        available_stock: item.product.available_stock || 0,
-        discounted_price: parseFloat(item.product.discounted_price)
-      }))
+      return response.data
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to sync cart')
+      return rejectWithValue(error.response?.data || 'Failed to add to cart')
+    }
+  }
+)
+
+export const updateCartItem = createAsyncThunk(
+  'cart/updateCartItem',
+  async ({ cart_item_id, quantity }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/cart/update/${cart_item_id}/`, {
+        quantity
+      })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to update cart item')
     }
   }
 )
 
 export const removeCartItem = createAsyncThunk(
   'cart/removeItem',
-  async (productId, { getState, rejectWithValue }) => {
+  async (cart_item_id, { rejectWithValue }) => {
     try {
-      const { cart } = getState()
-      const item = cart.items.find(item => item.product_id === productId)
-
-      if (item && item.cart_item_id) {
-        await api.delete(`/cart/remove/${item.cart_item_id}/`)
-      }
-
-      return productId
+      await api.delete(`/cart/remove/${cart_item_id}/`)
+      return cart_item_id
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to remove item')
     }
@@ -110,64 +89,11 @@ const cartSlice = createSlice({
     initialized: false
   },
   reducers: {
-    addToCartLocal: (state, action) => {
-      const { product, qty = 1 } = action.payload
-      const existingItem = state.items.find(item => item.product_id === product.product_id)
-      
-      if (existingItem) {
-        existingItem.qty += qty
-        existingItem.needsSync = true
-      } else {
-        state.items.push({
-          product_id: product.product_id,
-          name: product.name,
-          company: product.company,
-          disease_category: product.disease_category,
-          mrp: product.mrp,
-          discount: product.discount,
-          images: product.images,
-          trending: product.trending,
-          slug: product.slug,
-          qty: qty,
-          available_stock: product.available_stock,
-          discounted_price: product.discounted_price,
-          needsSync: true
-        })
-      }
-    },
-    
-    updateQtyLocal: (state, action) => {
-      const { productId, qty } = action.payload
-      const item = state.items.find(item => item.product_id === productId)
-      
-      if (item) {
-        if (qty <= 0) {
-          // Mark for deletion but keep in state temporarily for sync
-          item.qty = 0
-          item.needsSync = true
-        } else {
-          item.qty = qty
-          item.needsSync = true
-        }
-      }
-    },
-    
-    removeFromCartLocal: (state, action) => {
-      const productId = action.payload
-      state.items = state.items.filter(item => item.product_id !== productId)
-    },
-    
     clearCart: (state) => {
       state.items = []
       state.initialized = false
     },
     
-    markItemsSynced: (state) => {
-      state.items.forEach(item => {
-        item.needsSync = false
-      })
-    },
-
     setInitialized: (state, action) => {
       state.initialized = action.payload
     }
@@ -188,46 +114,45 @@ const cartSlice = createSlice({
         state.error = action.payload
         state.initialized = true
       })
-      .addCase(syncCartWithServer.pending, (state) => {
+      .addCase(addToCart.pending, (state) => {
+        state.syncing = true
+        state.error = null
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.syncing = false
+        // Refresh cart after adding
+        // The actual cart update will be handled by fetchCart
+      })
+      .addCase(addToCart.rejected, (state, action) => {
+        state.syncing = false
+        state.error = action.payload
+      })
+      .addCase(updateCartItem.pending, (state) => {
         state.syncing = true
       })
-      .addCase(syncCartWithServer.fulfilled, (state, action) => {
+      .addCase(updateCartItem.fulfilled, (state, action) => {
         state.syncing = false
-        state.lastSyncTime = Date.now()
-        state.items = action.payload
+        // Refresh cart after updating
+      })
+      .addCase(updateCartItem.rejected, (state, action) => {
+        state.syncing = false
+        state.error = action.payload
       })
       .addCase(removeCartItem.pending, (state) => {
         state.syncing = true
       })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         state.syncing = false
-        state.items = state.items.filter(item => item.product_id !== action.payload)
+        state.items = state.items.filter(item => item.cart_item_id !== action.payload)
       })
       .addCase(removeCartItem.rejected, (state, action) => {
-        state.syncing = false
-        state.error = action.payload
-      })
-      .addCase(syncCartWithServer.rejected, (state, action) => {
         state.syncing = false
         state.error = action.payload
       })
   }
 })
 
-// Debounced sync action
-export const debouncedSyncCart = () => (dispatch, getState) => {
-  const { cart } = getState()
-  const itemsNeedingSync = cart.items.filter(item => item.needsSync)
-  
-  if (itemsNeedingSync.length === 0) return
-  
-  clearTimeout(syncTimeout)
-  syncTimeout = setTimeout(() => {
-    dispatch(syncCartWithServer(cart.items))
-  }, SYNC_DELAY)
-}
-
-export const { addToCartLocal, updateQtyLocal, removeFromCartLocal, clearCart, markItemsSynced, setInitialized } = cartSlice.actions
+export const { clearCart, setInitialized } = cartSlice.actions
 
 // Selectors
 export const selectCartItems = (state) => state.cart.items
