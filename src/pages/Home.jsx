@@ -217,6 +217,7 @@ export default function Home() {
         </div>
       </div>
       {/* Lab Tests Section - Redesigned */}
+      {/* Lab Tests Section - Redesigned */}
       <div className="relative min-h-[50vh] w-full text-gray-800 overflow-hidden">
         {/* 1️⃣ Gradient Base */}
         <div
@@ -231,17 +232,17 @@ export default function Home() {
           className="absolute inset-0 z-10 pointer-events-none opacity-40"
           style={{
             backgroundImage: `
-            repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
-            repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
-            radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 2px),
-            radial-gradient(circle at 40px 40px, rgba(255,255,255,0.15) 2px, transparent 2px)
-          `,
+      repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+      radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 2px),
+      radial-gradient(circle at 40px 40px, rgba(255,255,255,0.15) 2px, transparent 2px)
+    `,
             backgroundSize: "40px 40px, 40px 40px, 40px 40px, 40px 40px",
           }}
         />
 
-        {/* 3️⃣ Hero Content */}
-        <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+        {/* 3️⃣ Hero Content - I changed min-h-screen to min-h-[50vh] here too */}
+        <div className="relative z-20 flex flex-col items-center justify-center min-h-[50vh] px-6 py-12 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
             Dr Das PathLabs
           </h1>
