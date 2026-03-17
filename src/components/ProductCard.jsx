@@ -5,6 +5,8 @@ import { addToCart, fetchCart, selectCartSyncing } from '../store/slices/cartSli
 import { selectUser } from '../store/slices/userSlice';
 import { useState, memo } from 'react';
 import LazyImage from './LazyImage';
+import Card from './Card';
+import Button from './Button';
 
 const ProductCard = memo(function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -44,89 +46,73 @@ const ProductCard = memo(function ProductCard({ product }) {
   };
 
   return (
-    <motion.div
+    <Card
       layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col border border-gray-100"
+      className="overflow-hidden flex flex-col"
+      rotation={Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0}
     >
       <Link to={`/product/${product.slug}`} className="block flex-grow" onClick={(e) => e.stopPropagation()}>
         <div className="relative">
           <LazyImage 
             src={product.images[0]} 
             alt={product.name} 
-            className="w-full h-32 md:h-48 object-cover" 
+            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink" 
           />
           {product.trending && (
-            <span className="absolute top-2 left-2 bg-gradient-to-r from-orange-400 to-red-400 text-white text-xs font-bold px-2 py-1 rounded-full">
-              🔥 Trending
+            <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
+              🔥 HOT
             </span>
           )}
           {product.discount > 0 && (
-            <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10">
               {product.discount}% OFF
             </span>
           )}
         </div>
         <div className="p-3 md:p-4 flex-grow">
-          <p className="text-xs md:text-sm text-gray-500 font-medium">{product.company}</p>
-          <h3 className="text-sm md:text-base font-semibold text-gray-900 mt-1 mb-2 line-clamp-2 leading-tight">
+          <p className="text-xs md:text-sm font-bold uppercase tracking-wide">{product.company}</p>
+          <h3 className="text-sm md:text-base font-black mt-1 mb-2 line-clamp-2 leading-tight">
             {product.name}
           </h3>
           <div className="flex justify-between items-center mb-3">
             <div>
-              <p className="text-lg md:text-xl font-bold text-gray-900">₹{discountedPrice.toFixed(2)}</p>
+              <p className="text-lg md:text-xl font-black">₹{discountedPrice.toFixed(2)}</p>
               {product.discount > 0 && (
-                <p className="text-xs md:text-sm text-gray-500 line-through">₹{product.mrp.toFixed(2)}</p>
+                <p className="text-xs md:text-sm font-bold line-through opacity-60">₹{product.mrp.toFixed(2)}</p>
               )}
             </div>
-            <p className={`text-xs font-medium px-2 py-1 rounded-full ${
+            <span className={`neo-badge rotate-2 ${
               product.available_stock > 0 
-                ? 'text-green-700 bg-green-100' 
-                : 'text-red-700 bg-red-100'
+                ? 'bg-neo-secondary' 
+                : 'bg-neo-accent'
             }`}>
-              {product.available_stock > 0 ? 'In Stock' : 'Out of Stock'}
-            </p>
+              {product.available_stock > 0 ? 'IN STOCK' : 'OUT OF STOCK'}
+            </span>
           </div>
         </div>
       </Link>
       
       {/* Add to Cart Button */}
       <div className="p-3 md:p-4 pt-0">
-        <button
+        <Button
+          variant={product.available_stock > 0 && user ? 'primary' : 'outline'}
+          size="sm"
+          className="w-full"
           onClick={handleAddToCart}
           disabled={product.available_stock <= 0 || isAdding || syncing || !user}
-          className={`w-full py-2 px-4 rounded-xl font-semibold text-sm transition-all ${
-            product.available_stock > 0 && user
-              ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm hover:shadow-md'
-              : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-          }`}
         >
           {isAdding || syncing ? (
-            <div className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Adding...
-            </div>
+            'ADDING...'
           ) : !user ? (
-            'Login to Add'
+            'LOGIN TO ADD'
           ) : product.available_stock > 0 ? (
-            <div className="flex items-center justify-center">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add to Cart
-            </div>
+            'ADD TO CART'
           ) : (
-            'Out of Stock'
+            'OUT OF STOCK'
           )}
-        </button>
+        </Button>
       </div>
-    </motion.div>
+    </Card>
   );
 });
 

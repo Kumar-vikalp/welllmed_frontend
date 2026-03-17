@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Button from './Button'
+import Card from './Card'
 
 export default function TrendingCarousel({ products, title = "Trending Products", showTitle = true }) {
   const [isDragging, setIsDragging] = useState(false)
@@ -44,6 +47,16 @@ export default function TrendingCarousel({ products, title = "Trending Products"
     setIsDragging(false)
   }
 
+  const scrollCarousel = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = 300
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      })
+    }
+  }
+
   useEffect(() => {
     const carousel = carouselRef.current
     if (carousel) {
@@ -70,16 +83,34 @@ export default function TrendingCarousel({ products, title = "Trending Products"
   if (!products || products.length === 0) return null
 
   return (
-    <div className="relative mb-8">
+    <div className="relative">
       {showTitle && (
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-black uppercase -rotate-1">{title}</h2>
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="rotate-1"
+              onClick={() => scrollCarousel('left')}
+            >
+              <ChevronLeft className="w-6 h-6 stroke-[3px]" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="-rotate-1"
+              onClick={() => scrollCarousel('right')}
+            >
+              <ChevronRight className="w-6 h-6 stroke-[3px]" />
+            </Button>
+          </div>
         </div>
       )}
 
       <div 
         ref={carouselRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-2"
+        className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-4"
         style={{ 
           scrollBehavior: 'smooth',
           userSelect: 'none'
@@ -88,50 +119,56 @@ export default function TrendingCarousel({ products, title = "Trending Products"
         {products.map((product, index) => (
           <motion.div
             key={product.product_id}
-            className="flex-shrink-0 w-40 md:w-56"
+            className="flex-shrink-0 w-64"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
             onClick={() => !isDragging && navigate(`/product/${product.slug}`)}
           >
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100"
-                 onMouseDown={(e) => e.preventDefault()}>
+            <Card
+              className="overflow-hidden cursor-pointer"
+              rotation={Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0}
+              onMouseDown={(e) => e.preventDefault()}
+            >
               <div className="relative">
                 <img 
                   src={product.images[0]} 
                   alt={product.name} 
-                  className="w-full h-28 md:h-40 object-cover"
+                  className="w-full h-40 object-cover border-b-4 border-neo-ink"
                   loading="lazy"
                 />
                 {product.trending && (
-                  <span className="absolute top-2 right-2 bg-gradient-to-r from-orange-400 to-red-400 text-white text-xs font-bold px-2 py-1 rounded-full">
-                    🔥
+                  <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
+                    🔥 HOT
                   </span>
                 )}
                 {product.discount > 0 && (
-                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  <span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10">
                     {product.discount}% OFF
                   </span>
                 )}
               </div>
-              <div className="p-3 md:p-4">
-                <p className="text-xs text-gray-500 font-medium">{product.company}</p>
-                <h3 className="text-xs md:text-sm font-semibold text-gray-900 mt-1 line-clamp-2 h-8 md:h-10 leading-tight">
+              <div className="p-4">
+                <p className="text-sm font-bold uppercase tracking-wide">{product.company}</p>
+                <h3 className="text-base font-black mt-1 mb-3 line-clamp-2 leading-tight">
                   {product.name}
                 </h3>
-                <div className="mt-3 flex justify-between items-center">
+                <div className="flex justify-between items-center mb-4">
                   <div>
-                    <p className="text-sm md:text-lg font-bold text-gray-900">₹{product.discounted_price.toFixed(2)}</p>
+                    <p className="text-xl font-black">₹{product.discounted_price.toFixed(2)}</p>
                     {product.discount > 0 && (
-                      <p className="text-xs text-gray-500 line-through">₹{product.mrp.toFixed(2)}</p>
+                      <p className="text-sm font-bold line-through opacity-60">₹{product.mrp.toFixed(2)}</p>
                     )}
                   </div>
-                  <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full">
+                  <span className="neo-badge bg-neo-secondary rotate-3">
                     {product.discount}% OFF
                   </span>
                 </div>
+                <Button variant="primary" size="sm" className="w-full">
+                  ADD TO CART
+                </Button>
               </div>
-            </div>
+            </Card>
           </motion.div>
         ))}
       </div>
