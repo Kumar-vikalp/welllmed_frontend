@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Toast from '../components/Toast';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { Star, Zap, Shield } from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -69,32 +72,47 @@ export default function ContactPage() {
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
-        className="bg-gray-50 min-h-screen"
+        className="bg-neo-canvas min-h-screen relative overflow-hidden"
       >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-neo-grid opacity-20"></div>
+        
+        {/* Floating Decorative Elements */}
+        <div className="absolute top-20 left-10 rotate-12">
+          <Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" />
+        </div>
+        <div className="absolute top-40 right-20 -rotate-12">
+          <Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
+        </div>
+        <div className="absolute bottom-32 left-32 rotate-45">
+          <Shield className="w-10 h-10 fill-neo-muted text-neo-muted" />
+        </div>
+
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-          <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative">
+          <div className="neo-container text-center relative z-10">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-4xl md:text-8xl font-black mb-6 uppercase"
             >
-              Contact Us
+              <span className="block -rotate-1">CONTACT</span>
+              <span className="block rotate-1 text-stroke">US</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto"
+              className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
             >
-              We're here to help with all your healthcare needs. Reach out to us anytime!
+              WE'RE HERE TO HELP WITH ALL YOUR HEALTHCARE NEEDS. REACH OUT TO US ANYTIME!
             </motion.p>
           </div>
         </div>
 
         {/* Contact Info Cards */}
-        <div className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4">
+        <div className="neo-section bg-white border-y-4 border-neo-ink">
+          <div className="neo-container">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {contactInfo.map((info, index) => (
                 <motion.div
@@ -102,16 +120,20 @@ export default function ContactPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-8 text-center shadow-sm"
                 >
-                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 text-purple-600">
-                    {info.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">{info.title}</h3>
-                  {info.details.map((detail, idx) => (
-                    <p key={idx} className="text-gray-700 font-semibold mb-1">{detail}</p>
-                  ))}
-                  <p className="text-gray-600 text-sm mt-3">{info.description}</p>
+                  <Card 
+                    className="p-8 text-center bg-neo-muted"
+                    rotation={Math.random() > 0.5 ? 1 : -1}
+                  >
+                    <div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 rotate-12">
+                      {info.icon}
+                    </div>
+                    <h3 className="text-2xl font-black text-neo-ink mb-4 uppercase -rotate-1">{info.title}</h3>
+                    {info.details.map((detail, idx) => (
+                      <p key={idx} className="text-neo-ink font-bold mb-2 uppercase text-sm">{detail}</p>
+                    ))}
+                    <p className="text-neo-ink font-bold text-xs mt-4 uppercase tracking-wide">{info.description}</p>
+                  </Card>
                 </motion.div>
               ))}
             </div>
@@ -119,18 +141,18 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="py-16 bg-gradient-to-r from-gray-50 to-blue-50">
+        <div className="neo-section bg-neo-secondary border-y-4 border-neo-ink">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm">
+            <Card className="p-8 md:p-12 bg-white rotate-1">
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Send us a Message</h2>
-                <p className="text-lg text-gray-600">Fill out the form below and we'll get back to you as soon as possible.</p>
+                <h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-4 uppercase -rotate-1">SEND US A MESSAGE</h2>
+                <p className="text-lg font-bold text-neo-ink uppercase">FILL OUT THE FORM BELOW AND WE'LL GET BACK TO YOU ASAP.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                    <label htmlFor="name" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide">FULL NAME *</label>
                     <input
                       type="text"
                       id="name"
@@ -138,7 +160,7 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className="neo-input w-full"
                       placeholder="Your full name"
                     />
                   </div>
@@ -151,7 +173,7 @@ export default function ContactPage() {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className="neo-input w-full"
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -159,40 +181,40 @@ export default function ContactPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <label htmlFor="phone" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide">PHONE NUMBER</label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className="neo-input w-full"
                       placeholder="+91 123 456 7890"
                     />
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                    <label htmlFor="subject" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide">SUBJECT *</label>
                     <select
                       id="subject"
                       name="subject"
                       required
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className="neo-input w-full"
                     >
-                      <option value="">Select a subject</option>
-                      <option value="general">General Inquiry</option>
-                      <option value="order">Order Support</option>
-                      <option value="technical">Technical Issue</option>
-                      <option value="billing">Billing Question</option>
-                      <option value="partnership">Partnership</option>
-                      <option value="other">Other</option>
+                      <option value="">SELECT A SUBJECT</option>
+                      <option value="general">GENERAL INQUIRY</option>
+                      <option value="order">ORDER SUPPORT</option>
+                      <option value="technical">TECHNICAL ISSUE</option>
+                      <option value="billing">BILLING QUESTION</option>
+                      <option value="partnership">PARTNERSHIP</option>
+                      <option value="other">OTHER</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                  <label htmlFor="message" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide">MESSAGE *</label>
                   <textarea
                     id="message"
                     name="message"
@@ -200,71 +222,66 @@ export default function ContactPage() {
                     rows="6"
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                    className="neo-input w-full resize-none"
                     placeholder="Please describe your inquiry in detail..."
                   ></textarea>
                 </div>
 
                 <div className="text-center">
-                  <button
+                  <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-4 px-12 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    size="lg"
+                    className="rotate-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
-                      <div className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Sending Message...
-                      </div>
+                      'SENDING MESSAGE...'
                     ) : (
-                      'Send Message'
+                      'SEND MESSAGE'
                     )}
-                  </button>
+                  </Button>
                 </div>
               </form>
-            </div>
+            </Card>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4">
+        <div className="neo-section bg-white border-y-4 border-neo-ink">
+          <div className="neo-container">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-              <p className="text-lg text-gray-600">Quick answers to common questions</p>
+              <h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-4 uppercase rotate-1">FREQUENTLY ASKED QUESTIONS</h2>
+              <p className="text-lg font-bold text-neo-ink uppercase">QUICK ANSWERS TO COMMON QUESTIONS</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">How fast is your delivery?</h3>
-                  <p className="text-gray-600">We deliver medicines within 10 minutes in major cities and within 24 hours in other areas.</p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Are your medicines authentic?</h3>
-                  <p className="text-gray-600">Yes, all our medicines are sourced directly from licensed manufacturers and are 100% authentic.</p>
-                </div>
-                <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Do you accept insurance?</h3>
-                  <p className="text-gray-600">We're working on insurance partnerships. Currently, we accept all major payment methods.</p>
-                </div>
+                <Card className="p-6 bg-neo-accent rotate-1">
+                  <h3 className="text-lg font-black text-white mb-3 uppercase">HOW FAST IS YOUR DELIVERY?</h3>
+                  <p className="text-white font-bold">WE DELIVER MEDICINES WITHIN 10 MINUTES IN MAJOR CITIES AND WITHIN 24 HOURS IN OTHER AREAS.</p>
+                </Card>
+                <Card className="p-6 bg-neo-secondary -rotate-1">
+                  <h3 className="text-lg font-black text-neo-ink mb-3 uppercase">ARE YOUR MEDICINES AUTHENTIC?</h3>
+                  <p className="text-neo-ink font-bold">YES, ALL OUR MEDICINES ARE SOURCED DIRECTLY FROM LICENSED MANUFACTURERS AND ARE 100% AUTHENTIC.</p>
+                </Card>
+                <Card className="p-6 bg-neo-muted rotate-2">
+                  <h3 className="text-lg font-black text-neo-ink mb-3 uppercase">DO YOU ACCEPT INSURANCE?</h3>
+                  <p className="text-neo-ink font-bold">WE'RE WORKING ON INSURANCE PARTNERSHIPS. CURRENTLY, WE ACCEPT ALL MAJOR PAYMENT METHODS.</p>
+                </Card>
               </div>
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Can I return medicines?</h3>
-                  <p className="text-gray-600">Due to safety regulations, we only accept returns for damaged or incorrect items within 24 hours.</p>
-                </div>
-                <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Do you require prescriptions?</h3>
-                  <p className="text-gray-600">Prescription medicines require a valid prescription. Over-the-counter medicines don't need one.</p>
-                </div>
-                <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Is my data secure?</h3>
-                  <p className="text-gray-600">Absolutely! We use industry-standard encryption to protect all your personal and medical information.</p>
-                </div>
+                <Card className="p-6 bg-white -rotate-1">
+                  <h3 className="text-lg font-black text-neo-ink mb-3 uppercase">CAN I RETURN MEDICINES?</h3>
+                  <p className="text-neo-ink font-bold">DUE TO SAFETY REGULATIONS, WE ONLY ACCEPT RETURNS FOR DAMAGED OR INCORRECT ITEMS WITHIN 24 HOURS.</p>
+                </Card>
+                <Card className="p-6 bg-neo-accent rotate-1">
+                  <h3 className="text-lg font-black text-white mb-3 uppercase">DO YOU REQUIRE PRESCRIPTIONS?</h3>
+                  <p className="text-white font-bold">PRESCRIPTION MEDICINES REQUIRE A VALID PRESCRIPTION. OVER-THE-COUNTER MEDICINES DON'T NEED ONE.</p>
+                </Card>
+                <Card className="p-6 bg-neo-secondary -rotate-2">
+                  <h3 className="text-lg font-black text-neo-ink mb-3 uppercase">IS MY DATA SECURE?</h3>
+                  <p className="text-neo-ink font-bold">ABSOLUTELY! WE USE INDUSTRY-STANDARD ENCRYPTION TO PROTECT ALL YOUR PERSONAL AND MEDICAL INFORMATION.</p>
+                </Card>
               </div>
             </div>
           </div>

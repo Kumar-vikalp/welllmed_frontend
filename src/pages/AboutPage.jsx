@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { Star, Zap, Shield, Clock } from 'lucide-react';
 
 export default function AboutPage() {
   const stats = [
@@ -34,32 +37,47 @@ export default function AboutPage() {
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }}
-      className="bg-gray-50 min-h-screen"
+      className="bg-neo-canvas min-h-screen relative overflow-hidden"
     >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-neo-grid opacity-20"></div>
+      
+      {/* Floating Decorative Elements */}
+      <div className="absolute top-20 left-10 rotate-12">
+        <Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" />
+      </div>
+      <div className="absolute top-40 right-20 -rotate-12">
+        <Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
+      </div>
+      <div className="absolute bottom-32 left-32 rotate-45">
+        <Shield className="w-10 h-10 fill-neo-muted text-neo-muted" />
+      </div>
+
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative">
+        <div className="neo-container text-center relative z-10">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold mb-6"
+            className="text-4xl md:text-8xl font-black mb-6 uppercase"
           >
-            About WellMed
+            <span className="block -rotate-1">ABOUT</span>
+            <span className="block rotate-1 text-stroke">WELLMED</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
           >
-            Your trusted partner in healthcare, delivering quality medicines to your doorstep since 2020
+            YOUR TRUSTED PARTNER IN HEALTHCARE, DELIVERING QUALITY MEDICINES TO YOUR DOORSTEP SINCE 2020
           </motion.p>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="neo-section bg-white border-y-4 border-neo-ink">
+        <div className="neo-container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <motion.div
@@ -67,10 +85,14 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <Card 
+                  className="p-6 text-center bg-neo-secondary"
+                  rotation={Math.random() > 0.5 ? 1 : -1}
+                >
+                  <div className="text-3xl md:text-5xl font-black text-neo-ink mb-2 -rotate-1">{stat.number}</div>
+                  <div className="text-neo-ink font-bold uppercase text-sm tracking-wide">{stat.label}</div>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -78,92 +100,93 @@ export default function AboutPage() {
       </div>
 
       {/* Mission Section */}
-      <div className="py-16 bg-gradient-to-r from-green-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm">
+      <div className="neo-section bg-neo-muted border-y-4 border-neo-ink">
+        <div className="neo-container">
+          <Card className="p-8 md:p-12 bg-white rotate-1">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
-                <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                  At WellMed, we believe healthcare should be accessible, affordable, and convenient for everyone. 
-                  Our mission is to revolutionize the way people access medicines by providing a seamless online 
-                  platform that connects patients with quality healthcare products.
+                <h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-6 uppercase -rotate-1">OUR MISSION</h2>
+                <p className="text-lg font-bold text-neo-ink mb-6 leading-relaxed uppercase">
+                  AT WELLMED, WE BELIEVE HEALTHCARE SHOULD BE ACCESSIBLE, AFFORDABLE, AND CONVENIENT FOR EVERYONE. 
+                  OUR MISSION IS TO REVOLUTIONIZE THE WAY PEOPLE ACCESS MEDICINES BY PROVIDING A SEAMLESS ONLINE 
+                  PLATFORM THAT CONNECTS PATIENTS WITH QUALITY HEALTHCARE PRODUCTS.
                 </p>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  We are committed to ensuring that every medicine we deliver meets the highest quality standards 
-                  and reaches our customers safely and on time.
+                <p className="text-lg font-bold text-neo-ink leading-relaxed uppercase">
+                  WE ARE COMMITTED TO ENSURING THAT EVERY MEDICINE WE DELIVER MEETS THE HIGHEST QUALITY STANDARDS 
+                  AND REACHES OUR CUSTOMERS SAFELY AND ON TIME.
                 </p>
               </div>
               <div className="relative">
-                <img 
+                <Card className="overflow-hidden rotate-3" hover={false}>
+                  <img 
                   src="https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
                   alt="Our Mission"
-                  className="w-full h-80 object-cover rounded-2xl shadow-lg"
+                    className="w-full h-80 object-cover"
                 />
+                </Card>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
       {/* Values Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Our Values</h2>
+      <div className="neo-section bg-white border-y-4 border-neo-ink">
+        <div className="neo-container">
+          <h2 className="text-3xl md:text-5xl font-black text-center text-neo-ink mb-12 uppercase rotate-1">OUR VALUES</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-8 text-center"
             >
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Quality First</h3>
-              <p className="text-gray-600">We never compromise on the quality of medicines and ensure all products meet international standards.</p>
+              <Card className="p-8 text-center bg-neo-accent rotate-2">
+                <div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 -rotate-12">
+                  <svg className="w-8 h-8 text-neo-ink stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-black text-white mb-4 uppercase">QUALITY FIRST</h3>
+                <p className="text-white font-bold uppercase text-sm">WE NEVER COMPROMISE ON THE QUALITY OF MEDICINES AND ENSURE ALL PRODUCTS MEET INTERNATIONAL STANDARDS.</p>
+              </Card>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-8 text-center"
             >
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Fast Delivery</h3>
-              <p className="text-gray-600">We understand urgency in healthcare and strive to deliver medicines as quickly as possible.</p>
+              <Card className="p-8 text-center bg-neo-secondary -rotate-1">
+                <div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 rotate-12">
+                  <Zap className="w-8 h-8 text-neo-ink stroke-[3px]" />
+                </div>
+                <h3 className="text-xl font-black text-neo-ink mb-4 uppercase">FAST DELIVERY</h3>
+                <p className="text-neo-ink font-bold uppercase text-sm">WE UNDERSTAND URGENCY IN HEALTHCARE AND STRIVE TO DELIVER MEDICINES AS QUICKLY AS POSSIBLE.</p>
+              </Card>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-8 text-center"
             >
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Customer Care</h3>
-              <p className="text-gray-600">Our dedicated support team is available 24/7 to assist you with any healthcare needs.</p>
+              <Card className="p-8 text-center bg-neo-muted rotate-1">
+                <div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 -rotate-6">
+                  <Clock className="w-8 h-8 text-neo-ink stroke-[3px]" />
+                </div>
+                <h3 className="text-xl font-black text-neo-ink mb-4 uppercase">CUSTOMER CARE</h3>
+                <p className="text-neo-ink font-bold uppercase text-sm">OUR DEDICATED SUPPORT TEAM IS AVAILABLE 24/7 TO ASSIST YOU WITH ANY HEALTHCARE NEEDS.</p>
+              </Card>
             </motion.div>
           </div>
         </div>
       </div>
 
       {/* Team Section */}
-      <div className="py-16 bg-gradient-to-r from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Meet Our Team</h2>
+      <div className="neo-section bg-neo-secondary border-y-4 border-neo-ink">
+        <div className="neo-container">
+          <Card className="p-8 md:p-12 bg-white -rotate-1">
+            <h2 className="text-3xl md:text-5xl font-black text-center text-neo-ink mb-12 uppercase rotate-1">MEET OUR TEAM</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {team.map((member, index) => (
                 <motion.div
@@ -173,42 +196,48 @@ export default function AboutPage() {
                   transition={{ delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-lg"
-                  />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-purple-600 font-semibold mb-3">{member.role}</p>
-                  <p className="text-gray-600">{member.description}</p>
+                  <Card className="p-6 bg-neo-muted" rotation={Math.random() > 0.5 ? 1 : -1}>
+                    <div className="w-32 h-32 border-4 border-neo-ink mx-auto mb-6 overflow-hidden rotate-3">
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <h3 className="text-xl font-black text-neo-ink mb-2 uppercase">{member.name}</h3>
+                    <p className="text-neo-accent font-bold mb-3 uppercase text-sm">{member.role}</p>
+                    <p className="text-neo-ink font-bold text-sm uppercase">{member.description}</p>
+                  </Card>
                 </motion.div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="py-16 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="bg-black bg-opacity-10 rounded-2xl p-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Experience Better Healthcare?</h2>
-            <p className="text-xl text-white opacity-90 mb-8">Join thousands of satisfied customers who trust WellMed for their healthcare needs.</p>
+      <div className="neo-section bg-neo-ink border-y-4 border-neo-ink">
+        <div className="neo-container text-center">
+          <Card className="p-8 bg-neo-ink border-white rotate-1" hover={false}>
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 uppercase -rotate-1">READY TO EXPERIENCE BETTER HEALTHCARE?</h2>
+            <p className="text-xl text-white font-bold mb-8 uppercase">JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST WELLMED FOR THEIR HEALTHCARE NEEDS.</p>
             <div className="space-x-4">
               <Link 
                 to="/products"
-                className="bg-white text-purple-600 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors inline-block"
               >
-                Shop Now
+                <Button variant="secondary" size="lg" className="rotate-2">
+                  SHOP NOW
+                </Button>
               </Link>
               <Link 
                 to="/contact"
-                className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-600 transition-colors inline-block"
               >
-                Contact Us
+                <Button variant="outline" size="lg" className="-rotate-2">
+                  CONTACT US
+                </Button>
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </motion.div>

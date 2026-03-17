@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import TrendingCarousel from '../components/TrendingCarousel'
 import HeroCarousel from '../components/HeroCarousel'
-import TopBanner from '../components/TopBanner'
 import Button from '../components/Button'
 import Card from '../components/Card'
 import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -164,108 +163,8 @@ export default function Home() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-neo-canvas min-h-screen">
-      {/* Neo-Brutalist Hero Section */}
-      <div className="relative overflow-hidden bg-neo-canvas">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-neo-grid opacity-20"></div>
-        
-        {/* Floating Decorative Elements */}
-        <div className="absolute top-20 left-10 rotate-12">
-          <Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" />
-        </div>
-        <div className="absolute top-40 right-20 -rotate-12">
-          <Star className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
-        </div>
-        
-        <div className="neo-container neo-section">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="inline-block"
-                >
-                  <span className="neo-badge rotate-1">⚡ EXPRESS DELIVERY</span>
-                </motion.div>
-                
-                <motion.h1 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-6xl md:text-8xl font-black leading-none"
-                >
-                  <span className="block -rotate-1">MEDICINE</span>
-                  <span className="block rotate-1 text-neo-accent">IN 10 MIN</span>
-                </motion.h1>
-                
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-xl font-bold max-w-lg"
-                >
-                  Emergency essentials or daily refills, we've got you covered with authentic medicines at your doorstep.
-                </motion.p>
-              </div>
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-4"
-              >
-                <Button size="lg" className="rotate-1">
-                  ORDER NOW
-                </Button>
-                <Button variant="outline" size="lg" className="-rotate-1">
-                  BROWSE MEDICINES
-                </Button>
-              </motion.div>
-            </div>
-            
-            {/* Right Content - Sticker Chaos */}
-            <div className="relative h-96 lg:h-[500px]">
-              {/* Main Medicine Image */}
-              <Card className="absolute top-10 left-10 rotate-3 z-10" hover={false}>
-                <img 
-                  src="https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
-                  alt="Medicine"
-                  className="w-48 h-32 object-cover"
-                />
-              </Card>
-              
-              {/* Floating Badges */}
-              <div className="absolute top-0 right-10 -rotate-12 z-20">
-                <Card variant="accent" className="p-4" hover={false}>
-                  <div className="text-center">
-                    <Shield className="w-8 h-8 mx-auto mb-2" />
-                    <p className="font-black text-sm">100% AUTHENTIC</p>
-                  </div>
-                </Card>
-              </div>
-              
-              <div className="absolute bottom-20 right-0 rotate-6 z-20">
-                <Card variant="secondary" className="p-4" hover={false}>
-                  <div className="text-center">
-                    <Clock className="w-8 h-8 mx-auto mb-2" />
-                    <p className="font-black text-sm">24/7 SUPPORT</p>
-                  </div>
-                </Card>
-              </div>
-              
-              {/* Background Numbers */}
-              <div className="absolute bottom-0 left-0 text-9xl font-black text-neo-ink opacity-10 -rotate-12">
-                10
-              </div>
-              <div className="absolute top-20 right-20 text-6xl font-black text-neo-accent opacity-20 rotate-12">
-                MIN
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Hero Carousel */}
+      <HeroCarousel />
 
       {/* Neo-Brutalist Flash Sale */}
       <div className="bg-neo-accent border-y-4 border-neo-ink">

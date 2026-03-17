@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { Star, Zap, Shield, Clock } from 'lucide-react';
 
 export default function HelpPage() {
   const [activeCategory, setActiveCategory] = useState('orders');
@@ -110,63 +113,86 @@ export default function HelpPage() {
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }}
-      className="bg-gray-50 min-h-screen"
+      className="bg-neo-canvas min-h-screen relative overflow-hidden"
     >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-neo-grid opacity-20"></div>
+      
+      {/* Floating Decorative Elements */}
+      <div className="absolute top-20 left-10 rotate-12">
+        <Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" />
+      </div>
+      <div className="absolute top-40 right-20 -rotate-12">
+        <Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
+      </div>
+      <div className="absolute bottom-32 left-32 rotate-45">
+        <Shield className="w-10 h-10 fill-neo-muted text-neo-muted" />
+      </div>
+
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative">
+        <div className="neo-container text-center relative z-10">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold mb-6"
+            className="text-4xl md:text-8xl font-black mb-6 uppercase"
           >
-            Help Center
+            <span className="block -rotate-1">HELP</span>
+            <span className="block rotate-1 text-stroke">CENTER</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
           >
-            Find answers to your questions and get the help you need
+            FIND ANSWERS TO YOUR QUESTIONS AND GET THE HELP YOU NEED
           </motion.p>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">Quick Actions</h2>
+      <div className="neo-section bg-white border-y-4 border-neo-ink">
+        <div className="neo-container">
+          <h2 className="text-2xl md:text-4xl font-black text-center text-neo-ink mb-12 uppercase rotate-1">QUICK ACTIONS</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Link to="/orders" className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="font-bold text-gray-900 mb-2">Track Order</h3>
-              <p className="text-gray-600 text-sm">Check your order status</p>
+            <Link to="/orders">
+              <Card className="p-6 text-center bg-neo-secondary rotate-1">
+                <div className="text-4xl mb-4">📦</div>
+                <h3 className="font-black text-neo-ink mb-2 uppercase">TRACK ORDER</h3>
+                <p className="text-neo-ink font-bold text-sm uppercase">CHECK YOUR ORDER STATUS</p>
+              </Card>
             </Link>
-            <Link to="/contact" className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-              <div className="text-4xl mb-4">💬</div>
-              <h3 className="font-bold text-gray-900 mb-2">Live Chat</h3>
-              <p className="text-gray-600 text-sm">Chat with our support team</p>
+            <Link to="/contact">
+              <Card className="p-6 text-center bg-neo-accent -rotate-1">
+                <div className="text-4xl mb-4">💬</div>
+                <h3 className="font-black text-white mb-2 uppercase">LIVE CHAT</h3>
+                <p className="text-white font-bold text-sm uppercase">CHAT WITH OUR SUPPORT TEAM</p>
+              </Card>
             </Link>
-            <Link to="/profile" className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-              <div className="text-4xl mb-4">👤</div>
-              <h3 className="font-bold text-gray-900 mb-2">My Account</h3>
-              <p className="text-gray-600 text-sm">Manage your profile</p>
+            <Link to="/profile">
+              <Card className="p-6 text-center bg-neo-muted rotate-2">
+                <div className="text-4xl mb-4">👤</div>
+                <h3 className="font-black text-neo-ink mb-2 uppercase">MY ACCOUNT</h3>
+                <p className="text-neo-ink font-bold text-sm uppercase">MANAGE YOUR PROFILE</p>
+              </Card>
             </Link>
-            <a href="tel:+911234567890" className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-              <div className="text-4xl mb-4">📞</div>
-              <h3 className="font-bold text-gray-900 mb-2">Call Support</h3>
-              <p className="text-gray-600 text-sm">+91 123 456 7890</p>
+            <a href="tel:+911234567890">
+              <Card className="p-6 text-center bg-white -rotate-2">
+                <div className="text-4xl mb-4">📞</div>
+                <h3 className="font-black text-neo-ink mb-2 uppercase">CALL SUPPORT</h3>
+                <p className="text-neo-ink font-bold text-sm uppercase">+91 123 456 7890</p>
+              </Card>
             </a>
           </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="py-16 bg-gradient-to-r from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">Frequently Asked Questions</h2>
+      <div className="neo-section bg-neo-secondary border-y-4 border-neo-ink">
+        <div className="neo-container">
+          <Card className="p-8 md:p-12 bg-white -rotate-1">
+            <h2 className="text-2xl md:text-4xl font-black text-center text-neo-ink mb-12 uppercase rotate-1">FREQUENTLY ASKED QUESTIONS</h2>
             
             {/* Category Tabs */}
             <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -176,12 +202,12 @@ export default function HelpPage() {
                   onClick={() => setActiveCategory(category.id)}
                   className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all ${
                     activeCategory === category.id
-                      ? 'bg-purple-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'neo-btn-primary'
+                      : 'neo-btn-outline'
                   }`}
                 >
-                  <span>{category.icon}</span>
-                  <span>{category.name}</span>
+                  <span className="text-2xl">{category.icon}</span>
+                  <span className="font-black uppercase text-sm">{category.name}</span>
                 </button>
               ))}
             </div>
@@ -194,34 +220,37 @@ export default function HelpPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6"
                 >
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">{item.question}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+                  <Card className="p-6 bg-neo-muted" rotation={Math.random() > 0.5 ? 1 : -1}>
+                    <h3 className="text-lg font-black text-neo-ink mb-3 uppercase">{item.question}</h3>
+                    <p className="text-neo-ink font-bold leading-relaxed text-sm">{item.answer}</p>
+                  </Card>
                 </motion.div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="py-16 bg-white">
+      <div className="neo-section bg-white border-y-4 border-neo-ink">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Still Need Help?</h2>
-          <p className="text-lg text-gray-600 mb-8">Can't find what you're looking for? Our support team is here to help!</p>
+          <h2 className="text-2xl md:text-4xl font-black text-neo-ink mb-6 uppercase rotate-1">STILL NEED HELP?</h2>
+          <p className="text-lg font-bold text-neo-ink mb-8 uppercase">CAN'T FIND WHAT YOU'RE LOOKING FOR? OUR SUPPORT TEAM IS HERE TO HELP!</p>
           <div className="space-x-4">
             <Link 
               to="/contact"
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all inline-block"
             >
-              Contact Support
+              <Button size="lg" className="rotate-2">
+                CONTACT SUPPORT
+              </Button>
             </Link>
             <a 
               href="mailto:support@wellmed.com"
-              className="border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white font-bold py-3 px-8 rounded-xl transition-all inline-block"
             >
-              Email Us
+              <Button variant="outline" size="lg" className="-rotate-2">
+                EMAIL US
+              </Button>
             </a>
           </div>
         </div>
