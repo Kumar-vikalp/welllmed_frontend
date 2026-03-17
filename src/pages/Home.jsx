@@ -217,7 +217,7 @@ export default function Home() {
         </div>
       </div>
       {/* Lab Tests Section - Redesigned */}
-      <div className="relative min-h-screen w-full text-gray-800 overflow-hidden">
+      <div className="relative min-h-[50vh] w-full text-gray-800 overflow-hidden">
         {/* 1️⃣ Gradient Base */}
         <div
           className="absolute inset-0 z-0"
