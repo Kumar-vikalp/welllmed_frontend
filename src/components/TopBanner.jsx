@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { X, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TopBanner({
-  title = "New Release 🎬",
+  title = "New Release",
   message = "Stream the latest blockbusters now available in 4K HDR quality!",
   ctaText = "Explore Now",
   ctaLink = "#",
@@ -16,53 +16,93 @@ export default function TopBanner({
     if (onDismiss) onDismiss();
   };
 
+  // Animation variants for staggered entry
+  const containerVariants = {
+    hidden: { y: -50, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        duration: 0.5, 
+        ease: "easeOut",
+        when: "beforeChildren", 
+        staggerChildren: 0.1 
+      }
+    },
+    exit: { y: -20, opacity: 0, transition: { duration: 0.2 } }
+  };
+
+  const itemVariants = {
+    hidden: { y: 10, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="relative isolate overflow-hidden bg-gradient-to-r from-primaryBtn/20 to-accentBlue/20 backdrop-blur-sm border border-primaryBtn/30 rounded-2xl mx-4 lg:mx-[120px] mt-4 lg:mt-0"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="relative z-[100] px-4 pt-4"
         >
-          <div
-            aria-hidden="true"
-            className="absolute left-[max(-7rem,calc(50%-52rem))] -z-10 -translate-y-1/2 transform-gpu blur-3xl"
-          >
-            <div
-              style={{
-                clipPath:
-                  "polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-              }}
-              className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-primaryBtn to-accentBlue opacity-30"
-            />
-          </div>
+          <div className="mx-auto max-w-7xl relative overflow-hidden bg-gray-900/95 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
+            
+            {/* Top accent glow line */}
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
 
-          <div className="flex items-center justify-center gap-4 px-2 py-2 sm:px-4 sm:py-3 text-white text-sm relative  bg-gradient-to-l from-[#a21caf] via-[#be185d] to-[#b91c1c]">
-            <div className="flex items-center gap-2 flex-1 min-w-0 justify-center whitespace-nowrap overflow-hidden text-ellipsis">
-              <p className="font-semibold text-xs sm:text-sm truncate">{title}</p>
+            <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
+              
+              <div className="flex items-center gap-3 min-w-0">
+                {/* 1. Animated Icon */}
+                <motion.div variants={itemVariants} className="hidden md:flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                  <Sparkles size={16} />
+                </motion.div>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 overflow-hidden">
+                  {/* 2. Animated Tag */}
+                  <motion.span 
+                    variants={itemVariants}
+                    className="text-[10px] uppercase tracking-[0.15em] font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded w-fit whitespace-nowrap"
+                  >
+                    {title}
+                  </motion.span>
+                  
+                  {/* 3. Animated Message */}
+                  <motion.p 
+                    variants={itemVariants}
+                    className="text-sm text-gray-300 font-medium truncate sm:whitespace-normal"
+                  >
+                    {message}
+                  </motion.p>
+                </div>
+              </div>
 
-              <span className="hidden sm:inline">•</span>
+              <div className="flex items-center gap-3">
+                {/* 4. Animated CTA (Hidden on Mobile) */}
+                <motion.div variants={itemVariants} className="hidden sm:block">
+                  <a
+                    href={ctaLink}
+                    className="group flex items-center gap-2 text-sm font-bold text-white hover:text-purple-300 transition-colors whitespace-nowrap"
+                  >
+                    {ctaText}
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </motion.div>
 
-              <p className="text-xs sm:text-sm truncate">{message}</p>
+                <div className="h-4 w-px bg-white/10 mx-1 hidden sm:block" />
+
+                {/* 5. Dismiss Button (Always Visible) */}
+                <button
+                  onClick={handleDismiss}
+                  className="p-1.5 text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-all active:scale-90"
+                  aria-label="Dismiss"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
-
-            <a
-              href={ctaLink}
-              className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3.5 py-1 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-white/20 transition-all duration-200 border border-white/20 whitespace-nowrap"
-            >
-              {ctaText} <span aria-hidden="true">→</span>
-            </a>
-
-            <button
-              type="button"
-              onClick={handleDismiss}
-              className="flex-shrink-0 p-1.5 sm:p-2 hover:bg-white/10 rounded-lg transition-colors duration-200 ml-2"
-              aria-label="Dismiss"
-            >
-              <X className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-            </button>
           </div>
         </motion.div>
       )}
