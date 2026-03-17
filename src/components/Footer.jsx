@@ -81,19 +81,19 @@ export default function Footer() {
           {/* How to Order */}
           <motion.div variants={itemVariants}>
             <Card className="p-6 bg-neo-accent -rotate-1 h-full" hover={false}>
-              <h3 className="text-2xl font-black text-white mb-6 uppercase rotate-1">HOW TO ORDER</h3>
+              <h3 className="text-2xl font-black  text-neo-ink mb-6 uppercase rotate-1">HOW TO ORDER</h3>
               <ul className="space-y-4">
                 <li className="flex items-start">
                   <span className="neo-badge bg-white text-neo-ink rotate-12 mr-3 mt-1">1</span>
-                  <span className="text-white font-bold text-sm uppercase">SEARCH FOR YOUR MEDICINES</span>
+                  <span className=" text-neo-ink font-bold text-sm uppercase">SEARCH FOR YOUR MEDICINES</span>
                 </li>
                 <li className="flex items-start">
                   <span className="neo-badge bg-white text-neo-ink -rotate-12 mr-3 mt-1">2</span>
-                  <span className="text-white font-bold text-sm uppercase">ADD TO CART AND CHECKOUT</span>
+                  <span className=" text-neo-ink font-bold text-sm uppercase">ADD TO CART AND CHECKOUT</span>
                 </li>
                 <li className="flex items-start">
                   <span className="neo-badge bg-white text-neo-ink rotate-12 mr-3 mt-1">3</span>
-                  <span className="text-white font-bold text-sm uppercase">GET DELIVERED IN 10 MINUTES</span>
+                  <span className=" text-neo-ink font-bold text-sm uppercase">GET DELIVERED IN 10 MINUTES</span>
                 </li>
               </ul>
             </Card>
