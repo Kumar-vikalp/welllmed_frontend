@@ -254,8 +254,8 @@ export default function CartPage() {
                   </div>
                   <div className="bg-black text-white p-4 border-4 border-black">
                     <div className="flex justify-between items-center">
-                      <span className="font-black uppercase tracking-widest">TOTAL</span>
-                      <span className="font-black text-xl sm:text-2xl">{formatPrice(cartTotal)}</span>
+                      <span className="font-white uppercase tracking-widest">TOTAL</span>
+                      <span className="font-white text-xl sm:text-2xl">{formatPrice(cartTotal)}</span>
                     </div>
                   </div>
                 </div>
