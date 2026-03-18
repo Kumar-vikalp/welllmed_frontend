@@ -147,7 +147,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-black text-white mb-4 uppercase">QUALITY FIRST</h3>
-                <p className="text-white font-bold uppercase text-sm">WE NEVER COMPROMISE ON THE QUALITY OF MEDICINES AND ENSURE ALL PRODUCTS MEET INTERNATIONAL STANDARDS.</p>
+                <p className="text-neo-ink font-bold uppercase text-sm">WE NEVER COMPROMISE ON THE QUALITY OF MEDICINES AND ENSURE ALL PRODUCTS MEET INTERNATIONAL STANDARDS.</p>
               </Card>
             </motion.div>
 
@@ -220,7 +220,7 @@ export default function AboutPage() {
         <div className="neo-container text-center">
           <Card className="p-8 bg-neo-ink border-white rotate-1" hover={false}>
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6 uppercase -rotate-1">READY TO EXPERIENCE BETTER HEALTHCARE?</h2>
-            <p className="text-xl text-white font-bold mb-8 uppercase">JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST genx FOR THEIR HEALTHCARE NEEDS.</p>
+            <p className="text-xl text-neo-ink font-bold mb-8 uppercase">JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST genx FOR THEIR HEALTHCARE NEEDS.</p>
             <div className="space-x-4">
               <Link 
                 to="/products"
