@@ -167,7 +167,7 @@ export default function Home() {
       <HeroCarousel />
 
       {/* Neo-Brutalist Flash Sale */}
-      <div className="bg-neo-accent border-y-4 border-neo-ink">
+      {/* <div className="bg-neo-accent border-y-4 border-neo-ink">
         <div className="neo-container py-6">
           <div className="flex items-center justify-center gap-4">
             <Zap className="w-8 h-8 animate-bounce" />
@@ -177,7 +177,7 @@ export default function Home() {
             <Zap className="w-8 h-8 animate-bounce" />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Categories Section with Neo-Brutalist Carousel */}
       <div className="neo-section bg-white border-y-4 border-neo-ink">
