@@ -146,7 +146,7 @@ export default function AboutPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-black text-white mb-4 uppercase">QUALITY FIRST</h3>
+                <h3 className="text-xl font-black text-neo-ink mb-4 uppercase">QUALITY FIRST</h3>
                 <p className="text-neo-ink font-bold uppercase text-sm">WE NEVER COMPROMISE ON THE QUALITY OF MEDICINES AND ENSURE ALL PRODUCTS MEET INTERNATIONAL STANDARDS.</p>
               </Card>
             </motion.div>
