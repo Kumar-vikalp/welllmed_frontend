@@ -55,9 +55,9 @@ export default function Login() {
         <Shield className="w-6 h-6 sm:w-10 sm:h-10 fill-[#C4B5FD] text-[#C4B5FD]" />
       </div>
 
-      <div className="relative z-10 min-h-screen flex">
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
         {/* Left Side - Branding (Desktop) / Hidden on Mobile */}
-        <div className="hidden lg:flex lg:w-1/2 bg-black border-r-4 border-black items-center justify-center p-12">
+        <div className="hidden lg:flex lg:w-1/2 bg-black border-r-8 border-black items-center justify-center p-12">
           <div className="text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +74,7 @@ export default function Login() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-6xl font-black uppercase tracking-tight text-white mb-4"
+              className="text-6xl font-black uppercase tracking-tight text-white mb-4 -rotate-1"
               style={{ WebkitTextStroke: '2px white', color: 'transparent' }}
             >
               WELLMED
@@ -129,7 +129,7 @@ export default function Login() {
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-6">
                 <div className="bg-[#FF6B6B] border-4 border-black p-3 shadow-[6px_6px_0px_0px_#000] rotate-1">
-                  <Pill className="w-8 h-8 stroke-[3px] text-black" />
+                  <Pill className="w-8 h-8 stroke-[3px] text-white" />
                 </div>
                 <span className="text-3xl font-black uppercase tracking-tight text-black">WELLMED</span>
               </div>
@@ -149,7 +149,7 @@ export default function Login() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="font-bold text-black/80 uppercase tracking-wide"
+                className="font-bold text-black uppercase tracking-wide"
               >
                 SIGN IN TO YOUR ACCOUNT
               </motion.p>
@@ -246,7 +246,14 @@ export default function Login() {
                     disabled:opacity-50 disabled:cursor-not-allowed
                     transition-all duration-100 rotate-1"
                 >
-                  {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-white mr-2 animate-spin"></div>
+                      SIGNING IN...
+                    </div>
+                  ) : (
+                    'SIGN IN'
+                  )}
                 </button>
               </form>
             </div>

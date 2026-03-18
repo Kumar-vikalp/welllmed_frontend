@@ -4,43 +4,43 @@ import { Link } from 'react-router-dom'
 export default function GenericInfoPage() {
   const benefits = [
     {
-      title: "Cost-Effective",
-      description: "Generic medicines are typically 20-80% cheaper than branded equivalents",
+      title: "COST-EFFECTIVE",
+      description: "GENERIC MEDICINES ARE TYPICALLY 20-80% CHEAPER THAN BRANDED EQUIVALENTS",
       icon: "💰"
     },
     {
-      title: "Same Quality",
-      description: "Contains the same active ingredients as branded medicines",
+      title: "SAME QUALITY",
+      description: "CONTAINS THE SAME ACTIVE INGREDIENTS AS BRANDED MEDICINES",
       icon: "🔬"
     },
     {
-      title: "FDA Approved",
-      description: "All generic medicines undergo rigorous testing and approval",
+      title: "FDA APPROVED",
+      description: "ALL GENERIC MEDICINES UNDERGO RIGOROUS TESTING AND APPROVAL",
       icon: "✅"
     },
     {
-      title: "Widely Available",
-      description: "Easily accessible at pharmacies and online platforms",
+      title: "WIDELY AVAILABLE",
+      description: "EASILY ACCESSIBLE AT PHARMACIES AND ONLINE PLATFORMS",
       icon: "🏥"
     }
   ]
 
   const faqs = [
     {
-      question: "Are generic medicines as effective as branded ones?",
-      answer: "Yes, generic medicines contain the same active ingredients in the same amounts as branded medicines and are equally effective."
+      question: "ARE GENERIC MEDICINES AS EFFECTIVE AS BRANDED ONES?",
+      answer: "YES, GENERIC MEDICINES CONTAIN THE SAME ACTIVE INGREDIENTS IN THE SAME AMOUNTS AS BRANDED MEDICINES AND ARE EQUALLY EFFECTIVE."
     },
     {
-      question: "Why are generic medicines cheaper?",
-      answer: "Generic manufacturers don't have to repeat expensive clinical trials and marketing costs, allowing them to offer lower prices."
+      question: "WHY ARE GENERIC MEDICINES CHEAPER?",
+      answer: "GENERIC MANUFACTURERS DON'T HAVE TO REPEAT EXPENSIVE CLINICAL TRIALS AND MARKETING COSTS, ALLOWING THEM TO OFFER LOWER PRICES."
     },
     {
-      question: "Are there any differences in side effects?",
-      answer: "Generic medicines have the same side effects as their branded counterparts since they contain identical active ingredients."
+      question: "ARE THERE ANY DIFFERENCES IN SIDE EFFECTS?",
+      answer: "GENERIC MEDICINES HAVE THE SAME SIDE EFFECTS AS THEIR BRANDED COUNTERPARTS SINCE THEY CONTAIN IDENTICAL ACTIVE INGREDIENTS."
     },
     {
-      question: "How can I identify generic medicines?",
-      answer: "Generic medicines are usually labeled with their chemical name rather than a brand name and are often priced lower."
+      question: "HOW CAN I IDENTIFY GENERIC MEDICINES?",
+      answer: "GENERIC MEDICINES ARE USUALLY LABELED WITH THEIR CHEMICAL NAME RATHER THAN A BRAND NAME AND ARE OFTEN PRICED LOWER."
     }
   ]
 
@@ -48,163 +48,263 @@ export default function GenericInfoPage() {
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }}
-      className="container mx-auto px-4 py-8"
+      className="min-h-screen bg-[#FFFDF5]"
     >
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-12 mb-12 text-center text-white">
-        <h1 className="text-5xl font-bold mb-4">Generic Medicines</h1>
-        <p className="text-xl mb-6">Safe, Effective, and Affordable Healthcare Solutions</p>
-        <div className="max-w-3xl mx-auto">
-          <p className="text-lg leading-relaxed">
-            Generic medicines are pharmaceutical products that contain the same active ingredients as branded medicines 
-            but are sold under their chemical names. They offer the same therapeutic benefits at a fraction of the cost.
-          </p>
+      <div className="bg-[#C4B5FD] border-b-8 border-black p-8 sm:p-12 md:p-16 text-center relative overflow-hidden">
+        {/* Background Pattern */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+            backgroundSize: '20px 20px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight mb-6 -rotate-1">
+            GENERIC MEDICINES
+          </h1>
+          <div className="bg-[#FFD93D] border-4 border-black p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] rotate-1 inline-block mb-8">
+            <p className="text-lg sm:text-xl font-black uppercase tracking-wide">
+              SAFE, EFFECTIVE, AND AFFORDABLE HEALTHCARE SOLUTIONS
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000]">
+              <p className="text-base sm:text-lg font-bold uppercase tracking-wide leading-relaxed">
+                GENERIC MEDICINES ARE PHARMACEUTICAL PRODUCTS THAT CONTAIN THE SAME ACTIVE INGREDIENTS AS BRANDED MEDICINES 
+                BUT ARE SOLD UNDER THEIR CHEMICAL NAMES. THEY OFFER THE SAME THERAPEUTIC BENEFITS AT A FRACTION OF THE COST.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* What are Generic Medicines */}
-      <div className="mb-16">
-        <h2 className="text-4xl font-bold mb-8 text-center">What are Generic Medicines?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="text-lg leading-relaxed mb-6">
-              Generic medicines are copies of brand-name drugs that have exactly the same dosage, intended use, 
-              effects, side effects, route of administration, risks, safety, and strength as the original drug.
-            </p>
-            <p className="text-lg leading-relaxed mb-6">
-              They are developed after the patent protection of the original drug expires, typically 20 years 
-              after the original drug was first patented.
-            </p>
-            <Link 
-              to="/products?generic=true" 
-              className="inline-block bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-            >
-              Shop Generic Medicines
-            </Link>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-4 text-teal-400">Key Facts</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <span className="text-green-400 mr-2">✓</span>
-                <span>Same active ingredients as branded drugs</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-400 mr-2">✓</span>
-                <span>Meet the same quality standards</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-400 mr-2">✓</span>
-                <span>Undergo rigorous testing</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-400 mr-2">✓</span>
-                <span>Approved by regulatory authorities</span>
-              </li>
-            </ul>
+      <div className="py-12 sm:py-16 md:py-24 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 rotate-1">
+            WHAT ARE GENERIC MEDICINES?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000] -rotate-1">
+              <p className="text-base sm:text-lg font-bold leading-relaxed mb-6 uppercase tracking-wide">
+                GENERIC MEDICINES ARE COPIES OF BRAND-NAME DRUGS THAT HAVE EXACTLY THE SAME DOSAGE, INTENDED USE, 
+                EFFECTS, SIDE EFFECTS, ROUTE OF ADMINISTRATION, RISKS, SAFETY, AND STRENGTH AS THE ORIGINAL DRUG.
+              </p>
+              <p className="text-base sm:text-lg font-bold leading-relaxed mb-6 uppercase tracking-wide">
+                THEY ARE DEVELOPED AFTER THE PATENT PROTECTION OF THE ORIGINAL DRUG EXPIRES, TYPICALLY 20 YEARS 
+                AFTER THE ORIGINAL DRUG WAS FIRST PATENTED.
+              </p>
+              <Link 
+                to="/products?generic=true"
+                className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+                  text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center
+                  shadow-[6px_6px_0px_0px_#000]
+                  hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+                  active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+                  transition-all duration-100"
+              >
+                SHOP GENERIC MEDICINES
+              </Link>
+            </div>
+            <div className="bg-black border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000] text-white rotate-1">
+              <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-6 text-[#FFD93D]">KEY FACTS</h3>
+              <div className="space-y-4">
+                <div className="flex items-start border-b-2 border-white pb-3">
+                  <span className="text-[#C4B5FD] mr-3 font-black text-xl">✓</span>
+                  <span className="font-bold uppercase tracking-wide">SAME ACTIVE INGREDIENTS AS BRANDED DRUGS</span>
+                </div>
+                <div className="flex items-start border-b-2 border-white pb-3">
+                  <span className="text-[#C4B5FD] mr-3 font-black text-xl">✓</span>
+                  <span className="font-bold uppercase tracking-wide">MEET THE SAME QUALITY STANDARDS</span>
+                </div>
+                <div className="flex items-start border-b-2 border-white pb-3">
+                  <span className="text-[#C4B5FD] mr-3 font-black text-xl">✓</span>
+                  <span className="font-bold uppercase tracking-wide">UNDERGO RIGOROUS TESTING</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-[#C4B5FD] mr-3 font-black text-xl">✓</span>
+                  <span className="font-bold uppercase tracking-wide">APPROVED BY REGULATORY AUTHORITIES</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Benefits Section */}
-      <div className="mb-16">
-        <h2 className="text-4xl font-bold mb-12 text-center">Benefits of Generic Medicines</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {benefits.map((benefit, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-gray-800 rounded-lg p-6 text-center"
-            >
-              <div className="text-4xl mb-4">{benefit.icon}</div>
-              <h3 className="text-xl font-bold mb-3 text-teal-400">{benefit.title}</h3>
-              <p className="text-gray-300">{benefit.description}</p>
-            </motion.div>
-          ))}
+      <div className="bg-[#FFD93D] border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 -rotate-1">
+            BENEFITS OF GENERIC MEDICINES
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white border-4 border-black p-6 text-center shadow-[6px_6px_0px_0px_#000]
+                  hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#000] transition-all duration-200"
+                style={{ transform: `rotate(${Math.random() > 0.5 ? 1 : -1}deg)` }}
+              >
+                <div className="text-4xl mb-4 bg-[#C4B5FD] border-4 border-black w-16 h-16 mx-auto flex items-center justify-center">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-3">{benefit.title}</h3>
+                <p className="font-bold text-sm uppercase tracking-wide leading-relaxed">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Comparison Table */}
-      <div className="mb-16">
-        <h2 className="text-4xl font-bold mb-8 text-center">Generic vs Branded Medicines</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full bg-gray-800 rounded-lg overflow-hidden">
-            <thead className="bg-teal-600">
-              <tr>
-                <th className="px-6 py-4 text-left">Aspect</th>
-                <th className="px-6 py-4 text-left">Generic Medicines</th>
-                <th className="px-6 py-4 text-left">Branded Medicines</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-gray-700">
-                <td className="px-6 py-4 font-semibold">Active Ingredients</td>
-                <td className="px-6 py-4 text-green-400">Same as branded</td>
-                <td className="px-6 py-4">Original formulation</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="px-6 py-4 font-semibold">Effectiveness</td>
-                <td className="px-6 py-4 text-green-400">Equally effective</td>
-                <td className="px-6 py-4">Proven effectiveness</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="px-6 py-4 font-semibold">Price</td>
-                <td className="px-6 py-4 text-green-400">20-80% cheaper</td>
-                <td className="px-6 py-4 text-red-400">Higher cost</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="px-6 py-4 font-semibold">Availability</td>
-                <td className="px-6 py-4 text-green-400">Widely available</td>
-                <td className="px-6 py-4">Brand dependent</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-semibold">Regulatory Approval</td>
-                <td className="px-6 py-4 text-green-400">FDA/WHO approved</td>
-                <td className="px-6 py-4 text-green-400">FDA/WHO approved</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="py-12 sm:py-16 md:py-24 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 rotate-1">
+            GENERIC VS BRANDED MEDICINES
+          </h2>
+          <div className="overflow-x-auto">
+            <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden min-w-[600px]">
+              <div className="bg-[#FF6B6B] border-b-4 border-black">
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <h3 className="font-black uppercase tracking-widest text-sm text-white">ASPECT</h3>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <h3 className="font-black uppercase tracking-widest text-sm text-white">GENERIC MEDICINES</h3>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <h3 className="font-black uppercase tracking-widest text-sm text-white">BRANDED MEDICINES</h3>
+                  </div>
+                </div>
+              </div>
+              <div className="divide-y-4 divide-black">
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]">
+                    <p className="font-black uppercase tracking-wide text-sm">ACTIVE INGREDIENTS</p>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">SAME AS BRANDED</p>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <p className="font-bold text-sm">ORIGINAL FORMULATION</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]">
+                    <p className="font-black uppercase tracking-wide text-sm">EFFECTIVENESS</p>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">EQUALLY EFFECTIVE</p>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <p className="font-bold text-sm">PROVEN EFFECTIVENESS</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]">
+                    <p className="font-black uppercase tracking-wide text-sm">PRICE</p>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">20-80% CHEAPER</p>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <p className="font-bold text-sm bg-[#FF6B6B] text-white border-2 border-black px-2 py-1 inline-block">HIGHER COST</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]">
+                    <p className="font-black uppercase tracking-wide text-sm">AVAILABILITY</p>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">WIDELY AVAILABLE</p>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <p className="font-bold text-sm">BRAND DEPENDENT</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-0">
+                  <div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]">
+                    <p className="font-black uppercase tracking-wide text-sm">REGULATORY APPROVAL</p>
+                  </div>
+                  <div className="p-4 sm:p-6 border-r-4 border-black">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">FDA/WHO APPROVED</p>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block">FDA/WHO APPROVED</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="mb-16">
-        <h2 className="text-4xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
-        <div className="space-y-6">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-gray-800 rounded-lg p-6"
-            >
-              <h3 className="text-xl font-bold mb-3 text-teal-400">{faq.question}</h3>
-              <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
-            </motion.div>
-          ))}
+      <div className="bg-[#C4B5FD] border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 -rotate-1">
+            FREQUENTLY ASKED QUESTIONS
+          </h2>
+          <div className="space-y-6">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000]
+                  hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#000] transition-all duration-200"
+                style={{ transform: `rotate(${Math.random() > 0.5 ? 0.5 : -0.5}deg)` }}
+              >
+                <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4">{faq.question}</h3>
+                <p className="font-bold leading-relaxed uppercase tracking-wide text-sm sm:text-base">{faq.answer}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-teal-600 to-blue-600 rounded-lg p-12 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4">Ready to Save on Your Medicines?</h2>
-        <p className="text-xl mb-8">Explore our wide range of generic medicines and start saving today!</p>
-        <div className="space-x-4">
-          <Link 
-            to="/products" 
-            className="inline-block bg-white text-teal-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Browse All Products
-          </Link>
-          <Link 
-            to="/products?trending=true" 
-            className="inline-block border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-teal-600 transition-colors"
-          >
-            View Trending
-          </Link>
+      <div className="bg-black border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8 text-white">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight mb-6 rotate-1">
+            READY TO SAVE ON YOUR MEDICINES?
+          </h2>
+          <div className="bg-[#FFD93D] border-4 border-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_#fff] -rotate-1 inline-block mb-8">
+            <p className="text-lg sm:text-xl font-black uppercase tracking-wide text-black">
+              EXPLORE OUR WIDE RANGE OF GENERIC MEDICINES AND START SAVING TODAY!
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              to="/products"
+              className="bg-[#FFD93D] border-4 border-white font-black uppercase tracking-widest 
+                text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center text-black
+                shadow-[6px_6px_0px_0px_#fff]
+                hover:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[3px] hover:translate-y-[3px]
+                active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+                transition-all duration-100"
+            >
+              BROWSE ALL PRODUCTS
+            </Link>
+            <Link 
+              to="/products?trending=true"
+              className="bg-white border-4 border-white font-black uppercase tracking-widest 
+                text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center text-black
+                shadow-[6px_6px_0px_0px_#fff]
+                hover:bg-[#C4B5FD] hover:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[3px] hover:translate-y-[3px]
+                active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+                transition-all duration-100"
+            >
+              VIEW TRENDING
+            </Link>
+          </div>
         </div>
       </div>
     </motion.div>
