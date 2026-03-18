@@ -27,49 +27,49 @@ export default function Home() {
   const categories = useMemo(() => [
     {
       name: 'Fever & Pain',
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/1.png',
       count: 25,
       color: 'bg-neo-accent'
     },
     {
       name: 'Allergy & Cold',
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/2.png',
       count: 18,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Digestive Health',
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/3.png',
       count: 22,
       color: 'bg-neo-muted'
     },
     {
       name: 'Heart & BP',
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/4.png',
       count: 15,
       color: 'bg-neo-accent'
     },
     {
       name: 'Vitamins',
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/5.png',
       count: 30,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Antibiotics',
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/6.png',
       count: 12,
       color: 'bg-neo-muted'
     },
     {
       name: 'Skin Care',
-      icon: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/7.png',
       count: 20,
       color: 'bg-neo-accent'
     },
     {
       name: 'Women\'s Health',
-      icon: 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/8.png',
       count: 16,
       color: 'bg-neo-secondary'
     }
@@ -237,9 +237,9 @@ export default function Home() {
                           <h3 className="text-lg font-black uppercase text-center leading-tight">
                             {category.name}
                           </h3>
-                          <p className="text-sm font-bold text-center mt-1">
+                          {/* <p className="text-sm font-bold text-center mt-1">
                             {category.count} ITEMS
-                          </p>
+                          </p> */}
                         </div>
                       </div>
                     </div>
