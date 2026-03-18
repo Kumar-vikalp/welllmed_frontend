@@ -115,8 +115,8 @@ export default function CheckoutPage() {
                 {/* UPI Option */}
                 <label
                   className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'UPI'
-                      ? 'bg-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
-                      : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                      ? 'bg-black text-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white text-black hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
                     }`}
                 >
                   <input
@@ -127,17 +127,19 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('UPI')}
                     className="sr-only"
                   />
-                  <div className="w-6 h-6 border-4 border-black mr-4 flex items-center justify-center">
-                    {paymentMethod === 'UPI' && <div className="w-2 h-2 bg-black"></div>}
+                  {/* The Radio Circle: Border changes to white when selected */}
+                  <div className={`w-6 h-6 border-4 mr-4 flex items-center justify-center ${paymentMethod === 'UPI' ? 'border-white' : 'border-black'}`}>
+                    {/* The Dot: Turns white when selected */}
+                    {paymentMethod === 'UPI' && <div className="w-2 h-2 bg-white"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide text-black">UPI PAYMENT</span>
+                  <span className="text-lg font-black uppercase tracking-wide">UPI PAYMENT</span>
                 </label>
 
                 {/* COD Option */}
                 <label
                   className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'COD'
-                      ? 'bg-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
-                      : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                      ? 'bg-black text-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white text-black hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
                     }`}
                 >
                   <input
@@ -148,10 +150,10 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('COD')}
                     className="sr-only"
                   />
-                  <div className="w-6 h-6 border-4 border-black mr-4 flex items-center justify-center">
-                    {paymentMethod === 'COD' && <div className="w-2 h-2 bg-black"></div>}
+                  <div className={`w-6 h-6 border-4 mr-4 flex items-center justify-center ${paymentMethod === 'COD' ? 'border-white' : 'border-black'}`}>
+                    {paymentMethod === 'COD' && <div className="w-2 h-2 bg-white"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide text-black">CASH ON DELIVERY</span>
+                  <span className="text-lg font-black uppercase tracking-wide">CASH ON DELIVERY</span>
                 </label>
               </div>
             </div>
@@ -191,8 +193,8 @@ export default function CheckoutPage() {
                   </div>
                   <div className="bg-black text-white p-4 border-4 border-black">
                     <div className="flex justify-between items-center">
-                      <span className="font-black uppercase tracking-widest text-xl">TOTAL</span>
-                      <span className="font-black text-2xl">{formatPrice(cartTotal)}</span>
+                      <span className="text-white uppercase tracking-widest text-xl">TOTAL</span>
+                      <span className="text-white text-2xl">{formatPrice(cartTotal)}</span>
                     </div>
                   </div>
                 </div>
