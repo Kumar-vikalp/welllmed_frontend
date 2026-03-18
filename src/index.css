@@ -4,7 +4,7 @@
 
 /* Neo-brutalist global styles */
 body {
-  background: #FFFDF5; /* Neo canvas color */
+  background-color: #FFFDF5;
   font-family: 'Space Grotesk', system-ui, sans-serif;
   min-height: 100vh;
 }
