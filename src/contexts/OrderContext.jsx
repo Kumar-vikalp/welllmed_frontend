@@ -16,7 +16,18 @@ export function OrderProvider({ children }) {
     try {
       setLoading(true);
       const response = await api.get('/orders/');
-      const ordersData = Array.isArray(response.data) ? response.data : [response.data];
+      
+      // Handle different response formats
+      let ordersData = [];
+      if (response.data) {
+        if (Array.isArray(response.data)) {
+          ordersData = response.data;
+        } else if (response.data.results && Array.isArray(response.data.results)) {
+          ordersData = response.data.results;
+        } else if (typeof response.data === 'object') {
+          ordersData = [response.data];
+        }
+      }
 
       const transformedOrders = ordersData.map(order => ({
         orderId: order.order_id,
@@ -38,6 +49,7 @@ export function OrderProvider({ children }) {
       setOrders(transformedOrders);
     } catch (error) {
       console.error('Failed to fetch orders', error);
+      // Set empty array on error instead of throwing
       setOrders([]);
     } finally {
       setLoading(false);
