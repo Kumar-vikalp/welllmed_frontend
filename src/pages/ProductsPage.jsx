@@ -81,11 +81,11 @@ export default function ProductsPage() {
   return (
     <>
       <SEO 
-        title="Buy Medicines Online - Best Prices & Fast Delivery | WellMed"
+        title="Buy Medicines Online - Best Prices & Fast Delivery | genx"
         description="Buy medicines online at best prices with free home delivery. Authentic medicines from top brands. Order now for fast delivery."
         keywords="buy medicine online, pharmacy, medicines, healthcare, online pharmacy, prescription drugs"
         type="website"
-        link="https://wellmed.com/products"
+        link="https://genx.com/products"
       />
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-50 min-h-screen">
       {/* Header Section */}

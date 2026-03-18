@@ -62,7 +62,7 @@ export default function AboutPage() {
             className="text-4xl md:text-8xl font-black mb-6 uppercase"
           >
             <span className="block -rotate-1">ABOUT</span>
-            <span className="block rotate-1 text-stroke">WELLMED</span>
+            <span className="block rotate-1 text-stroke">genx</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -107,7 +107,7 @@ export default function AboutPage() {
               <div>
                 <h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-6 uppercase -rotate-1">OUR MISSION</h2>
                 <p className="text-lg font-bold text-neo-ink mb-6 leading-relaxed uppercase">
-                  AT WELLMED, WE BELIEVE HEALTHCARE SHOULD BE ACCESSIBLE, AFFORDABLE, AND CONVENIENT FOR EVERYONE. 
+                  AT genx, WE BELIEVE HEALTHCARE SHOULD BE ACCESSIBLE, AFFORDABLE, AND CONVENIENT FOR EVERYONE. 
                   OUR MISSION IS TO REVOLUTIONIZE THE WAY PEOPLE ACCESS MEDICINES BY PROVIDING A SEAMLESS ONLINE 
                   PLATFORM THAT CONNECTS PATIENTS WITH QUALITY HEALTHCARE PRODUCTS.
                 </p>
@@ -220,7 +220,7 @@ export default function AboutPage() {
         <div className="neo-container text-center">
           <Card className="p-8 bg-neo-ink border-white rotate-1" hover={false}>
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6 uppercase -rotate-1">READY TO EXPERIENCE BETTER HEALTHCARE?</h2>
-            <p className="text-xl text-white font-bold mb-8 uppercase">JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST WELLMED FOR THEIR HEALTHCARE NEEDS.</p>
+            <p className="text-xl text-white font-bold mb-8 uppercase">JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST genx FOR THEIR HEALTHCARE NEEDS.</p>
             <div className="space-x-4">
               <Link 
                 to="/products"

@@ -104,7 +104,7 @@ export default function HelpPage() {
       },
       {
         question: 'I\'m not receiving notifications',
-        answer: 'Check your notification settings in the app and ensure notifications are enabled for WellMed in your device settings.'
+        answer: 'Check your notification settings in the app and ensure notifications are enabled for genx in your device settings.'
       }
     ]
   };
@@ -246,7 +246,7 @@ export default function HelpPage() {
               </Button>
             </Link>
             <a 
-              href="mailto:support@wellmed.com"
+              href="mailto:support@genx.com"
             >
               <Button variant="outline" size="lg" className="-rotate-2">
                 EMAIL US

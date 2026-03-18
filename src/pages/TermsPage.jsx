@@ -6,11 +6,11 @@ export default function TermsPage() {
   const sections = [
     {
       title: "Acceptance of Terms",
-      content: "By accessing and using WellMed's services, you accept and agree to be bound by the terms and provision of this agreement. These terms apply to all visitors, users, and others who access or use the service."
+      content: "By accessing and using genx's services, you accept and agree to be bound by the terms and provision of this agreement. These terms apply to all visitors, users, and others who access or use the service."
     },
     {
       title: "Use License",
-      content: "Permission is granted to temporarily download one copy of the materials on WellMed's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title."
+      content: "Permission is granted to temporarily download one copy of the materials on genx's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title."
     },
     {
       title: "Medical Disclaimer",
@@ -38,7 +38,7 @@ export default function TermsPage() {
     },
     {
       title: "Limitation of Liability",
-      content: "WellMed shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+      content: "genx shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
     },
     {
       title: "Changes to Terms",
@@ -119,7 +119,7 @@ export default function TermsPage() {
             <p className="text-xl text-neo-ink font-bold mb-8 uppercase">CONTACT US FOR CLARIFICATION OR ASSISTANCE</p>
             <div className="space-x-4">
               <a 
-                href="mailto:legal@wellmed.com"
+                href="mailto:legal@genx.com"
                 className="bg-neo-accent border-4 border-neo-ink text-neo-ink font-black uppercase tracking-widest text-sm px-6 py-3 shadow-neo btn-push hover:bg-red-500 transition-colors duration-100 inline-block"
               >
                 EMAIL LEGAL TEAM

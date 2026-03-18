@@ -52,7 +52,7 @@ export default function Footer() {
                 <div className="w-12 h-12 bg-neo-ink border-4 border-neo-ink flex items-center justify-center -rotate-3">
                   <span className="text-neo-secondary font-black text-2xl">W</span>
                 </div>
-                <span className="text-3xl font-black uppercase text-neo-ink -rotate-1">WellMed</span>
+                <span className="text-3xl font-black uppercase text-neo-ink -rotate-1">genx</span>
               </Link>
               <p className="text-neo-ink font-bold text-sm mb-6 leading-relaxed">
                 YOUR TRUSTED ONLINE PHARMACY FOR QUALITY MEDICINES AT AFFORDABLE PRICES. 
@@ -121,7 +121,7 @@ export default function Footer() {
               <h3 className="text-2xl font-black text-neo-ink mb-6 uppercase rotate-1">SUPPORT & LEGAL</h3>
               <ul className="space-y-3">
                 <li><a href="tel:+911234567890" className="text-neo-ink hover:text-white hover:bg-neo-accent hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold text-sm uppercase">📞 +91 123 456 7890</a></li>
-                <li><a href="mailto:support@wellmed.com" className="text-neo-ink hover:text-white hover:bg-neo-accent hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold text-sm uppercase">✉️ SUPPORT@WELLMED.COM</a></li>
+                <li><a href="mailto:support@genx.com" className="text-neo-ink hover:text-white hover:bg-neo-accent hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold text-sm uppercase">✉️ SUPPORT@genx.COM</a></li>
                 <li><Link to="/help" className="text-neo-ink hover:text-white hover:bg-neo-accent hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold text-sm uppercase">❓ HELP CENTER</Link></li>
                 <li><Link to="/contact" className="text-neo-ink hover:text-white hover:bg-neo-accent hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold text-sm uppercase">💬 CONTACT US</Link></li>
               </ul>
@@ -137,7 +137,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <Card className="p-4 bg-neo-secondary rotate-1 mb-4 md:mb-0" hover={false}>
               <p className="text-neo-ink font-black text-sm uppercase">
-                &copy; 2025 WELLMED. ALL RIGHTS RESERVED. | LICENSED ONLINE PHARMACY
+                &copy; 2025 genx. ALL RIGHTS RESERVED. | LICENSED ONLINE PHARMACY
               </p>
             </Card>
             <div className="flex items-center space-x-4">
@@ -155,7 +155,7 @@ export default function Footer() {
             <Card className="p-6 bg-neo-ink border-white -rotate-1" hover={false}>
               <p className=" text-neo-ink font-bold text-sm leading-relaxed uppercase tracking-wide">
                 DISCLAIMER: THIS WEBSITE IS FOR INFORMATIONAL PURPOSES ONLY. ALWAYS CONSULT WITH A HEALTHCARE PROFESSIONAL BEFORE TAKING ANY MEDICATION.
-                WELLMED IS COMMITTED TO PROVIDING SAFE, EFFECTIVE, AND AFFORDABLE HEALTHCARE SOLUTIONS.
+                genx IS COMMITTED TO PROVIDING SAFE, EFFECTIVE, AND AFFORDABLE HEALTHCARE SOLUTIONS.
               </p>
             </Card>
           </motion.div>

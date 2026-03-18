@@ -47,7 +47,7 @@ export default function ContactPage() {
         </svg>
       ),
       title: 'Email',
-      details: ['support@wellmed.com', 'orders@wellmed.com'],
+      details: ['support@genx.com', 'orders@genx.com'],
       description: 'We respond within 2 hours'
     },
     {

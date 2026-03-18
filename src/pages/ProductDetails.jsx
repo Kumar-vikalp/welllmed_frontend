@@ -114,11 +114,11 @@ export default function ProductDetails() {
   return (
     <>
       <SEO 
-        title={product ? `${product.name} - Buy Online at Best Price | WellMed` : 'Product Details | WellMed'}
+        title={product ? `${product.name} - Buy Online at Best Price | genx` : 'Product Details | genx'}
         description={product ? `Buy ${product.name} by ${product.company} online at best price. ${product.description}. Free delivery, authentic medicines.` : 'Buy medicines online at best prices with free delivery'}
         keywords={product ? `${product.name}, ${product.company}, ${product.disease_category}, buy medicine online, pharmacy` : 'medicine, pharmacy, online medicine'}
         type="product"
-        link={`https://wellmed.com/product/${slug}`}
+        link={`https://genx.com/product/${slug}`}
       />
       <Toast message={toast.message} type={toast.type} />
       <motion.div

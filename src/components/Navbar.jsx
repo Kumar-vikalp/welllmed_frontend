@@ -85,7 +85,7 @@ export default function Navbar() {
               <div className="w-12 h-12 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3">
                 <span className="font-black text-2xl">W</span>
               </div>
-              <span className="text-3xl font-black uppercase -rotate-1">WellMed</span>
+              <span className="text-3xl font-black uppercase -rotate-1">genx</span>
             </Link>
             
             {/* Search Bar */}
@@ -215,7 +215,7 @@ export default function Navbar() {
                   <div className="w-10 h-10 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3">
                     <span className="font-black text-xl">W</span>
                   </div>
-                  <span className="text-2xl font-black uppercase -rotate-1">WellMed</span>
+                  <span className="text-2xl font-black uppercase -rotate-1">genx</span>
                 </Link>
 
                 <div className="flex items-center space-x-4">
@@ -279,7 +279,7 @@ export default function Navbar() {
                   <div className="w-10 h-10 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3">
                     <span className="font-black text-xl">W</span>
                   </div>
-                  <span className="text-2xl font-black uppercase -rotate-1">WellMed</span>
+                  <span className="text-2xl font-black uppercase -rotate-1">genx</span>
                 </Link>
 
                 <div className="flex items-center space-x-4">

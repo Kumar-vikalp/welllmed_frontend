@@ -130,7 +130,7 @@ export default function Signup() {
                 <div className="bg-[#FFD93D] border-4 border-black p-3 shadow-[6px_6px_0px_0px_#000] -rotate-1">
                   <Pill className="w-8 h-8 stroke-[3px] text-black" />
                 </div>
-                <span className="text-3xl font-black uppercase tracking-tight text-black">WELLMED</span>
+                <span className="text-3xl font-black uppercase tracking-tight text-black">genx</span>
               </div>
             </div>
 
@@ -142,7 +142,7 @@ export default function Signup() {
                 transition={{ delay: 0.2 }}
                 className="text-3xl sm:text-4xl font-black mb-4 uppercase tracking-tight text-black rotate-1"
               >
-                JOIN WELLMED!
+                JOIN genx!
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -399,7 +399,7 @@ export default function Signup() {
               className="text-6xl font-black uppercase tracking-tight text-white mb-4"
               style={{ WebkitTextStroke: '2px white', color: 'transparent' }}
             >
-              WELLMED
+              genx
             </motion.h1>
             
             <motion.p

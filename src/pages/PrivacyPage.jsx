@@ -119,7 +119,7 @@ export default function PrivacyPage() {
             <p className="text-xl text-neo-ink font-bold mb-8 uppercase">CONTACT OUR DATA PROTECTION TEAM</p>
             <div className="space-x-4">
               <a 
-                href="mailto:privacy@wellmed.com"
+                href="mailto:privacy@genx.com"
                 className="bg-neo-accent border-4 border-neo-ink text-white font-black uppercase tracking-widest text-sm px-6 py-3 shadow-neo btn-push hover:bg-red-500 transition-colors duration-100 inline-block"
               >
                 EMAIL PRIVACY TEAM

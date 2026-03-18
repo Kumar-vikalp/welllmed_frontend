@@ -557,7 +557,7 @@ export default function Home() {
         <div className="neo-container">
           <Card className="p-8 bg-white rotate-1">
             <h2 className="text-3xl md:text-4xl font-black text-center mb-12 uppercase -rotate-1">
-              HOW WELLMED WORKS
+              HOW genx WORKS
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <motion.div

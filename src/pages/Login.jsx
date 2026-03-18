@@ -77,7 +77,7 @@ export default function Login() {
               className="text-6xl font-black uppercase tracking-tight text-white mb-4 -rotate-1"
               style={{ WebkitTextStroke: '2px white', color: 'transparent' }}
             >
-              WELLMED
+              genx
             </motion.h1>
             
             <motion.p
@@ -131,7 +131,7 @@ export default function Login() {
                 <div className="bg-[#FF6B6B] border-4 border-black p-3 shadow-[6px_6px_0px_0px_#000] rotate-1">
                   <Pill className="w-8 h-8 stroke-[3px] text-white" />
                 </div>
-                <span className="text-3xl font-black uppercase tracking-tight text-black">WELLMED</span>
+                <span className="text-3xl font-black uppercase tracking-tight text-black">genx</span>
               </div>
             </div>
 
@@ -287,7 +287,7 @@ export default function Login() {
             >
               <div className="bg-[#C4B5FD] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] rotate-1">
                 <h3 className="font-black uppercase tracking-widest text-sm text-center mb-4 -rotate-1">
-                  WHY CHOOSE WELLMED?
+                  WHY CHOOSE genx?
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="text-center">

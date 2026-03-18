@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
           <Link to="/" className="inline-block mb-6">
             <div className="bg-[#FFD93D] border-4 border-black p-4 shadow-[6px_6px_0px_0px_#000] -rotate-1">
               <span className="text-3xl sm:text-4xl font-black uppercase tracking-tight">
-                WELLMED
+                genx
               </span>
             </div>
           </Link>
