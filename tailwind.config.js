@@ -13,13 +13,50 @@ export default {
         sans: ['Space Grotesk', 'system-ui', 'sans-serif'], // Make Space Grotesk the default
       },
       colors: {
-        // Neo-brutalism core palette
+        // Neo-brutalism extended palette
         'neo': {
-          'canvas': '#FFFDF5',    // Cream background
-          'ink': '#000000',       // Pure black
-          'accent': '#FF6B6B',    // Hot red
-          'secondary': '#FFD93D', // Vivid yellow
-          'muted': '#C4B5FD',     // Soft violet
+          // Core
+          'canvas': '#FFFDF5',
+          'ink': '#000000',
+          'accent': '#FF6B6B',
+          'secondary': '#FFD93D',
+          'muted': '#C4B5FD',
+
+          // Pastel layer (soft brutal contrast)
+          'mint': '#DAF5F0',
+          'sage': '#B5D2AD',
+          'pastelYellow': '#FDFD96',
+          'peach': '#F8D6B3',
+          'lavenderPink': '#FCDFFF',
+          'lightViolet': '#E3DFF2',
+
+          // Fresh / vibrant
+          'aqua': '#A7DBD8',
+          'lime': '#BAFCA2',
+          'gold': '#FFDB58',
+          'coral': '#FFA07A',
+          'pink': '#FFC0CB',
+          'purple': '#C4A1FF',
+
+          // Sky / nature tones
+          'sky': '#87CEEB',
+          'lightGreen': '#90EE90',
+          'sun': '#F4D738',
+
+          // Strong accents
+          'orange': '#FF7A5C',
+          'hotPink': '#FF69B4',
+          'deepPurple': '#9723C9',
+
+          // Cool tones
+          'coolBlue': '#69D2E7',
+          'forest': '#7FBC8C',
+          'amber': '#E3A018',
+
+          // Reusable highlight variants
+          'accentAlt': '#FF6B6B',
+          'violetAlt': '#A388EE',
+          'pinkSoft': '#FFB2EF',
         },
         // Keep existing colors for gradual migration
         primary: {
@@ -120,7 +157,7 @@ export default {
     },
   },
   plugins: [
-    plugin(function({ addUtilities, theme }) {
+    plugin(function ({ addUtilities, theme }) {
       const newUtilities = {
         // Text stroke utilities for neo-brutalist display text
         '.text-stroke': {
