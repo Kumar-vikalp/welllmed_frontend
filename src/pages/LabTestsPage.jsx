@@ -1,16 +1,37 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
+import api from '../api/axiosConfig';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import Toast from '../components/Toast';
+import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight, Calendar, MapPin, Phone, Mail } from 'lucide-react';
 
 export default function LabTestsPage() {
+  const navigate = useNavigate();
+  const { user } = useUser();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [dailyOffers, setDailyOffers] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState({ message: '', type: 'info' });
+  
   const [formData, setFormData] = useState({
-    name: '',
+    patient_name: '',
+    patient_age: '',
+    patient_gender: 'male',
     phone: '',
     email: '',
-    address: '',
-    preferredDate: '',
-    preferredTime: ''
+    address_line: '',
+    city: '',
+    pincode: '',
+    preferred_date: '',
+    preferred_slot: '08:00-10:00',
+    amount: ''
   });
 
   const bannerSlides = [
@@ -31,120 +52,187 @@ export default function LabTestsPage() {
     }
   ];
 
-  const doctorCreatedTests = [
-    { name: 'Full Body Checkup', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=100&h=100&fit=crop', link: '/lab-tests/full-body' },
-    { name: 'Diabetes', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=100&h=100&fit=crop', link: '/lab-tests/diabetes' },
-    { name: "Women's Health", icon: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop', link: '/lab-tests/womens-health' },
-    { name: 'Thyroid', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&h=100&fit=crop', link: '/lab-tests/thyroid' },
-    { name: 'Vitamin', icon: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=100&h=100&fit=crop', link: '/lab-tests/vitamin' },
-    { name: 'Blood Studies', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=100&h=100&fit=crop', link: '/lab-tests/blood' }
+  const timeSlots = [
+    { value: '06:00-08:00', label: '6:00 AM – 8:00 AM' },
+    { value: '08:00-10:00', label: '8:00 AM – 10:00 AM' },
+    { value: '10:00-12:00', label: '10:00 AM – 12:00 PM' },
+    { value: '12:00-14:00', label: '12:00 PM – 2:00 PM' },
+    { value: '14:00-16:00', label: '2:00 PM – 4:00 PM' },
+    { value: '16:00-18:00', label: '4:00 PM – 6:00 PM' }
   ];
-
-  const vitalOrgans = [
-    { name: 'Thyroid', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&h=100&fit=crop', link: '/lab-tests/thyroid' },
-    { name: 'Heart', icon: 'https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=100&h=100&fit=crop', link: '/lab-tests/heart' },
-    { name: 'Joint Pain', icon: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=100&h=100&fit=crop', link: '/lab-tests/joint' },
-    { name: 'Kidney', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=100&h=100&fit=crop', link: '/lab-tests/kidney' },
-    { name: 'Liver', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=100&h=100&fit=crop', link: '/lab-tests/liver' },
-    { name: 'Bone and Joint', icon: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=100&h=100&fit=crop', link: '/lab-tests/bone' }
-  ];
-
-  const packages = [
-    { name: 'Sushruta Package 1', price: 999, tests: 15, color: 'bg-blue-50 border-blue-200' },
-    { name: 'Sushruta Package 2', price: 1499, tests: 25, color: 'bg-green-50 border-green-200' },
-    { name: 'Sushruta Basic Check', price: 799, tests: 12, color: 'bg-purple-50 border-purple-200' },
-    { name: 'Sushruta Extended Check', price: 1999, tests: 35, color: 'bg-orange-50 border-orange-200' },
-    { name: 'Sushruta Comprehensive Check', price: 2999, tests: 50, color: 'bg-red-50 border-red-200' },
-    { name: 'Sushruta Platinum', price: 4999, tests: 75, color: 'bg-yellow-50 border-yellow-200' },
-    { name: 'Sushruta Premium', price: 6999, tests: 100, color: 'bg-indigo-50 border-indigo-200' }
-  ];
-
-  const dailyOffers = [
-    { test: 'CBC', price: 155 },
-    { test: 'LFT', price: 259 },
-    { test: 'Lipid Profile', price: 230 },
-    { test: 'KFT', price: 199 },
-    { test: 'Vitamin B12', price: 299 },
-    { test: 'HbA1c', price: 179 },
-    { test: 'Thyroid Profile T3+T4+TSH', price: 399 },
-    { test: 'Vitamin D3', price: 249 }
-  ];
-
-  const faqs = [
-    {
-      question: "What is the Swasth Super 4 package?",
-      answer: "Regular health check-ups help us in detecting various diseases at an early stage. Early diagnosis and treatment give us the best chance of fighting the disease off without any severe complications. The Swasth Super 4 package by Dr. Lal PathLabs includes the goodness of all Swasth Super packages through which you can get a comprehensive health assessment of your body."
-    },
-    {
-      question: "What does the Swasth Super 4 package measure?",
-      answer: "The Swasth Super 4 package measures various aspects of our health including Glucose Fasting, Thyroid Profile Total, Lipid Profile Screen, Liver and Kidney Panel, HbA1c, Complete blood count (CBC), Vitamin D 25-Hydroxy, and Vitamin B12."
-    },
-    {
-      question: "When is the Swasth Super 4 package recommended?",
-      answer: "The Swasth Super 4 package is recommended as part of a routine health checkup, to diagnose various conditions, and for screening in people with risk factors such as obesity, family history, age over 45 years, unhealthy lifestyle, smoking, heavy alcohol use, and limited sun exposure."
-    },
-    {
-      question: "How is the Swasth Super 4 package performed?",
-      answer: "The Swasth Super 4 package is done in the morning after an 8 to 12 hour overnight fast. A healthcare professional will draw a blood sample from a vein in the arm."
-    },
-    {
-      question: "What are the risks of the Swasth Super 4 package?",
-      answer: "The Swasth Super 4 package is a safe, standard test and there are minimal risks involved such as bleeding, bruising, light headedness, and infection."
-    },
-    {
-      question: "What the results may indicate?",
-      answer: "The normal ranges may vary slightly among different laboratories. The doctor will evaluate the results based on health, gender, age, and other factors. Results can indicate various conditions including diabetes, prediabetes, cholesterol levels, and vitamin deficiencies."
-    },
-    {
-      question: "Am I Eligible for Tax Exemption on Swasthfit Preventive Full Body Packages?",
-      answer: "You can avail tax exemptions of up to Rs 5000 under Section 80D for Swasthfit preventive health check-ups."
-    }
-  ];
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleBookingSubmit = (e) => {
-    e.preventDefault();
-    alert('Booking request submitted successfully! We will contact you soon.');
-    setShowBookingForm(false);
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      address: '',
-      preferredDate: '',
-      preferredTime: ''
-    });
-  };
 
   useEffect(() => {
+    fetchData();
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, [bannerSlides.length]);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch categories
+      const categoriesResponse = await api.get('/lab/categories/');
+      setCategories(categoriesResponse.data);
+      
+      // Fetch daily offers
+      const offersResponse = await api.get('/lab/tests/?daily_offer=true');
+      setDailyOffers(offersResponse.data);
+      
+      // Fetch packages
+      const packagesResponse = await api.get('/lab/packages/');
+      setPackages(packagesResponse.data);
+      
+    } catch (error) {
+      console.error('Failed to fetch lab data:', error);
+      setToast({ message: 'Failed to load lab tests data', type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!user) {
+      setToast({ message: 'Please login to book lab tests', type: 'error' });
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const bookingData = {
+        ...formData,
+        patient_age: parseInt(formData.patient_age),
+        amount: selectedPackage ? selectedPackage.final_price : formData.amount
+      };
+
+      if (selectedPackage) {
+        bookingData.package = selectedPackage.id;
+      }
+
+      const response = await api.post('/lab/bookings/', bookingData);
+      
+      setToast({ 
+        message: `Booking confirmed! Booking ID: ${response.data.booking_id}`, 
+        type: 'success' 
+      });
+      
+      setShowBookingForm(false);
+      setSelectedPackage(null);
+      setFormData({
+        patient_name: '',
+        patient_age: '',
+        patient_gender: 'male',
+        phone: '',
+        email: '',
+        address_line: '',
+        city: '',
+        pincode: '',
+        preferred_date: '',
+        preferred_slot: '08:00-10:00',
+        amount: ''
+      });
+      
+    } catch (error) {
+      console.error('Booking failed:', error);
+      setToast({ 
+        message: error.response?.data?.detail || 'Booking failed. Please try again.', 
+        type: 'error' 
+      });
+    }
+  };
+
+  const handlePackageBooking = (pkg) => {
+    setSelectedPackage(pkg);
+    setFormData(prev => ({
+      ...prev,
+      amount: pkg.final_price
+    }));
+    setShowBookingForm(true);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center">
+        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_#000]">
+          <div className="w-16 h-16 border-4 border-black bg-[#FF6B6B] animate-spin mx-auto mb-4"></div>
+          <p className="font-black uppercase tracking-widest text-sm">LOADING LAB TESTS...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="bg-gray-50 min-h-screen"
-    >
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+    <>
+      <Toast message={toast.message} type={toast.type} />
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-[#FFFDF5] min-h-screen relative overflow-hidden"
+      >
+        {/* Background Pattern */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+            backgroundSize: '20px 20px'
+          }}
+        ></div>
+
+        {/* Floating Decorative Elements */}
+        <div className="absolute top-10 left-4 sm:top-20 sm:left-10 rotate-12">
+          <Star className="w-6 h-6 sm:w-8 sm:h-8 fill-[#FF6B6B] text-[#FF6B6B] animate-spin-slow" />
+        </div>
+        <div className="absolute top-32 right-4 sm:top-40 sm:right-20 -rotate-12">
+          <Zap className="w-8 h-8 sm:w-12 sm:h-12 fill-[#FFD93D] text-[#FFD93D] animate-bounce" />
+        </div>
+        <div className="absolute bottom-32 left-8 sm:bottom-32 sm:left-32 rotate-45">
+          <Shield className="w-6 h-6 sm:w-10 sm:h-10 fill-[#C4B5FD] text-[#C4B5FD]" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
+          {/* Hero Section */}
+          <div className="text-center mb-8 sm:mb-12">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight mb-4 sm:mb-6"
+            >
+              <span className="block -rotate-1">DR DAS</span>
+              <span className="block rotate-1" style={{ WebkitTextStroke: '2px black', color: 'transparent' }}>
+                PATHLABS
+              </span>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-sm sm:text-base md:text-lg font-bold max-w-3xl mx-auto uppercase tracking-wide"
+            >
+              TESTS YOU CAN TRUST — ADVANCED DIAGNOSTICS AT YOUR DOORSTEP
+            </motion.p>
+          </div>
 
           {/* Banner Carousel */}
-          <div className="relative w-full h-[200px] mb-8 rounded-2xl overflow-hidden">
+          <div className="relative w-full h-32 sm:h-48 md:h-64 mb-8 sm:mb-12 border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
             {bannerSlides.map((slide, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: currentSlide === index ? 1 : 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.2 }}
                 className="absolute inset-0"
                 style={{ display: currentSlide === index ? 'block' : 'none' }}
               >
@@ -159,184 +247,536 @@ export default function LabTestsPage() {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${currentSlide === index ? 'bg-white w-6' : 'bg-white/50'
-                    }`}
+                  className={`w-3 h-3 border-2 border-black transition-all ${
+                    currentSlide === index 
+                      ? 'bg-[#FFD93D] w-6' 
+                      : 'bg-white'
+                  }`}
                 />
               ))}
             </div>
           </div>
 
-
           {/* Doctor Created Health Checks */}
-          <div className="mb-8 bg-white rounded-2xl p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl md:text-2xl font-bold">Doctor Created Health Checks ({doctorCreatedTests.length})</h2>
-              <Link to="/lab-tests/all" className="text-purple-600 hover:text-purple-700 font-medium">
-                View All →
-              </Link>
-            </div>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-              {doctorCreatedTests.map((test) => (
-                <Link
-                  key={test.name}
-                  to={test.link}
-                  className="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors"
-                >
-                  <div className="w-16 h-16 mb-3 rounded-full overflow-hidden">
-                    <img src={test.icon} alt={test.name} className="w-full h-full object-cover" />
-                  </div>
-                  <p className="text-sm text-center font-medium text-gray-700">{test.name}</p>
-                </Link>
-              ))}
+          <div className="mb-8 sm:mb-12">
+            <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+              <div className="bg-[#C4B5FD] border-b-4 border-black p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight -rotate-1">
+                    DOCTOR CREATED HEALTH CHECKS ({categories.filter(c => c.category_type === 'doctor_created').length})
+                  </h2>
+                  <Link to="/lab-tests/all">
+                    <Button variant="ghost" size="sm" className="rotate-1">
+                      VIEW ALL →
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className="p-4 sm:p-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                  {categories
+                    .filter(category => category.category_type === 'doctor_created')
+                    .map((category, index) => (
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={`/lab-tests/category/${category.slug}`}
+                        className="block group"
+                      >
+                        <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#FFD93D] flex items-center justify-center">
+                            {category.icon_url ? (
+                              <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-lg sm:text-xl font-black">🔬</span>
+                            )}
+                          </div>
+                          <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
+                            {category.name}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Daily Offers */}
-          <div className="px-4 py-12 bg-gradient-to-r from-blue-50 to-purple-50">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8">Sushruta Daily Offers</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {dailyOffers.map((offer, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 text-center"
-                  >
-                    <h3 className="font-semibold text-gray-900 mb-2">{offer.test}</h3>
-                    <p className="text-2xl font-bold text-purple-600">₹{offer.price}/-</p>
-                  </motion.div>
-                ))}
+          <div className="mb-8 sm:mb-12">
+            <div className="bg-[#FFD93D] border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+              <div className="bg-black border-b-4 border-black p-4 sm:p-6">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white rotate-1">
+                  🔥 DAILY OFFERS - LIMITED TIME!
+                </h2>
+              </div>
+              <div className="p-4 sm:p-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {dailyOffers.map((offer, index) => (
+                    <motion.div
+                      key={offer.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center relative">
+                        {offer.discount_percent > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 shadow-[2px_2px_0px_0px_#000] rotate-12 z-10">
+                            {offer.discount_percent}% OFF
+                          </span>
+                        )}
+                        <h3 className="font-black text-sm sm:text-base mb-2 uppercase tracking-wide leading-tight">
+                          {offer.short_name || offer.name}
+                        </h3>
+                        <div className="mb-3">
+                          <p className="text-lg sm:text-xl font-black text-[#FF6B6B]">
+                            ₹{parseFloat(offer.final_price).toFixed(0)}
+                          </p>
+                          {offer.discount_percent > 0 && (
+                            <p className="text-xs font-bold line-through opacity-60">
+                              ₹{parseFloat(offer.price).toFixed(0)}
+                            </p>
+                          )}
+                        </div>
+                        <Button variant="primary" size="sm" className="w-full text-xs">
+                          BOOK NOW
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+
           {/* Vital Organs */}
-          <div className="mb-8 bg-white rounded-2xl p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl md:text-2xl font-bold">Vital Organs ({vitalOrgans.length})</h2>
-              <Link to="/lab-tests/vital-organs" className="text-purple-600 hover:text-purple-700 font-medium">
-                View All →
-              </Link>
+          <div className="mb-8 sm:mb-12">
+            <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+              <div className="bg-[#FF6B6B] border-b-4 border-black p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white -rotate-1">
+                    VITAL ORGANS ({categories.filter(c => c.category_type === 'vital_organ').length})
+                  </h2>
+                  <Link to="/lab-tests/vital-organs">
+                    <Button variant="ghost" size="sm" className="rotate-1 border-white text-white hover:bg-white hover:text-black">
+                      VIEW ALL →
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className="p-4 sm:p-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                  {categories
+                    .filter(category => category.category_type === 'vital_organ')
+                    .map((category, index) => (
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={`/lab-tests/category/${category.slug}`}
+                        className="block group"
+                      >
+                        <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#C4B5FD] flex items-center justify-center">
+                            {category.icon_url ? (
+                              <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-lg sm:text-xl font-black">❤️</span>
+                            )}
+                          </div>
+                          <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
+                            {category.name}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-              {vitalOrgans.map((organ) => (
-                <Link
-                  key={organ.name}
-                  to={organ.link}
-                  className="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors"
+          </div>
+
+          {/* Health Packages */}
+          <div className="mb-8 sm:mb-12">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-tight mb-4 rotate-1">
+                HEALTH CHECKUP PACKAGES
+              </h2>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                COMPREHENSIVE HEALTH SCREENING AT UNBEATABLE PRICES
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {packages.map((pkg, index) => (
+                <motion.div
+                  key={pkg.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <div className="w-16 h-16 mb-3 rounded-full overflow-hidden">
-                    <img src={organ.icon} alt={organ.name} className="w-full h-full object-cover" />
+                  <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 overflow-hidden relative">
+                    {pkg.badge && (
+                      <span className="absolute -top-2 -right-2 bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 shadow-[2px_2px_0px_0px_#000] rotate-12 z-10">
+                        {pkg.badge}
+                      </span>
+                    )}
+                    
+                    <div className="bg-[#FFD93D] border-b-4 border-black p-4">
+                      <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight leading-tight">
+                        {pkg.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm font-bold mt-1">
+                        {pkg.tagline}
+                      </p>
+                    </div>
+                    
+                    <div className="p-4 sm:p-6">
+                      <div className="text-center mb-4">
+                        <div className="text-2xl sm:text-3xl font-black text-[#FF6B6B] mb-1">
+                          ₹{parseFloat(pkg.final_price).toFixed(0)}
+                        </div>
+                        {pkg.discount_percent > 0 && (
+                          <div className="flex items-center justify-center gap-2">
+                            <p className="text-sm font-bold line-through opacity-60">
+                              ₹{parseFloat(pkg.price).toFixed(0)}
+                            </p>
+                            <span className="bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 text-white">
+                              {pkg.discount_percent}% OFF
+                            </span>
+                          </div>
+                        )}
+                        <p className="text-xs font-bold mt-2 uppercase tracking-wide">
+                          {pkg.total_tests} TESTS INCLUDED
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center justify-between text-xs font-bold">
+                          <span>🏠 HOME COLLECTION:</span>
+                          <span className={pkg.home_collection ? 'text-green-600' : 'text-red-600'}>
+                            {pkg.home_collection ? 'YES' : 'NO'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs font-bold">
+                          <span>⏰ REPORT DELIVERY:</span>
+                          <span>{pkg.report_delivery_hours}H</span>
+                        </div>
+                        {pkg.fasting_required && (
+                          <div className="flex items-center justify-between text-xs font-bold">
+                            <span>🍽️ FASTING:</span>
+                            <span className="text-orange-600">REQUIRED</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="flex-1 text-xs"
+                          onClick={() => handlePackageBooking(pkg)}
+                        >
+                          BOOK NOW
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex-1 text-xs"
+                          onClick={() => navigate(`/lab/package/${pkg.slug}`)}
+                        >
+                          DETAILS
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-center font-medium text-gray-700">{organ.name}</p>
-                </Link>
+                </motion.div>
               ))}
             </div>
           </div>
-          {/* Package Types */}
-          <div className="px-4 py-12 bg-white">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">Health Checkup Packages</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {packages.map((pkg, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => navigate(`/lab/package/${pkg.name.toLowerCase().replace(/\s+/g, '-')}`)}
-                    className={`${pkg.color} rounded-2xl p-6 border-2 cursor-pointer hover:shadow-lg transition-all`}
-                  >
-                    <div className="text-center">
-                      <h3 className="text-lg font-bold text-gray-900 mb-3">{pkg.name}</h3>
-                      <div className="text-3xl font-bold text-purple-600 mb-2">₹{pkg.price}</div>
-                      <p className="text-sm text-gray-600 mb-4">{pkg.tests} Tests Included</p>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedPackage(pkg);
-                            setShowBookingForm(true);
-                          }}
-                          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm flex-1"
-                        >
-                          Book Now
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/lab/package/${pkg.name.toLowerCase().replace(/\s+/g, '-')}`);
-                          }}
-                          className="border border-purple-600 text-purple-600 hover:bg-purple-50 font-medium py-2 px-4 rounded-lg transition-colors text-sm flex-1"
-                        >
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
 
-
-          {/* Description Section */}
-          <div className="px-4 py-12 bg-white">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                Swasthfit Full Body Checkup Packages at Lal PathLabs
+          {/* How to Book Section */}
+          <div className="mb-8 sm:mb-12">
+            <div className="bg-black border-4 border-black shadow-[8px_8px_0px_0px_#000] text-white p-6 sm:p-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-center mb-6 sm:mb-8 uppercase rotate-1">
+                HOW TO BOOK A LAB TEST IN 3 SIMPLE STEPS
               </h2>
-              <div className="prose prose-lg text-gray-600 leading-relaxed">
-                <p className="mb-6">
-                  Regular health check-ups help us in detecting various diseases at an early stage. Early diagnosis and treatment give us the best chance of fighting the disease off without any severe complications. The Swasth Super 4 package by Dr. Lal PathLabs includes the goodness of all Swasth Super packages through which you can get a comprehensive health assessment of your body. The Swasth Super 4 package can be performed as part of a regular preventive health checkup once every 6 to 12 months or as recommended by the doctor.
-                </p>
-                <p className="mb-6">Various components of the Dr. Lal PathLabs Swasth Super 4 package include:</p>
-                <ul className="space-y-3 mb-6">
-                  <li><strong>Glucose Fasting</strong> measures the level of glucose in the blood after an 8 to 12 hour overnight fast.</li>
-                  <li><strong>Thyroid Profile Total</strong> is a group of tests done together to diagnose thyroid disorders.</li>
-                  <li><strong>Lipid Profile Screen</strong> is a blood test used to assess the risk of developing Cardiovascular disease.</li>
-                  <li><strong>Liver and Kidney Panel</strong> is a group of blood tests that are performed together to detect, evaluate, and monitor liver health and kidney function.</li>
-                  <li><strong>HbA1c</strong> is a useful and simple blood test that can be used to diagnose diabetes.</li>
-                  <li><strong>Complete blood count (CBC)</strong> is the most commonly ordered blood test.</li>
-                  <li><strong>Vitamin D 25-Hydroxy</strong> measures the level of Vitamin D in the blood.</li>
-                  <li><strong>Vitamin B12</strong> measures the concentration of Vitamin B12 in blood.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* How to Book Banner */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
-            <h2 className="text-2xl font-bold mb-6 text-center">How to Book a Lab Test in 3 Simple Steps</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">1</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FFD93D] border-4 border-white mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl font-black text-black">1</span>
+                  </div>
+                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">CHOOSE TEST</h3>
+                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                    SELECT FROM OUR WIDE RANGE OF TESTS
+                  </p>
                 </div>
-                <h3 className="font-semibold mb-2">Choose Test</h3>
-                <p className="text-sm opacity-90">Select from our wide range of tests</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">2</span>
+                <div className="text-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FF6B6B] border-4 border-white mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl font-black text-white">2</span>
+                  </div>
+                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">BOOK SLOT</h3>
+                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                    PICK YOUR CONVENIENT TIME
+                  </p>
                 </div>
-                <h3 className="font-semibold mb-2">Book Slot</h3>
-                <p className="text-sm opacity-90">Pick your convenient time</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">3</span>
+                <div className="text-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#C4B5FD] border-4 border-white mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl font-black text-black">3</span>
+                  </div>
+                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">GET RESULTS</h3>
+                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                    RECEIVE REPORTS ONLINE
+                  </p>
                 </div>
-                <h3 className="font-semibold mb-2">Get Results</h3>
-                <p className="text-sm opacity-90">Receive reports online</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      
-    </motion.div>
 
+        {/* Booking Form Modal */}
+        {showBookingForm && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000] w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            >
+              <div className="bg-[#FFD93D] border-b-4 border-black p-4 sm:p-6 flex justify-between items-center">
+                <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight">
+                  BOOK {selectedPackage ? selectedPackage.name : 'LAB TEST'}
+                </h3>
+                <button
+                  onClick={() => setShowBookingForm(false)}
+                  className="w-8 h-8 bg-[#FF6B6B] border-2 border-black font-black text-white hover:bg-red-600 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <form onSubmit={handleBookingSubmit} className="p-4 sm:p-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      PATIENT NAME *
+                    </label>
+                    <input
+                      type="text"
+                      name="patient_name"
+                      required
+                      value={formData.patient_name}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="ENTER PATIENT NAME"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      AGE *
+                    </label>
+                    <input
+                      type="number"
+                      name="patient_age"
+                      required
+                      min="1"
+                      max="120"
+                      value={formData.patient_age}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="AGE"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                    GENDER *
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+                      formData.patient_gender === 'male' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="patient_gender"
+                        value="male"
+                        checked={formData.patient_gender === 'male'}
+                        onChange={handleInputChange}
+                        className="sr-only"
+                      />
+                      MALE
+                    </label>
+                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+                      formData.patient_gender === 'female' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="patient_gender"
+                        value="female"
+                        checked={formData.patient_gender === 'female'}
+                        onChange={handleInputChange}
+                        className="sr-only"
+                      />
+                      FEMALE
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      PHONE *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="PHONE NUMBER"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      EMAIL *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="EMAIL ADDRESS"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                    ADDRESS *
+                  </label>
+                  <input
+                    type="text"
+                    name="address_line"
+                    required
+                    value={formData.address_line}
+                    onChange={handleInputChange}
+                    className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                    placeholder="FULL ADDRESS"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      CITY *
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      required
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="CITY"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      PINCODE *
+                    </label>
+                    <input
+                      type="text"
+                      name="pincode"
+                      required
+                      pattern="[0-9]{6}"
+                      value={formData.pincode}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                      placeholder="PINCODE"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      PREFERRED DATE *
+                    </label>
+                    <input
+                      type="date"
+                      name="preferred_date"
+                      required
+                      min={new Date().toISOString().split('T')[0]}
+                      value={formData.preferred_date}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-2">
+                      TIME SLOT *
+                    </label>
+                    <select
+                      name="preferred_slot"
+                      required
+                      value={formData.preferred_slot}
+                      onChange={handleInputChange}
+                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+                    >
+                      {timeSlots.map(slot => (
+                        <option key={slot.value} value={slot.value}>
+                          {slot.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {selectedPackage && (
+                  <div className="bg-[#C4B5FD] border-4 border-black p-4">
+                    <h4 className="font-black uppercase text-sm mb-2">PACKAGE DETAILS:</h4>
+                    <p className="font-bold text-sm">{selectedPackage.name}</p>
+                    <p className="font-bold text-lg text-[#FF6B6B]">₹{selectedPackage.final_price}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="flex-1"
+                    onClick={() => setShowBookingForm(false)}
+                  >
+                    CANCEL
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="flex-1"
+                  >
+                    CONFIRM BOOKING
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </motion.div>
+    </>
   );
 }
