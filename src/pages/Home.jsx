@@ -233,14 +233,14 @@ export default function Home() {
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                       <div className="absolute inset-0 flex flex-col justify-end p-4">
-                        <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
-                          {/* <h3 className="text-lg font-black uppercase text-center leading-tight">
+                        {/* <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
+                          <h3 className="text-lg font-black uppercase text-center leading-tight">
                             {category.name}
-                          </h3> */}
-                          {/* <p className="text-sm font-bold text-center mt-1">
+                          </h3>
+                          <p className="text-sm font-bold text-center mt-1">
                             {category.count} ITEMS
-                          </p> */}
-                        </div>
+                          </p>
+                        </div> */}
                       </div>
                     </div>
                   </Card>
