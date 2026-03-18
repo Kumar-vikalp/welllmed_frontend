@@ -27,6 +27,7 @@ export default function ProductDetails() {
   const user = useSelector(selectUser);
   const [qty, setQty] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('description');
   const navigate = useNavigate();
   const [toast, setToast] = useState({ message: '', type: 'info' });
 
@@ -54,7 +55,7 @@ export default function ProductDetails() {
   
   const handleAddToCart = async () => {
     if (!user) {
-      setToast({ message: 'Please login to add items to cart', type: 'error' });
+      setToast({ message: 'PLEASE LOGIN TO ADD ITEMS TO CART', type: 'error' });
       return;
     }
     
@@ -68,12 +69,12 @@ export default function ProductDetails() {
         // Refresh cart to get updated data
         await dispatch(fetchCart());
         
-        setToast({ message: `${product.name} added to cart!`, type: 'success' });
+        setToast({ message: `${product.name.toUpperCase()} ADDED TO CART!`, type: 'success' });
       } catch (error) {
-        setToast({ message: error.message || 'Failed to add to cart', type: 'error' });
+        setToast({ message: error.message?.toUpperCase() || 'FAILED TO ADD TO CART', type: 'error' });
       }
     } else {
-      setToast({ message: 'Product is out of stock', type: 'error' });
+      setToast({ message: 'PRODUCT IS OUT OF STOCK', type: 'error' });
     }
   };
 
@@ -85,14 +86,16 @@ export default function ProductDetails() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Skeleton className="w-full h-96 rounded-lg" />
-          <div className="space-y-4">
-            <Skeleton className="w-3/4 h-12" />
-            <Skeleton className="w-1/2 h-8" />
-            <Skeleton className="w-full h-24" />
-            <Skeleton className="w-1/4 h-10" />
+      <div className="min-h-screen bg-[#FFFDF5] p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] h-96"></div>
+            <div className="space-y-4">
+              <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] h-12"></div>
+              <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] h-8"></div>
+              <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] h-24"></div>
+              <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] h-10"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -101,123 +104,171 @@ export default function ProductDetails() {
 
   if (!product) {
     return (
-      <div className="text-center py-20">
-        <h1 className="text-4xl font-bold">Product Not Found</h1>
-        <p className="mt-4">The product you are looking for does not exist.</p>
-        <button onClick={() => navigate('/')} className="mt-6 bg-teal-500 text-white font-bold py-2 px-4 rounded">Go Home</button>
+      <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000] p-8 sm:p-12 -rotate-1">
+            <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight mb-4">PRODUCT NOT FOUND</h1>
+            <p className="font-bold uppercase tracking-wide mb-6">THE PRODUCT YOU ARE LOOKING FOR DOES NOT EXIST</p>
+            <button 
+              onClick={() => navigate('/')} 
+              className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+                text-xs sm:text-sm px-6 py-4 h-14 w-full sm:w-auto
+                shadow-[6px_6px_0px_0px_#000]
+                hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+                active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+                transition-all duration-100"
+            >
+              GO HOME
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
   
   const discountedPrice = product.discounted_price;
 
+  const tabs = [
+    { id: 'description', label: 'DESCRIPTION' },
+    { id: 'ingredients', label: 'INGREDIENTS' },
+    { id: 'dosage', label: 'DOSAGE' },
+    { id: 'cautions', label: 'CAUTIONS' }
+  ];
+
   return (
     <>
       <SEO 
-        title={product ? `${product.name} - Buy Online at Best Price | genx` : 'Product Details | genx'}
+        title={product ? `${product.name} - Buy Online at Best Price | WellMed` : 'Product Details | WellMed'}
         description={product ? `Buy ${product.name} by ${product.company} online at best price. ${product.description}. Free delivery, authentic medicines.` : 'Buy medicines online at best prices with free delivery'}
         keywords={product ? `${product.name}, ${product.company}, ${product.disease_category}, buy medicine online, pharmacy` : 'medicine, pharmacy, online medicine'}
         type="product"
-        link={`https://genx.com/product/${slug}`}
+        link={`https://wellmed.com/product/${slug}`}
       />
       <Toast message={toast.message} type={toast.type} />
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="container mx-auto px-4 py-8"
+        className="min-h-screen bg-[#FFFDF5]"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          {/* Product Images */}
-          <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="space-y-4">
-            <div className="relative">
-              <LazyImage 
-                src={product.images[activeImageIndex]} 
-                alt={product.name} 
-                className="w-full h-96 object-cover rounded-lg shadow-2xl" 
-              />
-              {product.trending && (
-                <span className="absolute top-4 left-4 bg-yellow-500 text-gray-900 text-sm font-bold px-3 py-1 rounded-full">
-                  Trending
-                </span>
-              )}
-              {product.discount > 0 && (
-                <span className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
-                  {product.discount}% OFF
-                </span>
-              )}
-            </div>
-            
-            {/* Image Thumbnails */}
-            {product.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                      activeImageIndex === index ? 'border-teal-500' : 'border-gray-600'
-                    }`}
-                  >
-                    <LazyImage src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
+        {/* Background Pattern */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+            backgroundSize: '20px 20px'
+          }}
+        ></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
+            {/* Product Images */}
+            <motion.div 
+              initial={{ x: -50, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }} 
+              transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }} 
+              className="space-y-4"
+            >
+              <div className="relative">
+                <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+                  <LazyImage 
+                    src={product.images[activeImageIndex]} 
+                    alt={product.name} 
+                    className="w-full h-80 sm:h-96 object-cover" 
+                  />
+                  {product.trending && (
+                    <span className="absolute -top-3 -left-3 bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest text-xs px-3 py-1 shadow-[4px_4px_0px_0px_#000] rotate-12 z-10">
+                      🔥 TRENDING
+                    </span>
+                  )}
+                  {product.discount > 0 && (
+                    <span className="absolute -top-3 -right-3 bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest text-xs px-3 py-1 shadow-[4px_4px_0px_0px_#000] -rotate-12 z-10">
+                      {product.discount}% OFF
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-          </motion.div>
-
-          {/* Product Info */}
-          <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
-            <span className="text-teal-400 font-semibold">{product.company}</span>
-            <h1 className="text-4xl font-extrabold my-2">{product.name}</h1>
-            <p className="text-gray-400 text-lg mb-4">{product.disease_category}</p>
-
-            <div className="my-4">
-              <span className="text-4xl font-bold text-teal-400">₹{discountedPrice.toFixed(2)}</span>
-              {product.discount > 0 && (
-                <>
-                  <span className="text-xl text-gray-500 line-through ml-3">₹{product.mrp.toFixed(2)}</span>
-                  <span className="text-lg text-green-400 font-semibold ml-3">{product.discount}% OFF</span>
-                </>
+              
+              {/* Image Thumbnails */}
+              {product.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto">
+                  {product.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveImageIndex(index)}
+                      className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-black shadow-[4px_4px_0px_0px_#000] overflow-hidden ${
+                        activeImageIndex === index ? 'bg-[#FFD93D]' : 'bg-white hover:bg-[#C4B5FD]'
+                      } transition-colors duration-100`}
+                    >
+                      <LazyImage src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
               )}
-            </div>
+            </motion.div>
 
-            <p className="leading-relaxed my-6">{product.description}</p>
-            
-            {/* Stock and Expiry Info */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6 border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Product Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
-                    <div className={`w-3 h-3 rounded-full ${product.available_stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                    <div>
-                      <p className="text-sm text-gray-600">Stock Status</p>
-                      <p className={`font-semibold ${product.available_stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {product.available_stock > 0 ? `${product.available_stock} Available` : 'Out of Stock'}
-                      </p>
-                    </div>
+            {/* Product Info */}
+            <motion.div 
+              initial={{ x: 50, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }} 
+              transition={{ delay: 0.4, duration: 0.2, ease: "easeOut" }}
+            >
+              <div className="bg-[#C4B5FD] border-2 border-black px-3 py-1 inline-block mb-4">
+                <span className="font-black uppercase tracking-widest text-xs">{product.company}</span>
+              </div>
+              
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 leading-tight">
+                {product.name}
+              </h1>
+              
+              <div className="bg-[#FFD93D] border-2 border-black px-3 py-1 inline-block mb-6">
+                <p className="font-bold uppercase tracking-wide text-sm">{product.disease_category}</p>
+              </div>
+
+              {/* Price Section */}
+              <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] p-4 sm:p-6 mb-6">
+                <div className="flex items-center gap-4 mb-2">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-black">₹{discountedPrice.toFixed(2)}</span>
+                  {product.discount > 0 && (
+                    <>
+                      <span className="text-lg sm:text-xl line-through opacity-60 font-bold">₹{product.mrp.toFixed(2)}</span>
+                      <span className="bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1">
+                        {product.discount}% OFF
+                      </span>
+                    </>
+                  )}
+                </div>
+                <p className="font-bold uppercase tracking-wide text-sm">INCLUSIVE OF ALL TAXES</p>
+              </div>
+
+            {/* Stock and Info */}
+            <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] p-4 sm:p-6 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 border-2 border-black ${product.available_stock > 0 ? 'bg-[#FFD93D]' : 'bg-[#FF6B6B]'}`}></div>
+                  <div>
+                    <p className="font-black uppercase tracking-widest text-xs">STOCK STATUS</p>
+                    <p className="font-bold text-sm">
+                      {product.available_stock > 0 ? `${product.available_stock} AVAILABLE` : 'OUT OF STOCK'}
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
-                    <div className={`w-3 h-3 rounded-full ${product.returnable ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                    <div>
-                      <p className="text-sm text-gray-600">Return Policy</p>
-                      <p className={`font-semibold ${product.returnable ? 'text-green-600' : 'text-red-600'}`}>
-                        {product.returnable ? 'Returnable' : 'Non-Returnable'}
-                      </p>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 border-2 border-black ${product.returnable ? 'bg-[#FFD93D]' : 'bg-[#FF6B6B]'}`}></div>
+                  <div>
+                    <p className="font-black uppercase tracking-widest text-xs">RETURN POLICY</p>
+                    <p className="font-bold text-sm">
+                      {product.returnable ? 'RETURNABLE' : 'NON-RETURNABLE'}
+                    </p>
                   </div>
                 </div>
                 {product.expiry_date && (
-                  <div className="md:col-span-2">
-                    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
-                      <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                      <div>
-                        <p className="text-sm text-gray-600">Expiry Date</p>
-                        <p className="font-semibold text-orange-600">{formatDate(product.expiry_date)}</p>
-                      </div>
+                  <div className="sm:col-span-2 flex items-center gap-3">
+                    <div className="w-4 h-4 border-2 border-black bg-[#C4B5FD]"></div>
+                    <div>
+                      <p className="font-black uppercase tracking-widest text-xs">EXPIRY DATE</p>
+                      <p className="font-bold text-sm">{formatDate(product.expiry_date)}</p>
                     </div>
                   </div>
                 )}
@@ -226,22 +277,44 @@ export default function ProductDetails() {
             
             {/* Quantity and Add to Cart */}
             {product.available_stock > 0 && (
-              <div className="flex items-center space-x-4 my-6">
-                <div className="flex items-center border border-gray-600 rounded">
-                  <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-4 py-2 text-xl">-</button>
-                  <input 
-                    type="number" 
-                    value={qty} 
-                    onChange={(e) => setQty(Math.max(1, Math.min(product.available_stock, parseInt(e.target.value) || 1)))}
-                    className="w-16 text-center bg-transparent focus:outline-none text-xl font-bold" 
-                  />
-                  <button onClick={() => setQty(q => Math.min(product.available_stock, q + 1))} className="px-4 py-2 text-xl">+</button>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border-4 border-black bg-white">
+                    <button 
+                      onClick={() => setQty(q => Math.max(1, q - 1))} 
+                      className="w-12 h-12 font-black text-xl border-r-4 border-black hover:bg-[#FFD93D] transition-colors duration-100"
+                    >
+                      -
+                    </button>
+                    <input 
+                      type="number" 
+                      value={qty} 
+                      onChange={(e) => setQty(Math.max(1, Math.min(product.available_stock, parseInt(e.target.value) || 1)))}
+                      className="w-16 h-12 text-center bg-transparent focus:outline-none font-black text-xl border-r-4 border-black" 
+                    />
+                    <button 
+                      onClick={() => setQty(q => Math.min(product.available_stock, q + 1))} 
+                      className="w-12 h-12 font-black text-xl hover:bg-[#FFD93D] transition-colors duration-100"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="bg-[#C4B5FD] border-2 border-black px-3 py-1">
+                    <span className="font-black uppercase tracking-widest text-xs">
+                      MAX: {product.available_stock}
+                    </span>
+                  </div>
                 </div>
+                
                 <button 
                   onClick={handleAddToCart}
-                  className="flex-grow bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300"
+                  className="w-full bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+                    text-sm py-4 h-14 shadow-[6px_6px_0px_0px_#000]
+                    hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+                    active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+                    transition-all duration-100"
                 >
-                  Add to Cart
+                  ADD TO CART
                 </button>
               </div>
             )}
@@ -249,188 +322,200 @@ export default function ProductDetails() {
         </div>
 
         {/* Product Details Tabs */}
-        <div className="mt-16 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Product Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Benefits */}
-            {product.benefits.length > 0 && (
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
-                <h3 className="text-lg font-bold mb-4 text-green-700 flex items-center">
-                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  Benefits
-                </h3>
-                <ul className="space-y-3">
-                  {product.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm leading-relaxed">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
+        <div className="max-w-7xl mx-auto p-4 sm:p-8 mt-12">
+          <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+            {/* Tab Navigation */}
+            <div className="bg-[#FFD93D] border-b-4 border-black">
+              <div className="flex overflow-x-auto">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-shrink-0 px-4 sm:px-6 py-4 font-black uppercase tracking-widest text-xs sm:text-sm border-r-4 border-black last:border-r-0 transition-colors duration-100 ${
+                      activeTab === tab.id 
+                        ? 'bg-black text-white' 
+                        : 'hover:bg-[#FF6B6B] hover:text-white'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
-            )}
+            </div>
 
-            {/* Key Ingredients */}
-            {product.key_ingredients.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
-                <h3 className="text-lg font-bold mb-4 text-blue-700 flex items-center">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
-                    </svg>
-                  </div>
-                  Key Ingredients
-                </h3>
-                <ul className="space-y-3">
-                  {product.key_ingredients.map((ingredient, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm leading-relaxed">{ingredient}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {/* Tab Content */}
+            <div className="p-4 sm:p-8">
+              {activeTab === 'description' && (
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 border-b-4 border-black pb-2">
+                    PRODUCT DESCRIPTION
+                  </h3>
+                  <p className="font-bold leading-relaxed mb-6">{product.description}</p>
+                  
+                  {product.benefits.length > 0 && (
+                    <div className="bg-[#C4B5FD] border-4 border-black p-4 sm:p-6 mb-6">
+                      <h4 className="font-black uppercase tracking-widest text-sm mb-4 border-b-2 border-black pb-2">
+                        KEY BENEFITS
+                      </h4>
+                      <ul className="space-y-2">
+                        {product.benefits.map((benefit, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-black mt-2 flex-shrink-0"></div>
+                            <span className="font-bold text-sm">{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {/* Dosage */}
-            {product.dosage.length > 0 && (
-              <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-6 border border-purple-100">
-                <h3 className="text-lg font-bold mb-4 text-purple-700 flex items-center">
-                  <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  Dosage
-                </h3>
-                <ul className="space-y-3">
-                  {product.dosage.map((dose, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm leading-relaxed">{dose}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {activeTab === 'ingredients' && (
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 border-b-4 border-black pb-2">
+                    KEY INGREDIENTS
+                  </h3>
+                  {product.key_ingredients.length > 0 ? (
+                    <div className="space-y-3">
+                      {product.key_ingredients.map((ingredient, index) => (
+                        <div key={index} className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_#000]">
+                          <p className="font-bold">{ingredient}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-[#FFD93D] border-4 border-black p-6 text-center">
+                      <p className="font-bold uppercase tracking-wide">INGREDIENT INFORMATION NOT AVAILABLE</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {/* Directions for Use */}
-            {product.directions_for_use && (
-              <div className="md:col-span-2 lg:col-span-3 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold mb-4 text-gray-700 flex items-center">
-                  <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  Directions for Use
-                </h3>
-                <p className="text-gray-700 leading-relaxed">{product.directions_for_use}</p>
-              </div>
-            )}
+              {activeTab === 'dosage' && (
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 border-b-4 border-black pb-2">
+                    DOSAGE & DIRECTIONS
+                  </h3>
+                  {product.dosage.length > 0 ? (
+                    <div className="space-y-3 mb-6">
+                      {product.dosage.map((dose, index) => (
+                        <div key={index} className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_#000]">
+                          <p className="font-bold">{dose}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  
+                  {product.directions_for_use && (
+                    <div className="bg-[#C4B5FD] border-4 border-black p-4 sm:p-6">
+                      <h4 className="font-black uppercase tracking-widest text-sm mb-4 border-b-2 border-black pb-2">
+                        DIRECTIONS FOR USE
+                      </h4>
+                      <p className="font-bold leading-relaxed">{product.directions_for_use}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-          {/* Warning Sections */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {/* Cautions */}
-            {product.cautions.length > 0 && (
-              <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl p-6 border border-yellow-200">
-                <h3 className="text-lg font-bold mb-4 text-yellow-700 flex items-center">
-                  <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                  </div>
-                  Cautions
-                </h3>
-                <ul className="space-y-3">
-                  {product.cautions.map((caution, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm leading-relaxed">{caution}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {activeTab === 'cautions' && (
+                <div className="space-y-6">
+                  {product.cautions.length > 0 && (
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 border-b-4 border-black pb-2">
+                        CAUTIONS & WARNINGS
+                      </h3>
+                      <div className="bg-[#FFD93D] border-4 border-black p-4 sm:p-6 mb-6">
+                        <ul className="space-y-3">
+                          {product.cautions.map((caution, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-black mt-2 flex-shrink-0"></div>
+                              <span className="font-bold text-sm">{caution}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
 
-            {/* Side Effects */}
-            {product.side_effects.length > 0 && (
-              <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-xl p-6 border border-red-200">
-                <h3 className="text-lg font-bold mb-4 text-red-700 flex items-center">
-                  <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-2">
-                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  Side Effects
-                </h3>
-                <ul className="space-y-3">
-                  {product.side_effects.map((effect, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm leading-relaxed">{effect}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                  {product.side_effects.length > 0 && (
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 border-b-4 border-black pb-2">
+                        POSSIBLE SIDE EFFECTS
+                      </h3>
+                      <div className="bg-[#FF6B6B] border-4 border-black p-4 sm:p-6">
+                        <ul className="space-y-3">
+                          {product.side_effects.map((effect, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
+                              <span className="font-bold text-sm text-white">{effect}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Manufacturer Info */}
-          <div className="mt-8">
-            {/* Manufacturer Info */}
-            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border border-teal-100">
-              <h3 className="text-lg font-bold mb-4 text-teal-700 flex items-center">
-                <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center mr-2">
-                  <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
+          {(product.manufactured_by || product.packed_by || product.seller_information) && (
+            <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] mt-8 overflow-hidden">
+              <div className="bg-black border-b-4 border-black p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white">
+                  MANUFACTURER INFORMATION
+                </h3>
+              </div>
+              <div className="p-4 sm:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {product.manufactured_by && (
+                    <div className="bg-[#C4B5FD] border-4 border-black p-4">
+                      <p className="font-black uppercase tracking-widest text-xs mb-2">MANUFACTURED BY</p>
+                      <p className="font-bold text-sm">{product.manufactured_by}</p>
+                    </div>
+                  )}
+                  {product.packed_by && (
+                    <div className="bg-[#FFD93D] border-4 border-black p-4">
+                      <p className="font-black uppercase tracking-widest text-xs mb-2">PACKED BY</p>
+                      <p className="font-bold text-sm">{product.packed_by}</p>
+                    </div>
+                  )}
+                  {product.seller_information && (
+                    <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_#000]">
+                      <p className="font-black uppercase tracking-widest text-xs mb-2">SELLER</p>
+                      <p className="font-bold text-sm">{product.seller_information}</p>
+                    </div>
+                  )}
                 </div>
-                Manufacturer Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {product.manufactured_by && (
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">Manufactured by</p>
-                    <p className="font-semibold text-gray-900">{product.manufactured_by}</p>
-                  </div>
-                )}
-                {product.packed_by && (
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">Packed by</p>
-                    <p className="font-semibold text-gray-900">{product.packed_by}</p>
-                  </div>
-                )}
-                {product.seller_information && (
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">Seller</p>
-                    <p className="font-semibold text-gray-900">{product.seller_information}</p>
-                  </div>
-                )}
               </div>
             </div>
-          </div>
-          </div>
+          )}
         </div>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-20">
-            <h2 className="text-3xl font-bold mb-6">Related Products</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {relatedProducts.map(p => (
-                <div key={p.product_id}>
-                  <ProductCard product={p} />
+          <div className="max-w-7xl mx-auto p-4 sm:p-8 mt-12">
+            <div className="bg-[#FFD93D] border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
+              <div className="bg-black border-b-4 border-black p-4 sm:p-6">
+                <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white -rotate-1">
+                  RELATED PRODUCTS
+                </h2>
+              </div>
+              <div className="p-4 sm:p-6">
+                <div className="flex gap-4 overflow-x-auto pb-4">
+                  {relatedProducts.map(p => (
+                    <div key={p.product_id} className="flex-shrink-0 w-64">
+                      <ProductCard product={p} />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
+    </motion.div>
     </>
   );
 }

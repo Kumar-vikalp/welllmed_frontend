@@ -235,6 +235,9 @@ export default function Navbar() {
                       <div className="w-8 h-8 bg-neo-accent border-2 border-neo-ink flex items-center justify-center">
                         <span className="font-black text-sm">
                           {user.email?.charAt(0).toUpperCase()}
+                          console.log('====================================');
+                          console.log({user.email?.charAt(0).toUpperCase()});
+                          console.log('====================================');
                         </span>
                       </div>
                     </Link>
