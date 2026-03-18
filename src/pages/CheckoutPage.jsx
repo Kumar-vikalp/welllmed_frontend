@@ -115,8 +115,8 @@ export default function CheckoutPage() {
                 {/* UPI Option */}
                 <label
                   className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'UPI'
-                      ? 'bg-black text-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
-                      : 'bg-white text-black hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                      ? 'bg-black shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
                     }`}
                 >
                   <input
@@ -127,19 +127,21 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('UPI')}
                     className="sr-only"
                   />
-                  {/* The Radio Circle: Border changes to white when selected */}
+                  {/* Radio Circle: Flips border color */}
                   <div className={`w-6 h-6 border-4 mr-4 flex items-center justify-center ${paymentMethod === 'UPI' ? 'border-white' : 'border-black'}`}>
-                    {/* The Dot: Turns white when selected */}
                     {paymentMethod === 'UPI' && <div className="w-2 h-2 bg-white"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide">UPI PAYMENT</span>
+                  {/* Text: Flips to white when selected */}
+                  <span className={`text-lg font-black uppercase tracking-wide ${paymentMethod === 'UPI' ? 'text-white' : 'text-black'}`}>
+                    UPI PAYMENT
+                  </span>
                 </label>
 
                 {/* COD Option */}
                 <label
                   className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'COD'
-                      ? 'bg-black text-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
-                      : 'bg-white text-black hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                      ? 'bg-black shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
                     }`}
                 >
                   <input
@@ -153,7 +155,10 @@ export default function CheckoutPage() {
                   <div className={`w-6 h-6 border-4 mr-4 flex items-center justify-center ${paymentMethod === 'COD' ? 'border-white' : 'border-black'}`}>
                     {paymentMethod === 'COD' && <div className="w-2 h-2 bg-white"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide">CASH ON DELIVERY</span>
+                  {/* Text: Flips to white when selected */}
+                  <span className={`text-lg font-black uppercase tracking-wide ${paymentMethod === 'COD' ? 'text-white' : 'text-black'}`}>
+                    CASH ON DELIVERY
+                  </span>
                 </label>
               </div>
             </div>
