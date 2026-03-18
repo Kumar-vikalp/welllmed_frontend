@@ -69,21 +69,22 @@ export default function LabTestsPage() {
     return () => clearInterval(timer);
   }, [bannerSlides.length]);
 
-  const fetchData = async () => {
+const fetchData = async () => {
     try {
       setLoading(true);
       
-      // Fetch categories
+      // 1. Update Categories
       const categoriesResponse = await api.get('/lab/categories/');
-      setCategories(categoriesResponse.data);
+      // Extract the array from the results key
+      setCategories(categoriesResponse.data.results || []);
       
-      // Fetch daily offers
+      // 2. Update Daily Offers
       const offersResponse = await api.get('/lab/tests/?daily_offer=true');
-      setDailyOffers(offersResponse.data);
+      setDailyOffers(offersResponse.data.results || []);
       
-      // Fetch packages
+      // 3. Update Packages
       const packagesResponse = await api.get('/lab/packages/');
-      setPackages(packagesResponse.data);
+      setPackages(packagesResponse.data.results || []);
       
     } catch (error) {
       console.error('Failed to fetch lab data:', error);
@@ -92,7 +93,7 @@ export default function LabTestsPage() {
       setLoading(false);
     }
   };
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({

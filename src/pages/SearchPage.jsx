@@ -84,7 +84,8 @@ export default function SearchPage() {
       ></div>
 
       {/* Search Header */}
-      <div className="z-10 bg-[#C4B5FD] border-b-8 border-black sticky top-16 lg:top-16">
+      {/* <div className="relative z-10 bg-[#C4B5FD] border-b-8 border-black sticky top-16 lg:top-16"> */}
+        <div className="sticky top-16 z-50 bg-[#C4B5FD] border-b-8 border-black">
         <div className="max-w-7xl mx-auto p-4 sm:p-6">
           <div className="relative">
             <input
