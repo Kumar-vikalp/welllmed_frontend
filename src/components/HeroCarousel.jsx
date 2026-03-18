@@ -224,10 +224,10 @@ export default function HeroCarousel() {
 
               {/* Background Numbers */}
               <div className="absolute bottom-0 left-0 text-6xl md:text-9xl font-black text-neo-ink opacity-10 -rotate-12 pointer-events-none">
-                10
+                Gemx
               </div>
               <div className="absolute top-20 right-20 text-4xl md:text-6xl font-black text-neo-ink opacity-20 rotate-12 pointer-events-none hidden md:block">
-                MIN
+                Medicos
               </div>
             </motion.div>
           </AnimatePresence>
