@@ -253,9 +253,9 @@ export default function CartPage() {
                     <span className="font-black bg-[#C4B5FD] border-2 border-black px-2 py-1 text-xs">FREE</span>
                   </div>
                   <div className="bg-black text-white p-4 border-4 border-black">
-                    <div className="flex justify-between items-center">
-                      <span className="font-white uppercase tracking-widest">TOTAL</span>
-                      <span className="font-white text-xl sm:text-2xl">{formatPrice(cartTotal)}</span>
+                    <div className="text-white flex justify-between items-center">
+                      <span className="text-white uppercase tracking-widest">TOTAL</span>
+                      <span className="text-white text-xl sm:text-2xl">{formatPrice(cartTotal)}</span>
                     </div>
                   </div>
                 </div>

@@ -62,7 +62,7 @@ export default function CheckoutPage() {
         <div className="max-w-7xl mx-auto text-center py-20">
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight mb-4">YOUR CART IS EMPTY</h1>
           <p className="text-base sm:text-lg font-bold uppercase tracking-wide mb-8">YOU CAN'T CHECKOUT WITHOUT ANY ITEMS</p>
-          <button 
+          <button
             onClick={() => navigate('/products')}
             className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
               text-sm px-6 py-4 h-14 w-full sm:w-auto
@@ -88,7 +88,7 @@ export default function CheckoutPage() {
         <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight text-center mb-8 sm:mb-12">
           CHECKOUT
         </h1>
-        
+
         <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Side */}
           <div className="lg:col-span-2 space-y-8">
@@ -112,12 +112,12 @@ export default function CheckoutPage() {
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">PAYMENT METHOD</h2>
               </div>
               <div className="p-4 sm:p-6 space-y-4">
+                {/* UPI Option */}
                 <label
-                  className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${
-                    paymentMethod === 'UPI' 
-                      ? 'bg-black text-white shadow-[4px_4px_0px_0px_#000]' 
+                  className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'UPI'
+                      ? 'bg-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
                       : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
-                  }`}
+                    }`}
                 >
                   <input
                     type="radio"
@@ -127,18 +127,18 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('UPI')}
                     className="sr-only"
                   />
-                  <div className="w-6 h-6 border-4 border-current mr-4 flex items-center justify-center">
-                    {paymentMethod === 'UPI' && <div className="w-2 h-2 bg-current"></div>}
+                  <div className="w-6 h-6 border-4 border-black mr-4 flex items-center justify-center">
+                    {paymentMethod === 'UPI' && <div className="w-2 h-2 bg-black"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide">UPI PAYMENT</span>
+                  <span className="text-lg font-black uppercase tracking-wide text-black">UPI PAYMENT</span>
                 </label>
-                
+
+                {/* COD Option */}
                 <label
-                  className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${
-                    paymentMethod === 'COD' 
-                      ? 'bg-black text-white shadow-[4px_4px_0px_0px_#000]' 
+                  className={`flex items-center p-4 sm:p-6 border-4 border-black cursor-pointer transition-all duration-100 ${paymentMethod === 'COD'
+                      ? 'bg-white shadow-[2px_2px_0px_0px_#000] translate-x-[2px] translate-y-[2px]'
                       : 'bg-white hover:bg-[#C4B5FD] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
-                  }`}
+                    }`}
                 >
                   <input
                     type="radio"
@@ -148,10 +148,10 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('COD')}
                     className="sr-only"
                   />
-                  <div className="w-6 h-6 border-4 border-current mr-4 flex items-center justify-center">
-                    {paymentMethod === 'COD' && <div className="w-2 h-2 bg-current"></div>}
+                  <div className="w-6 h-6 border-4 border-black mr-4 flex items-center justify-center">
+                    {paymentMethod === 'COD' && <div className="w-2 h-2 bg-black"></div>}
                   </div>
-                  <span className="text-lg font-black uppercase tracking-wide">CASH ON DELIVERY</span>
+                  <span className="text-lg font-black uppercase tracking-wide text-black">CASH ON DELIVERY</span>
                 </label>
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
               <div className="bg-[#FF6B6B] border-b-4 border-black p-4 sm:p-6">
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">ORDER SUMMARY</h2>
               </div>
-              
+
               <div className="p-4 sm:p-6">
                 <div className="space-y-3 mb-6">
                   {cart.map((item) => (
@@ -179,7 +179,7 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center pb-2 border-b-2 border-black">
                     <span className="font-bold uppercase tracking-wide">SUBTOTAL</span>
