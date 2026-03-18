@@ -27,49 +27,49 @@ export default function Home() {
   const categories = useMemo(() => [
     {
       name: 'Fever & Pain',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/1.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/1.png',
       count: 25,
       color: 'bg-neo-accent'
     },
     {
       name: 'Allergy & Cold',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/2.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/2.png',
       count: 18,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Digestive Health',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/3.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/3.png',
       count: 22,
       color: 'bg-neo-muted'
     },
     {
       name: 'Heart & BP',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/4.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/4.png',
       count: 15,
       color: 'bg-neo-accent'
     },
     {
       name: 'Vitamins',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/5.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/5.png',
       count: 30,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Antibiotics',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/6.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/6.png',
       count: 12,
       color: 'bg-neo-muted'
     },
     {
       name: 'Skin Care',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/7.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/7.png',
       count: 20,
       color: 'bg-neo-accent'
     },
     {
       name: 'Women\'s Health',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/categories/8.png',
+      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/8.png',
       count: 16,
       color: 'bg-neo-secondary'
     }
@@ -234,9 +234,9 @@ export default function Home() {
                       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                       <div className="absolute inset-0 flex flex-col justify-end p-4">
                         <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
-                          <h3 className="text-lg font-black uppercase text-center leading-tight">
+                          {/* <h3 className="text-lg font-black uppercase text-center leading-tight">
                             {category.name}
-                          </h3>
+                          </h3> */}
                           {/* <p className="text-sm font-bold text-center mt-1">
                             {category.count} ITEMS
                           </p> */}
