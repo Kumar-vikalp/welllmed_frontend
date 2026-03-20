@@ -1,0 +1,69 @@
+src
+ ┣ api
+ ┃ ┗ axiosConfig.js
+ ┣ assets
+ ┃ ┗ react.svg
+ ┣ components
+ ┃ ┣ Breadcrumbs.jsx
+ ┃ ┣ Button.jsx
+ ┃ ┣ Card.jsx
+ ┃ ┣ Footer.jsx
+ ┃ ┣ HeroCarousel.jsx
+ ┃ ┣ Layout.jsx
+ ┃ ┣ LazyImage.jsx
+ ┃ ┣ LocationDetector.jsx
+ ┃ ┣ Modal.jsx
+ ┃ ┣ Navbar.jsx
+ ┃ ┣ NeoBrutalistCarousel.jsx
+ ┃ ┣ ProductCard.jsx
+ ┃ ┣ ProtectedRoute.jsx
+ ┃ ┣ SearchBar.jsx
+ ┃ ┣ SEO.jsx
+ ┃ ┣ Skeleton.jsx
+ ┃ ┣ Toast.jsx
+ ┃ ┣ TopBanner.jsx
+ ┃ ┗ TrendingCarousel.jsx
+ ┣ contexts
+ ┃ ┣ AddressContext.jsx
+ ┃ ┣ CartContext.jsx
+ ┃ ┣ OrderContext.jsx
+ ┃ ┗ UserContext.jsx
+ ┣ data
+ ┃ ┣ dummyProducts.js
+ ┃ ┗ products.json
+ ┣ pages
+ ┃ ┣ AboutPage.jsx
+ ┃ ┣ CartPage.jsx
+ ┃ ┣ CheckoutPage.jsx
+ ┃ ┣ ContactPage.jsx
+ ┃ ┣ ForgotPasswordPage.jsx
+ ┃ ┣ GenericInfoPage.jsx
+ ┃ ┣ HelpPage.jsx
+ ┃ ┣ Home.jsx
+ ┃ ┣ HowToOrderPage.jsx
+ ┃ ┣ LabTestsPage.jsx
+ ┃ ┣ Login.jsx
+ ┃ ┣ OrderHistoryPage.jsx
+ ┃ ┣ OrderSuccessPage.jsx
+ ┃ ┣ PrescriptionUploadPage.jsx
+ ┃ ┣ PrivacyPage.jsx
+ ┃ ┣ ProductDetails.jsx
+ ┃ ┣ ProductsPage.jsx
+ ┃ ┣ ProfilePage.jsx
+ ┃ ┣ ResetPasswordPage.jsx
+ ┃ ┣ SearchPage.jsx
+ ┃ ┣ Signup.jsx
+ ┃ ┗ TermsPage.jsx
+ ┣ store
+ ┃ ┣ slices
+ ┃ ┃ ┣ cartSlice.js
+ ┃ ┃ ┣ ordersSlice.js
+ ┃ ┃ ┣ productsSlice.js
+ ┃ ┃ ┗ userSlice.js
+ ┃ ┗ index.js
+ ┣ utils
+ ┃ ┗ locationUtils.js
+ ┣ App.css
+ ┣ App.jsx
+ ┣ index.css
+ ┗ main.jsx

@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/ContactPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { motion } from 'framer-motion';
+<span class='ln'>3</span>import Toast from '../components/Toast';
+<span class='ln'>4</span>import Card from '../components/Card';
+<span class='ln'>5</span>import Button from '../components/Button';
+<span class='ln'>6</span>import { Star, Zap, Shield } from 'lucide-react';
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function ContactPage() {
+<span class='ln'>9</span>  const [formData, setFormData] = useState({
+<span class='ln'>10</span>    name: '',
+<span class='ln'>11</span>    email: '',
+<span class='ln'>12</span>    phone: '',
+<span class='ln'>13</span>    subject: '',
+<span class='ln'>14</span>    message: ''
+<span class='ln'>15</span>  });
+<span class='ln'>16</span>  const [loading, setLoading] = useState(false);
+<span class='ln'>17</span>  const [toast, setToast] = useState({ message: '', type: 'info' });
+<span class='ln'>18</span>
+<span class='ln'>19</span>  const handleChange = (e) =&gt; {
+<span class='ln'>20</span>    setFormData({ ...formData, [e.target.name]: e.target.value });
+<span class='ln'>21</span>  };
+<span class='ln'>22</span>
+<span class='ln'>23</span>  const handleSubmit = async (e) =&gt; {
+<span class='ln'>24</span>    e.preventDefault();
+<span class='ln'>25</span>    setLoading(true);
+<span class='ln'>26</span>    
+<span class='ln'>27</span>    // Simulate form submission
+<span class='ln'>28</span>    setTimeout(() =&gt; {
+<span class='ln'>29</span>      setToast({ message: 'Thank you for your message! We\'ll get back to you soon.', type: 'success' });
+<span class='ln'>30</span>      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+<span class='ln'>31</span>      setLoading(false);
+<span class='ln'>32</span>    }, 1000);
+<span class='ln'>33</span>  };
+<span class='ln'>34</span>
+<span class='ln'>35</span>  const contactInfo = [
+<span class='ln'>36</span>    {
+<span class='ln'>37</span>      icon: (
+<span class='ln'>38</span>        &lt;svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>39</span>          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /&gt;
+<span class='ln'>40</span>        &lt;/svg&gt;
+<span class='ln'>41</span>      ),
+<span class='ln'>42</span>      title: 'Phone',
+<span class='ln'>43</span>      details: ['+91 123 456 7890', '+91 987 654 3210'],
+<span class='ln'>44</span>      description: 'Available 24/7 for emergencies'
+<span class='ln'>45</span>    },
+<span class='ln'>46</span>    {
+<span class='ln'>47</span>      icon: (
+<span class='ln'>48</span>        &lt;svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>49</span>          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /&gt;
+<span class='ln'>50</span>        &lt;/svg&gt;
+<span class='ln'>51</span>      ),
+<span class='ln'>52</span>      title: 'Email',
+<span class='ln'>53</span>      details: ['support@genx.com', 'orders@genx.com'],
+<span class='ln'>54</span>      description: 'We respond within 2 hours'
+<span class='ln'>55</span>    },
+<span class='ln'>56</span>    {
+<span class='ln'>57</span>      icon: (
+<span class='ln'>58</span>        &lt;svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>59</span>          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /&gt;
+<span class='ln'>60</span>          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /&gt;
+<span class='ln'>61</span>        &lt;/svg&gt;
+<span class='ln'>62</span>      ),
+<span class='ln'>63</span>      title: 'Address',
+<span class='ln'>64</span>      details: ['123 Healthcare Street', 'Medical District, Mumbai 400001'],
+<span class='ln'>65</span>      description: 'Visit our headquarters'
+<span class='ln'>66</span>    }
+<span class='ln'>67</span>  ];
+<span class='ln'>68</span>
+<span class='ln'>69</span>  return (
+<span class='ln'>70</span>    &lt;&gt;
+<span class='ln'>71</span>      &lt;Toast message={toast.message} type={toast.type} /&gt;
+<span class='ln'>72</span>      &lt;motion.div 
+<span class='ln'>73</span>        initial={{ opacity: 0 }} 
+<span class='ln'>74</span>        animate={{ opacity: 1 }}
+<span class='ln'>75</span>        className="bg-neo-canvas min-h-screen relative overflow-hidden"
+<span class='ln'>76</span>      &gt;
+<span class='ln'>77</span>        {/* Background Pattern */}
+<span class='ln'>78</span>        &lt;div className="absolute inset-0 bg-neo-grid opacity-20"&gt;&lt;/div&gt;
+<span class='ln'>79</span>        
+<span class='ln'>80</span>        {/* Floating Decorative Elements */}
+<span class='ln'>81</span>        &lt;div className="absolute top-20 left-10 rotate-12"&gt;
+<span class='ln'>82</span>          &lt;Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" /&gt;
+<span class='ln'>83</span>        &lt;/div&gt;
+<span class='ln'>84</span>        &lt;div className="absolute top-40 right-20 -rotate-12"&gt;
+<span class='ln'>85</span>          &lt;Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" /&gt;
+<span class='ln'>86</span>        &lt;/div&gt;
+<span class='ln'>87</span>        &lt;div className="absolute bottom-32 left-32 rotate-45"&gt;
+<span class='ln'>88</span>          &lt;Shield className="w-10 h-10 fill-neo-muted text-neo-muted" /&gt;
+<span class='ln'>89</span>        &lt;/div&gt;
+<span class='ln'>90</span>
+<span class='ln'>91</span>        {/* Hero Section */}
+<span class='ln'>92</span>        &lt;div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative"&gt;
+<span class='ln'>93</span>          &lt;div className="neo-container text-center relative z-10"&gt;
+<span class='ln'>94</span>            &lt;motion.h1 
+<span class='ln'>95</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>96</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>97</span>              className="text-4xl md:text-8xl font-black mb-6 uppercase"
+<span class='ln'>98</span>            &gt;
+<span class='ln'>99</span>              &lt;span className="block -rotate-1"&gt;CONTACT&lt;/span&gt;
+<span class='ln'>100</span>              &lt;span className="block rotate-1 text-stroke"&gt;US&lt;/span&gt;
+<span class='ln'>101</span>            &lt;/motion.h1&gt;
+<span class='ln'>102</span>            &lt;motion.p 
+<span class='ln'>103</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>104</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>105</span>              transition={{ delay: 0.2 }}
+<span class='ln'>106</span>              className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
+<span class='ln'>107</span>            &gt;
+<span class='ln'>108</span>              WE'RE HERE TO HELP WITH ALL YOUR HEALTHCARE NEEDS. REACH OUT TO US ANYTIME!
+<span class='ln'>109</span>            &lt;/motion.p&gt;
+<span class='ln'>110</span>          &lt;/div&gt;
+<span class='ln'>111</span>        &lt;/div&gt;
+<span class='ln'>112</span>
+<span class='ln'>113</span>        {/* Contact Info Cards */}
+<span class='ln'>114</span>        &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>115</span>          &lt;div className="neo-container"&gt;
+<span class='ln'>116</span>            &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-8"&gt;
+<span class='ln'>117</span>              {contactInfo.map((info, index) =&gt; (
+<span class='ln'>118</span>                &lt;motion.div
+<span class='ln'>119</span>                  key={index}
+<span class='ln'>120</span>                  initial={{ opacity: 0, y: 20 }}
+<span class='ln'>121</span>                  animate={{ opacity: 1, y: 0 }}
+<span class='ln'>122</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>123</span>                &gt;
+<span class='ln'>124</span>                  &lt;Card 
+<span class='ln'>125</span>                    className="p-8 text-center bg-neo-muted"
+<span class='ln'>126</span>                    rotation={Math.random() &gt; 0.5 ? 1 : -1}
+<span class='ln'>127</span>                  &gt;
+<span class='ln'>128</span>                    &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 rotate-12"&gt;
+<span class='ln'>129</span>                      {info.icon}
+<span class='ln'>130</span>                    &lt;/div&gt;
+<span class='ln'>131</span>                    &lt;h3 className="text-2xl font-black text-neo-ink mb-4 uppercase -rotate-1"&gt;{info.title}&lt;/h3&gt;
+<span class='ln'>132</span>                    {info.details.map((detail, idx) =&gt; (
+<span class='ln'>133</span>                      &lt;p key={idx} className="text-neo-ink font-bold mb-2 uppercase text-sm"&gt;{detail}&lt;/p&gt;
+<span class='ln'>134</span>                    ))}
+<span class='ln'>135</span>                    &lt;p className="text-neo-ink font-bold text-xs mt-4 uppercase tracking-wide"&gt;{info.description}&lt;/p&gt;
+<span class='ln'>136</span>                  &lt;/Card&gt;
+<span class='ln'>137</span>                &lt;/motion.div&gt;
+<span class='ln'>138</span>              ))}
+<span class='ln'>139</span>            &lt;/div&gt;
+<span class='ln'>140</span>          &lt;/div&gt;
+<span class='ln'>141</span>        &lt;/div&gt;
+<span class='ln'>142</span>
+<span class='ln'>143</span>        {/* Contact Form */}
+<span class='ln'>144</span>        &lt;div className="neo-section bg-neo-secondary border-y-4 border-neo-ink"&gt;
+<span class='ln'>145</span>          &lt;div className="max-w-4xl mx-auto px-4"&gt;
+<span class='ln'>146</span>            &lt;Card className="p-8 md:p-12 bg-white rotate-1"&gt;
+<span class='ln'>147</span>              &lt;div className="text-center mb-12"&gt;
+<span class='ln'>148</span>                &lt;h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-4 uppercase -rotate-1"&gt;SEND US A MESSAGE&lt;/h2&gt;
+<span class='ln'>149</span>                &lt;p className="text-lg font-bold text-neo-ink uppercase"&gt;FILL OUT THE FORM BELOW AND WE'LL GET BACK TO YOU ASAP.&lt;/p&gt;
+<span class='ln'>150</span>              &lt;/div&gt;
+<span class='ln'>151</span>
+<span class='ln'>152</span>              &lt;form onSubmit={handleSubmit} className="space-y-6"&gt;
+<span class='ln'>153</span>                &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;
+<span class='ln'>154</span>                  &lt;div&gt;
+<span class='ln'>155</span>                    &lt;label htmlFor="name" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide"&gt;FULL NAME *&lt;/label&gt;
+<span class='ln'>156</span>                    &lt;input
+<span class='ln'>157</span>                      type="text"
+<span class='ln'>158</span>                      id="name"
+<span class='ln'>159</span>                      name="name"
+<span class='ln'>160</span>                      required
+<span class='ln'>161</span>                      value={formData.name}
+<span class='ln'>162</span>                      onChange={handleChange}
+<span class='ln'>163</span>                      className="neo-input w-full"
+<span class='ln'>164</span>                      placeholder="Your full name"
+<span class='ln'>165</span>                    /&gt;
+<span class='ln'>166</span>                  &lt;/div&gt;
+<span class='ln'>167</span>                  &lt;div&gt;
+<span class='ln'>168</span>                    &lt;label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2"&gt;Email Address *&lt;/label&gt;
+<span class='ln'>169</span>                    &lt;input
+<span class='ln'>170</span>                      type="email"
+<span class='ln'>171</span>                      id="email"
+<span class='ln'>172</span>                      name="email"
+<span class='ln'>173</span>                      required
+<span class='ln'>174</span>                      value={formData.email}
+<span class='ln'>175</span>                      onChange={handleChange}
+<span class='ln'>176</span>                      className="neo-input w-full"
+<span class='ln'>177</span>                      placeholder="your.email@example.com"
+<span class='ln'>178</span>                    /&gt;
+<span class='ln'>179</span>                  &lt;/div&gt;
+<span class='ln'>180</span>                &lt;/div&gt;
+<span class='ln'>181</span>
+<span class='ln'>182</span>                &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;
+<span class='ln'>183</span>                  &lt;div&gt;
+<span class='ln'>184</span>                    &lt;label htmlFor="phone" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide"&gt;PHONE NUMBER&lt;/label&gt;
+<span class='ln'>185</span>                    &lt;input
+<span class='ln'>186</span>                      type="tel"
+<span class='ln'>187</span>                      id="phone"
+<span class='ln'>188</span>                      name="phone"
+<span class='ln'>189</span>                      value={formData.phone}
+<span class='ln'>190</span>                      onChange={handleChange}
+<span class='ln'>191</span>                      className="neo-input w-full"
+<span class='ln'>192</span>                      placeholder="+91 123 456 7890"
+<span class='ln'>193</span>                    /&gt;
+<span class='ln'>194</span>                  &lt;/div&gt;
+<span class='ln'>195</span>                  &lt;div&gt;
+<span class='ln'>196</span>                    &lt;label htmlFor="subject" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide"&gt;SUBJECT *&lt;/label&gt;
+<span class='ln'>197</span>                    &lt;select
+<span class='ln'>198</span>                      id="subject"
+<span class='ln'>199</span>                      name="subject"
+<span class='ln'>200</span>                      required
+<span class='ln'>201</span>                      value={formData.subject}
+<span class='ln'>202</span>                      onChange={handleChange}
+<span class='ln'>203</span>                      className="neo-input w-full"
+<span class='ln'>204</span>                    &gt;
+<span class='ln'>205</span>                      &lt;option value=""&gt;SELECT A SUBJECT&lt;/option&gt;
+<span class='ln'>206</span>                      &lt;option value="general"&gt;GENERAL INQUIRY&lt;/option&gt;
+<span class='ln'>207</span>                      &lt;option value="order"&gt;ORDER SUPPORT&lt;/option&gt;
+<span class='ln'>208</span>                      &lt;option value="technical"&gt;TECHNICAL ISSUE&lt;/option&gt;
+<span class='ln'>209</span>                      &lt;option value="billing"&gt;BILLING QUESTION&lt;/option&gt;
+<span class='ln'>210</span>                      &lt;option value="partnership"&gt;PARTNERSHIP&lt;/option&gt;
+<span class='ln'>211</span>                      &lt;option value="other"&gt;OTHER&lt;/option&gt;
+<span class='ln'>212</span>                    &lt;/select&gt;
+<span class='ln'>213</span>                  &lt;/div&gt;
+<span class='ln'>214</span>                &lt;/div&gt;
+<span class='ln'>215</span>
+<span class='ln'>216</span>                &lt;div&gt;
+<span class='ln'>217</span>                  &lt;label htmlFor="message" className="block text-sm font-black text-neo-ink mb-2 uppercase tracking-wide"&gt;MESSAGE *&lt;/label&gt;
+<span class='ln'>218</span>                  &lt;textarea
+<span class='ln'>219</span>                    id="message"
+<span class='ln'>220</span>                    name="message"
+<span class='ln'>221</span>                    required
+<span class='ln'>222</span>                    rows="6"
+<span class='ln'>223</span>                    value={formData.message}
+<span class='ln'>224</span>                    onChange={handleChange}
+<span class='ln'>225</span>                    className="neo-input w-full resize-none"
+<span class='ln'>226</span>                    placeholder="Please describe your inquiry in detail..."
+<span class='ln'>227</span>                  &gt;&lt;/textarea&gt;
+<span class='ln'>228</span>                &lt;/div&gt;
+<span class='ln'>229</span>
+<span class='ln'>230</span>                &lt;div className="text-center"&gt;
+<span class='ln'>231</span>                  &lt;Button
+<span class='ln'>232</span>                    type="submit"
+<span class='ln'>233</span>                    disabled={loading}
+<span class='ln'>234</span>                    size="lg"
+<span class='ln'>235</span>                    className="rotate-2 disabled:opacity-50 disabled:cursor-not-allowed"
+<span class='ln'>236</span>                  &gt;
+<span class='ln'>237</span>                    {loading ? (
+<span class='ln'>238</span>                      'SENDING MESSAGE...'
+<span class='ln'>239</span>                    ) : (
+<span class='ln'>240</span>                      'SEND MESSAGE'
+<span class='ln'>241</span>                    )}
+<span class='ln'>242</span>                  &lt;/Button&gt;
+<span class='ln'>243</span>                &lt;/div&gt;
+<span class='ln'>244</span>              &lt;/form&gt;
+<span class='ln'>245</span>            &lt;/Card&gt;
+<span class='ln'>246</span>          &lt;/div&gt;
+<span class='ln'>247</span>        &lt;/div&gt;
+<span class='ln'>248</span>
+<span class='ln'>249</span>        {/* FAQ Section */}
+<span class='ln'>250</span>        &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>251</span>          &lt;div className="neo-container"&gt;
+<span class='ln'>252</span>            &lt;div className="text-center mb-12"&gt;
+<span class='ln'>253</span>              &lt;h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-4 uppercase rotate-1"&gt;FREQUENTLY ASKED QUESTIONS&lt;/h2&gt;
+<span class='ln'>254</span>              &lt;p className="text-lg font-bold text-neo-ink uppercase"&gt;QUICK ANSWERS TO COMMON QUESTIONS&lt;/p&gt;
+<span class='ln'>255</span>            &lt;/div&gt;
+<span class='ln'>256</span>
+<span class='ln'>257</span>            &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-8"&gt;
+<span class='ln'>258</span>              &lt;div className="space-y-6"&gt;
+<span class='ln'>259</span>                &lt;Card className="p-6 bg-neo-accent rotate-1"&gt;
+<span class='ln'>260</span>                  &lt;h3 className="text-lg font-black text-white mb-3 uppercase"&gt;HOW FAST IS YOUR DELIVERY?&lt;/h3&gt;
+<span class='ln'>261</span>                  &lt;p className="text-white font-bold"&gt;WE DELIVER MEDICINES WITHIN 10 MINUTES IN MAJOR CITIES AND WITHIN 24 HOURS IN OTHER AREAS.&lt;/p&gt;
+<span class='ln'>262</span>                &lt;/Card&gt;
+<span class='ln'>263</span>                &lt;Card className="p-6 bg-neo-secondary -rotate-1"&gt;
+<span class='ln'>264</span>                  &lt;h3 className="text-lg font-black text-neo-ink mb-3 uppercase"&gt;ARE YOUR MEDICINES AUTHENTIC?&lt;/h3&gt;
+<span class='ln'>265</span>                  &lt;p className="text-neo-ink font-bold"&gt;YES, ALL OUR MEDICINES ARE SOURCED DIRECTLY FROM LICENSED MANUFACTURERS AND ARE 100% AUTHENTIC.&lt;/p&gt;
+<span class='ln'>266</span>                &lt;/Card&gt;
+<span class='ln'>267</span>                &lt;Card className="p-6 bg-neo-muted rotate-2"&gt;
+<span class='ln'>268</span>                  &lt;h3 className="text-lg font-black text-neo-ink mb-3 uppercase"&gt;DO YOU ACCEPT INSURANCE?&lt;/h3&gt;
+<span class='ln'>269</span>                  &lt;p className="text-neo-ink font-bold"&gt;WE'RE WORKING ON INSURANCE PARTNERSHIPS. CURRENTLY, WE ACCEPT ALL MAJOR PAYMENT METHODS.&lt;/p&gt;
+<span class='ln'>270</span>                &lt;/Card&gt;
+<span class='ln'>271</span>              &lt;/div&gt;
+<span class='ln'>272</span>              &lt;div className="space-y-6"&gt;
+<span class='ln'>273</span>                &lt;Card className="p-6 bg-white -rotate-1"&gt;
+<span class='ln'>274</span>                  &lt;h3 className="text-lg font-black text-neo-ink mb-3 uppercase"&gt;CAN I RETURN MEDICINES?&lt;/h3&gt;
+<span class='ln'>275</span>                  &lt;p className="text-neo-ink font-bold"&gt;DUE TO SAFETY REGULATIONS, WE ONLY ACCEPT RETURNS FOR DAMAGED OR INCORRECT ITEMS WITHIN 24 HOURS.&lt;/p&gt;
+<span class='ln'>276</span>                &lt;/Card&gt;
+<span class='ln'>277</span>                &lt;Card className="p-6 bg-neo-accent rotate-1"&gt;
+<span class='ln'>278</span>                  &lt;h3 className="text-lg font-black text-white mb-3 uppercase"&gt;DO YOU REQUIRE PRESCRIPTIONS?&lt;/h3&gt;
+<span class='ln'>279</span>                  &lt;p className="text-white font-bold"&gt;PRESCRIPTION MEDICINES REQUIRE A VALID PRESCRIPTION. OVER-THE-COUNTER MEDICINES DON'T NEED ONE.&lt;/p&gt;
+<span class='ln'>280</span>                &lt;/Card&gt;
+<span class='ln'>281</span>                &lt;Card className="p-6 bg-neo-secondary -rotate-2"&gt;
+<span class='ln'>282</span>                  &lt;h3 className="text-lg font-black text-neo-ink mb-3 uppercase"&gt;IS MY DATA SECURE?&lt;/h3&gt;
+<span class='ln'>283</span>                  &lt;p className="text-neo-ink font-bold"&gt;ABSOLUTELY! WE USE INDUSTRY-STANDARD ENCRYPTION TO PROTECT ALL YOUR PERSONAL AND MEDICAL INFORMATION.&lt;/p&gt;
+<span class='ln'>284</span>                &lt;/Card&gt;
+<span class='ln'>285</span>              &lt;/div&gt;
+<span class='ln'>286</span>            &lt;/div&gt;
+<span class='ln'>287</span>          &lt;/div&gt;
+<span class='ln'>288</span>        &lt;/div&gt;
+<span class='ln'>289</span>      &lt;/motion.div&gt;
+<span class='ln'>290</span>    &lt;/&gt;
+<span class='ln'>291</span>  );
+<span class='ln'>292</span>}
+</pre></div></body></html>

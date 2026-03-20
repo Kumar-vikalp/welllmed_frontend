@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/store/index.js</span><span class='lang'>JS</span></div><div class='wrap'><pre><span class='ln'>1</span>import { configureStore } from '@reduxjs/toolkit'
+<span class='ln'>2</span>import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
+<span class='ln'>3</span>import storage from 'redux-persist/lib/storage'
+<span class='ln'>4</span>import { combineReducers } from '@reduxjs/toolkit'
+<span class='ln'>5</span>
+<span class='ln'>6</span>import cartSlice from './slices/cartSlice'
+<span class='ln'>7</span>import productsSlice from './slices/productsSlice'
+<span class='ln'>8</span>import userSlice from './slices/userSlice'
+<span class='ln'>9</span>import ordersSlice from './slices/ordersSlice'
+<span class='ln'>10</span>
+<span class='ln'>11</span>const persistConfig = {
+<span class='ln'>12</span>  key: 'root',
+<span class='ln'>13</span>  storage,
+<span class='ln'>14</span>  whitelist: ['cart', 'user'], // Only persist cart and user data
+<span class='ln'>15</span>  blacklist: ['products', 'orders'] // Don't persist products and orders as they should be fresh
+<span class='ln'>16</span>}
+<span class='ln'>17</span>
+<span class='ln'>18</span>const rootReducer = combineReducers({
+<span class='ln'>19</span>  cart: cartSlice,
+<span class='ln'>20</span>  products: productsSlice,
+<span class='ln'>21</span>  user: userSlice,
+<span class='ln'>22</span>  orders: ordersSlice
+<span class='ln'>23</span>})
+<span class='ln'>24</span>
+<span class='ln'>25</span>const persistedReducer = persistReducer(persistConfig, rootReducer)
+<span class='ln'>26</span>
+<span class='ln'>27</span>export const store = configureStore({
+<span class='ln'>28</span>  reducer: persistedReducer,
+<span class='ln'>29</span>  middleware: (getDefaultMiddleware) =&gt;
+<span class='ln'>30</span>    getDefaultMiddleware({
+<span class='ln'>31</span>      serializableCheck: {
+<span class='ln'>32</span>        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+<span class='ln'>33</span>      }
+<span class='ln'>34</span>    }),
+<span class='ln'>35</span>  devTools: process.env.NODE_ENV !== 'production'
+<span class='ln'>36</span>})
+<span class='ln'>37</span>
+<span class='ln'>38</span>export const persistor = persistStore(store)
+</pre></div></body></html>

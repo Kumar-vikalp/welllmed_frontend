@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/App.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { Routes, Route, useLocation } from 'react-router-dom';
+<span class='ln'>2</span>import { Navigate } from 'react-router-dom';
+<span class='ln'>3</span>import { AnimatePresence, motion } from 'framer-motion';
+<span class='ln'>4</span>import { useSelector } from 'react-redux';
+<span class='ln'>5</span>import { selectUser } from './store/slices/userSlice';
+<span class='ln'>6</span>import { Suspense, useEffect } from 'react';
+<span class='ln'>7</span>import { useDispatch } from 'react-redux';
+<span class='ln'>8</span>import { fetchCart } from './store/slices/cartSlice';
+<span class='ln'>9</span>
+<span class='ln'>10</span>import Home from './pages/Home';
+<span class='ln'>11</span>import Login from './pages/Login';
+<span class='ln'>12</span>import Signup from './pages/Signup';
+<span class='ln'>13</span>import ProductsPage from './pages/ProductsPage';
+<span class='ln'>14</span>import GenericInfoPage from './pages/GenericInfoPage';
+<span class='ln'>15</span>import ForgotPasswordPage from './pages/ForgotPasswordPage';
+<span class='ln'>16</span>import ResetPasswordPage from './pages/ResetPasswordPage';
+<span class='ln'>17</span>import ProductDetails from './pages/ProductDetails';
+<span class='ln'>18</span>import CartPage from './pages/CartPage';
+<span class='ln'>19</span>import CheckoutPage from './pages/CheckoutPage';
+<span class='ln'>20</span>import SearchPage from './pages/SearchPage';
+<span class='ln'>21</span>import ProfilePage from './pages/ProfilePage';
+<span class='ln'>22</span>import OrderHistoryPage from './pages/OrderHistoryPage';
+<span class='ln'>23</span>import OrderSuccessPage from './pages/OrderSuccessPage';
+<span class='ln'>24</span>import AboutPage from './pages/AboutPage';
+<span class='ln'>25</span>import ContactPage from './pages/ContactPage';
+<span class='ln'>26</span>import HelpPage from './pages/HelpPage';
+<span class='ln'>27</span>import HowToOrderPage from './pages/HowToOrderPage';
+<span class='ln'>28</span>import LabTestsPage from './pages/LabTestsPage';
+<span class='ln'>29</span>import PrescriptionUploadPage from './pages/PrescriptionUploadPage';
+<span class='ln'>30</span>
+<span class='ln'>31</span>import Layout from './components/Layout';
+<span class='ln'>32</span>import ProtectedRoute from './components/ProtectedRoute';
+<span class='ln'>33</span>
+<span class='ln'>34</span>// Loading component
+<span class='ln'>35</span>const PageLoader = () =&gt; (
+<span class='ln'>36</span>  &lt;motion.div 
+<span class='ln'>37</span>    initial={{ opacity: 0 }}
+<span class='ln'>38</span>    animate={{ opacity: 1 }}
+<span class='ln'>39</span>    className="flex items-center justify-center min-h-screen"
+<span class='ln'>40</span>  &gt;
+<span class='ln'>41</span>    &lt;div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"&gt;&lt;/div&gt;
+<span class='ln'>42</span>  &lt;/motion.div&gt;
+<span class='ln'>43</span>);
+<span class='ln'>44</span>
+<span class='ln'>45</span>export default function App() {
+<span class='ln'>46</span>  const location = useLocation();
+<span class='ln'>47</span>  const dispatch = useDispatch();
+<span class='ln'>48</span>  const user = useSelector(selectUser);
+<span class='ln'>49</span>
+<span class='ln'>50</span>  // Initialize cart when user is available
+<span class='ln'>51</span>  useEffect(() =&gt; {
+<span class='ln'>52</span>    if (user) {
+<span class='ln'>53</span>      dispatch(fetchCart());
+<span class='ln'>54</span>    }
+<span class='ln'>55</span>  }, [user, dispatch]);
+<span class='ln'>56</span>
+<span class='ln'>57</span>  return (
+<span class='ln'>58</span>    &lt;Suspense fallback={&lt;PageLoader /&gt;}&gt;
+<span class='ln'>59</span>      &lt;Routes location={location} key={location.pathname}&gt;
+<span class='ln'>60</span>        {/* Public Routes with Layout */}
+<span class='ln'>61</span>        &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+<span class='ln'>62</span>          &lt;Route index element={&lt;Home /&gt;} /&gt;
+<span class='ln'>63</span>          &lt;Route path="products" element={&lt;ProductsPage /&gt;} /&gt;
+<span class='ln'>64</span>          &lt;Route path="search" element={&lt;SearchPage /&gt;} /&gt;
+<span class='ln'>65</span>          &lt;Route path="generic-info" element={&lt;GenericInfoPage /&gt;} /&gt;
+<span class='ln'>66</span>          &lt;Route path="about" element={&lt;AboutPage /&gt;} /&gt;
+<span class='ln'>67</span>          &lt;Route path="contact" element={&lt;ContactPage /&gt;} /&gt;
+<span class='ln'>68</span>          &lt;Route path="help" element={&lt;HelpPage /&gt;} /&gt;
+<span class='ln'>69</span>          &lt;Route path="how-to-order" element={&lt;HowToOrderPage /&gt;} /&gt;
+<span class='ln'>70</span>          &lt;Route path="lab" element={&lt;LabTestsPage /&gt;} /&gt;
+<span class='ln'>71</span>          &lt;Route path="upload-prescription" element={&lt;PrescriptionUploadPage /&gt;} /&gt;
+<span class='ln'>72</span>          &lt;Route path="product/:slug" element={&lt;ProductDetails /&gt;} /&gt;
+<span class='ln'>73</span>          &lt;Route path="cart" element={&lt;CartPage /&gt;} /&gt;
+<span class='ln'>74</span>          
+<span class='ln'>75</span>          {/* Protected Routes with Layout */}
+<span class='ln'>76</span>          &lt;Route path="checkout" element={&lt;ProtectedRoute&gt;&lt;CheckoutPage /&gt;&lt;/ProtectedRoute&gt;} /&gt;
+<span class='ln'>77</span>          &lt;Route path="profile" element={&lt;ProtectedRoute&gt;&lt;ProfilePage /&gt;&lt;/ProtectedRoute&gt;} /&gt;
+<span class='ln'>78</span>          &lt;Route path="orders" element={&lt;ProtectedRoute&gt;&lt;OrderHistoryPage /&gt;&lt;/ProtectedRoute&gt;} /&gt;
+<span class='ln'>79</span>        &lt;/Route&gt;
+<span class='ln'>80</span>        
+<span class='ln'>81</span>        {/* Routes without the main layout */}
+<span class='ln'>82</span>        &lt;Route path="/login" element={user ? &lt;Navigate to="/" replace /&gt; : &lt;Login /&gt;} /&gt;
+<span class='ln'>83</span>        &lt;Route path="/signup" element={user ? &lt;Navigate to="/" replace /&gt; : &lt;Signup /&gt;} /&gt;
+<span class='ln'>84</span>        &lt;Route path="/forgot-password" element={user ? &lt;Navigate to="/" replace /&gt; : &lt;ForgotPasswordPage /&gt;} /&gt;
+<span class='ln'>85</span>        &lt;Route path="/reset-password" element={user ? &lt;Navigate to="/" replace /&gt; : &lt;ResetPasswordPage /&gt;} /&gt;
+<span class='ln'>86</span>        &lt;Route path="/order-success" element={&lt;ProtectedRoute&gt;&lt;OrderSuccessPage /&gt;&lt;/ProtectedRoute&gt;} /&gt;
+<span class='ln'>87</span>      &lt;/Routes&gt;
+<span class='ln'>88</span>    &lt;/Suspense&gt;
+<span class='ln'>89</span>  );
+<span class='ln'>90</span>}
+<span class='ln'>91</span>
+</pre></div></body></html>

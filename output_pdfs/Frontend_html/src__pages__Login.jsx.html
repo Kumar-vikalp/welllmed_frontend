@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/Login.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { Link, useNavigate, useLocation } from 'react-router-dom';
+<span class='ln'>3</span>import { useUser } from '../contexts/UserContext';
+<span class='ln'>4</span>import { motion } from 'framer-motion';
+<span class='ln'>5</span>import { Pill, Eye, EyeOff, Star, Zap, Shield } from 'lucide-react';
+<span class='ln'>6</span>
+<span class='ln'>7</span>export default function Login() {
+<span class='ln'>8</span>  const [email, setEmail] = useState('');
+<span class='ln'>9</span>  const [password, setPassword] = useState('');
+<span class='ln'>10</span>  const [showPassword, setShowPassword] = useState(false);
+<span class='ln'>11</span>  const [error, setError] = useState('');
+<span class='ln'>12</span>  const [isLoading, setIsLoading] = useState(false);
+<span class='ln'>13</span>  
+<span class='ln'>14</span>  const navigate = useNavigate();
+<span class='ln'>15</span>  const location = useLocation();
+<span class='ln'>16</span>  const { login } = useUser();
+<span class='ln'>17</span>
+<span class='ln'>18</span>  const from = location.state?.from?.pathname || "/";
+<span class='ln'>19</span>
+<span class='ln'>20</span>  const handleSubmit = async (e) =&gt; {
+<span class='ln'>21</span>    e.preventDefault();
+<span class='ln'>22</span>    setError('');
+<span class='ln'>23</span>    setIsLoading(true);
+<span class='ln'>24</span>
+<span class='ln'>25</span>    try {
+<span class='ln'>26</span>      await login(email, password);
+<span class='ln'>27</span>      navigate(from, { replace: true });
+<span class='ln'>28</span>    } catch (err) {
+<span class='ln'>29</span>      const errorMessage = err.response?.data?.detail || 'Login failed. Please check your credentials.';
+<span class='ln'>30</span>      setError(errorMessage);
+<span class='ln'>31</span>    } finally {
+<span class='ln'>32</span>      setIsLoading(false);
+<span class='ln'>33</span>    }
+<span class='ln'>34</span>  };
+<span class='ln'>35</span>
+<span class='ln'>36</span>  return (
+<span class='ln'>37</span>    &lt;div className="min-h-screen bg-[#FFFDF5] relative overflow-hidden"&gt;
+<span class='ln'>38</span>      {/* Background Pattern */}
+<span class='ln'>39</span>      &lt;div 
+<span class='ln'>40</span>        className="absolute inset-0 opacity-10"
+<span class='ln'>41</span>        style={{
+<span class='ln'>42</span>          backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>43</span>          backgroundSize: '20px 20px'
+<span class='ln'>44</span>        }}
+<span class='ln'>45</span>      &gt;&lt;/div&gt;
+<span class='ln'>46</span>      
+<span class='ln'>47</span>      {/* Floating Decorative Elements */}
+<span class='ln'>48</span>      &lt;div className="absolute top-10 left-4 sm:top-20 sm:left-10 rotate-12"&gt;
+<span class='ln'>49</span>        &lt;Star className="w-6 h-6 sm:w-8 sm:h-8 fill-[#FF6B6B] text-[#FF6B6B] animate-spin-slow" /&gt;
+<span class='ln'>50</span>      &lt;/div&gt;
+<span class='ln'>51</span>      &lt;div className="absolute top-32 right-4 sm:top-40 sm:right-20 -rotate-12"&gt;
+<span class='ln'>52</span>        &lt;Zap className="w-8 h-8 sm:w-12 sm:h-12 fill-[#FFD93D] text-[#FFD93D] animate-bounce" /&gt;
+<span class='ln'>53</span>      &lt;/div&gt;
+<span class='ln'>54</span>      &lt;div className="absolute bottom-20 left-8 sm:bottom-32 sm:left-32 rotate-45"&gt;
+<span class='ln'>55</span>        &lt;Shield className="w-6 h-6 sm:w-10 sm:h-10 fill-[#C4B5FD] text-[#C4B5FD]" /&gt;
+<span class='ln'>56</span>      &lt;/div&gt;
+<span class='ln'>57</span>
+<span class='ln'>58</span>      &lt;div className="relative z-10 min-h-screen flex flex-col lg:flex-row"&gt;
+<span class='ln'>59</span>        {/* Left Side - Branding (Desktop) / Hidden on Mobile */}
+<span class='ln'>60</span>        &lt;div className="hidden lg:flex lg:w-1/2 bg-black border-r-8 border-black items-center justify-center p-12"&gt;
+<span class='ln'>61</span>          &lt;div className="text-center"&gt;
+<span class='ln'>62</span>            &lt;motion.div
+<span class='ln'>63</span>              initial={{ opacity: 0, scale: 0.8 }}
+<span class='ln'>64</span>              animate={{ opacity: 1, scale: 1 }}
+<span class='ln'>65</span>              transition={{ duration: 0.5 }}
+<span class='ln'>66</span>              className="mb-8"
+<span class='ln'>67</span>            &gt;
+<span class='ln'>68</span>              &lt;div className="bg-[#FFD93D] border-4 border-white p-8 shadow-[12px_12px_0px_0px_#fff] rotate-3"&gt;
+<span class='ln'>69</span>                &lt;Pill className="w-20 h-20 stroke-[4px] text-black mx-auto" /&gt;
+<span class='ln'>70</span>              &lt;/div&gt;
+<span class='ln'>71</span>            &lt;/motion.div&gt;
+<span class='ln'>72</span>            
+<span class='ln'>73</span>            &lt;motion.h1
+<span class='ln'>74</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>75</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>76</span>              transition={{ delay: 0.2 }}
+<span class='ln'>77</span>              className="text-6xl font-black uppercase tracking-tight text-white mb-4 -rotate-1"
+<span class='ln'>78</span>              style={{ WebkitTextStroke: '2px white', color: 'transparent' }}
+<span class='ln'>79</span>            &gt;
+<span class='ln'>80</span>              genx
+<span class='ln'>81</span>            &lt;/motion.h1&gt;
+<span class='ln'>82</span>            
+<span class='ln'>83</span>            &lt;motion.p
+<span class='ln'>84</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>85</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>86</span>              transition={{ delay: 0.4 }}
+<span class='ln'>87</span>              className="text-xl font-bold text-white uppercase tracking-wide"
+<span class='ln'>88</span>            &gt;
+<span class='ln'>89</span>              YOUR HEALTH, OUR PRIORITY
+<span class='ln'>90</span>            &lt;/motion.p&gt;
+<span class='ln'>91</span>            
+<span class='ln'>92</span>            &lt;motion.div
+<span class='ln'>93</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>94</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>95</span>              transition={{ delay: 0.6 }}
+<span class='ln'>96</span>              className="mt-8 space-y-4"
+<span class='ln'>97</span>            &gt;
+<span class='ln'>98</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>99</span>                &lt;div className="bg-[#FF6B6B] border-2 border-white p-2"&gt;
+<span class='ln'>100</span>                  &lt;span className="text-white font-black text-sm"&gt;⚡&lt;/span&gt;
+<span class='ln'>101</span>                &lt;/div&gt;
+<span class='ln'>102</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;10 MIN DELIVERY&lt;/span&gt;
+<span class='ln'>103</span>              &lt;/div&gt;
+<span class='ln'>104</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>105</span>                &lt;div className="bg-[#C4B5FD] border-2 border-white p-2"&gt;
+<span class='ln'>106</span>                  &lt;span className="text-black font-black text-sm"&gt;✓&lt;/span&gt;
+<span class='ln'>107</span>                &lt;/div&gt;
+<span class='ln'>108</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;100% AUTHENTIC&lt;/span&gt;
+<span class='ln'>109</span>              &lt;/div&gt;
+<span class='ln'>110</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>111</span>                &lt;div className="bg-[#FFD93D] border-2 border-white p-2"&gt;
+<span class='ln'>112</span>                  &lt;span className="text-black font-black text-sm"&gt;💰&lt;/span&gt;
+<span class='ln'>113</span>                &lt;/div&gt;
+<span class='ln'>114</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;BEST PRICES&lt;/span&gt;
+<span class='ln'>115</span>              &lt;/div&gt;
+<span class='ln'>116</span>            &lt;/motion.div&gt;
+<span class='ln'>117</span>          &lt;/div&gt;
+<span class='ln'>118</span>        &lt;/div&gt;
+<span class='ln'>119</span>
+<span class='ln'>120</span>        {/* Right Side - Form */}
+<span class='ln'>121</span>        &lt;div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8"&gt;
+<span class='ln'>122</span>          &lt;motion.div 
+<span class='ln'>123</span>            initial={{ opacity: 0, x: 50 }}
+<span class='ln'>124</span>            animate={{ opacity: 1, x: 0 }}
+<span class='ln'>125</span>            transition={{ duration: 0.5 }}
+<span class='ln'>126</span>            className="w-full max-w-md"
+<span class='ln'>127</span>          &gt;
+<span class='ln'>128</span>            {/* Mobile Header */}
+<span class='ln'>129</span>            &lt;div className="lg:hidden text-center mb-8"&gt;
+<span class='ln'>130</span>              &lt;div className="flex items-center justify-center space-x-3 mb-6"&gt;
+<span class='ln'>131</span>                &lt;div className="bg-[#FF6B6B] border-4 border-black p-3 shadow-[6px_6px_0px_0px_#000] rotate-1"&gt;
+<span class='ln'>132</span>                  &lt;Pill className="w-8 h-8 stroke-[3px] text-white" /&gt;
+<span class='ln'>133</span>                &lt;/div&gt;
+<span class='ln'>134</span>                &lt;span className="text-3xl font-black uppercase tracking-tight text-black"&gt;genx&lt;/span&gt;
+<span class='ln'>135</span>              &lt;/div&gt;
+<span class='ln'>136</span>            &lt;/div&gt;
+<span class='ln'>137</span>
+<span class='ln'>138</span>            {/* Form Header */}
+<span class='ln'>139</span>            &lt;div className="text-center mb-8"&gt;
+<span class='ln'>140</span>              &lt;motion.h1 
+<span class='ln'>141</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>142</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>143</span>                transition={{ delay: 0.2 }}
+<span class='ln'>144</span>                className="text-3xl sm:text-4xl font-black mb-4 uppercase tracking-tight text-black -rotate-1"
+<span class='ln'>145</span>              &gt;
+<span class='ln'>146</span>                WELCOME BACK!
+<span class='ln'>147</span>              &lt;/motion.h1&gt;
+<span class='ln'>148</span>              &lt;motion.p 
+<span class='ln'>149</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>150</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>151</span>                transition={{ delay: 0.3 }}
+<span class='ln'>152</span>                className="font-bold text-black uppercase tracking-wide"
+<span class='ln'>153</span>              &gt;
+<span class='ln'>154</span>                SIGN IN TO YOUR ACCOUNT
+<span class='ln'>155</span>              &lt;/motion.p&gt;
+<span class='ln'>156</span>            &lt;/div&gt;
+<span class='ln'>157</span>
+<span class='ln'>158</span>            {/* Login Form */}
+<span class='ln'>159</span>            &lt;div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[8px_8px_0px_0px_#000] rotate-1"&gt;
+<span class='ln'>160</span>              &lt;form onSubmit={handleSubmit} className="space-y-6"&gt;
+<span class='ln'>161</span>                {/* Email Field */}
+<span class='ln'>162</span>                &lt;div&gt;
+<span class='ln'>163</span>                  &lt;label htmlFor="email" className="block font-black uppercase tracking-widest text-xs text-black mb-2"&gt;
+<span class='ln'>164</span>                    EMAIL ADDRESS *
+<span class='ln'>165</span>                  &lt;/label&gt;
+<span class='ln'>166</span>                  &lt;input
+<span class='ln'>167</span>                    id="email"
+<span class='ln'>168</span>                    name="email"
+<span class='ln'>169</span>                    type="email"
+<span class='ln'>170</span>                    autoComplete="email"
+<span class='ln'>171</span>                    required
+<span class='ln'>172</span>                    value={email}
+<span class='ln'>173</span>                    onChange={(e) =&gt; setEmail(e.target.value)}
+<span class='ln'>174</span>                    className="w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>175</span>                      placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>176</span>                      focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>177</span>                      focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>178</span>                      transition-all duration-100"
+<span class='ln'>179</span>                    placeholder="ENTER YOUR EMAIL"
+<span class='ln'>180</span>                  /&gt;
+<span class='ln'>181</span>                &lt;/div&gt;
+<span class='ln'>182</span>
+<span class='ln'>183</span>                {/* Password Field */}
+<span class='ln'>184</span>                &lt;div&gt;
+<span class='ln'>185</span>                  &lt;div className="flex justify-between items-center mb-2"&gt;
+<span class='ln'>186</span>                    &lt;label htmlFor="password" className="font-black uppercase tracking-widest text-xs text-black"&gt;
+<span class='ln'>187</span>                      PASSWORD *
+<span class='ln'>188</span>                    &lt;/label&gt;
+<span class='ln'>189</span>                    &lt;Link 
+<span class='ln'>190</span>                      to="/forgot-password" 
+<span class='ln'>191</span>                      className="font-bold uppercase tracking-wide text-xs text-[#FF6B6B] hover:underline hover:decoration-4 hover:underline-offset-4 transition-all duration-100"
+<span class='ln'>192</span>                    &gt;
+<span class='ln'>193</span>                      FORGOT PASSWORD?
+<span class='ln'>194</span>                    &lt;/Link&gt;
+<span class='ln'>195</span>                  &lt;/div&gt;
+<span class='ln'>196</span>                  &lt;div className="relative"&gt;
+<span class='ln'>197</span>                    &lt;input
+<span class='ln'>198</span>                      id="password"
+<span class='ln'>199</span>                      name="password"
+<span class='ln'>200</span>                      type={showPassword ? "text" : "password"}
+<span class='ln'>201</span>                      autoComplete="current-password"
+<span class='ln'>202</span>                      required
+<span class='ln'>203</span>                      value={password}
+<span class='ln'>204</span>                      onChange={(e) =&gt; setPassword(e.target.value)}
+<span class='ln'>205</span>                      className="w-full border-4 border-black bg-white font-bold text-base h-14 px-4 pr-16
+<span class='ln'>206</span>                        placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>207</span>                        focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>208</span>                        focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>209</span>                        transition-all duration-100"
+<span class='ln'>210</span>                      placeholder="ENTER YOUR PASSWORD"
+<span class='ln'>211</span>                    /&gt;
+<span class='ln'>212</span>                    &lt;button
+<span class='ln'>213</span>                      type="button"
+<span class='ln'>214</span>                      onClick={() =&gt; setShowPassword(!showPassword)}
+<span class='ln'>215</span>                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white border-2 border-black p-2
+<span class='ln'>216</span>                        hover:bg-[#C4B5FD] transition-colors duration-100"
+<span class='ln'>217</span>                    &gt;
+<span class='ln'>218</span>                      {showPassword ? (
+<span class='ln'>219</span>                        &lt;EyeOff className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>220</span>                      ) : (
+<span class='ln'>221</span>                        &lt;Eye className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>222</span>                      )}
+<span class='ln'>223</span>                    &lt;/button&gt;
+<span class='ln'>224</span>                  &lt;/div&gt;
+<span class='ln'>225</span>                &lt;/div&gt;
+<span class='ln'>226</span>                
+<span class='ln'>227</span>                {/* Error Message */}
+<span class='ln'>228</span>                {error &amp;&amp; (
+<span class='ln'>229</span>                  &lt;motion.div
+<span class='ln'>230</span>                    initial={{ opacity: 0, y: -10 }}
+<span class='ln'>231</span>                    animate={{ opacity: 1, y: 0 }}
+<span class='ln'>232</span>                    className="bg-[#FF6B6B] border-4 border-black p-4 -rotate-1"
+<span class='ln'>233</span>                  &gt;
+<span class='ln'>234</span>                    &lt;p className="font-bold text-sm text-white text-center uppercase"&gt;{error}&lt;/p&gt;
+<span class='ln'>235</span>                  &lt;/motion.div&gt;
+<span class='ln'>236</span>                )}
+<span class='ln'>237</span>
+<span class='ln'>238</span>                {/* Submit Button */}
+<span class='ln'>239</span>                &lt;button
+<span class='ln'>240</span>                  type="submit"
+<span class='ln'>241</span>                  disabled={isLoading}
+<span class='ln'>242</span>                  className="w-full bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest text-sm py-4 h-14
+<span class='ln'>243</span>                    shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>244</span>                    hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>245</span>                    active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>246</span>                    disabled:opacity-50 disabled:cursor-not-allowed
+<span class='ln'>247</span>                    transition-all duration-100 rotate-1"
+<span class='ln'>248</span>                &gt;
+<span class='ln'>249</span>                  {isLoading ? (
+<span class='ln'>250</span>                    &lt;div className="flex items-center justify-center"&gt;
+<span class='ln'>251</span>                      &lt;div className="w-4 h-4 border-2 border-white mr-2 animate-spin"&gt;&lt;/div&gt;
+<span class='ln'>252</span>                      SIGNING IN...
+<span class='ln'>253</span>                    &lt;/div&gt;
+<span class='ln'>254</span>                  ) : (
+<span class='ln'>255</span>                    'SIGN IN'
+<span class='ln'>256</span>                  )}
+<span class='ln'>257</span>                &lt;/button&gt;
+<span class='ln'>258</span>              &lt;/form&gt;
+<span class='ln'>259</span>            &lt;/div&gt;
+<span class='ln'>260</span>
+<span class='ln'>261</span>            {/* Sign Up Link */}
+<span class='ln'>262</span>            &lt;motion.div
+<span class='ln'>263</span>              initial={{ opacity: 0 }}
+<span class='ln'>264</span>              animate={{ opacity: 1 }}
+<span class='ln'>265</span>              transition={{ delay: 0.6 }}
+<span class='ln'>266</span>              className="text-center mt-8"
+<span class='ln'>267</span>            &gt;
+<span class='ln'>268</span>              &lt;div className="bg-[#FFD93D] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>269</span>                &lt;p className="font-bold text-black uppercase tracking-wide"&gt;
+<span class='ln'>270</span>                  NOT A MEMBER?{' '}
+<span class='ln'>271</span>                  &lt;Link 
+<span class='ln'>272</span>                    to="/signup" 
+<span class='ln'>273</span>                    className="font-black text-black underline decoration-4 underline-offset-4 hover:text-[#FF6B6B] transition-colors duration-100"
+<span class='ln'>274</span>                  &gt;
+<span class='ln'>275</span>                    SIGN UP NOW
+<span class='ln'>276</span>                  &lt;/Link&gt;
+<span class='ln'>277</span>                &lt;/p&gt;
+<span class='ln'>278</span>              &lt;/div&gt;
+<span class='ln'>279</span>            &lt;/motion.div&gt;
+<span class='ln'>280</span>
+<span class='ln'>281</span>            {/* Features (Mobile Only) */}
+<span class='ln'>282</span>            &lt;motion.div
+<span class='ln'>283</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>284</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>285</span>              transition={{ delay: 0.8 }}
+<span class='ln'>286</span>              className="lg:hidden mt-8"
+<span class='ln'>287</span>            &gt;
+<span class='ln'>288</span>              &lt;div className="bg-[#C4B5FD] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] rotate-1"&gt;
+<span class='ln'>289</span>                &lt;h3 className="font-black uppercase tracking-widest text-sm text-center mb-4 -rotate-1"&gt;
+<span class='ln'>290</span>                  WHY CHOOSE genx?
+<span class='ln'>291</span>                &lt;/h3&gt;
+<span class='ln'>292</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-3 gap-4"&gt;
+<span class='ln'>293</span>                  &lt;div className="text-center"&gt;
+<span class='ln'>294</span>                    &lt;div className="bg-[#FF6B6B] border-2 border-black w-12 h-12 mx-auto mb-2 flex items-center justify-center rotate-12"&gt;
+<span class='ln'>295</span>                      &lt;span className="font-black text-sm text-white"&gt;⚡&lt;/span&gt;
+<span class='ln'>296</span>                    &lt;/div&gt;
+<span class='ln'>297</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;10 MIN DELIVERY&lt;/p&gt;
+<span class='ln'>298</span>                  &lt;/div&gt;
+<span class='ln'>299</span>                  &lt;div className="text-center"&gt;
+<span class='ln'>300</span>                    &lt;div className="bg-[#FFD93D] border-2 border-black w-12 h-12 mx-auto mb-2 flex items-center justify-center -rotate-12"&gt;
+<span class='ln'>301</span>                      &lt;span className="font-black text-sm text-black"&gt;✓&lt;/span&gt;
+<span class='ln'>302</span>                    &lt;/div&gt;
+<span class='ln'>303</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;100% AUTHENTIC&lt;/p&gt;
+<span class='ln'>304</span>                  &lt;/div&gt;
+<span class='ln'>305</span>                  &lt;div className="text-center"&gt;
+<span class='ln'>306</span>                    &lt;div className="bg-white border-2 border-black w-12 h-12 mx-auto mb-2 flex items-center justify-center rotate-6"&gt;
+<span class='ln'>307</span>                      &lt;span className="font-black text-sm text-black"&gt;💰&lt;/span&gt;
+<span class='ln'>308</span>                    &lt;/div&gt;
+<span class='ln'>309</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;BEST PRICES&lt;/p&gt;
+<span class='ln'>310</span>                  &lt;/div&gt;
+<span class='ln'>311</span>                &lt;/div&gt;
+<span class='ln'>312</span>              &lt;/div&gt;
+<span class='ln'>313</span>            &lt;/motion.div&gt;
+<span class='ln'>314</span>          &lt;/motion.div&gt;
+<span class='ln'>315</span>        &lt;/div&gt;
+<span class='ln'>316</span>      &lt;/div&gt;
+<span class='ln'>317</span>    &lt;/div&gt;
+<span class='ln'>318</span>  );
+<span class='ln'>319</span>}
+</pre></div></body></html>

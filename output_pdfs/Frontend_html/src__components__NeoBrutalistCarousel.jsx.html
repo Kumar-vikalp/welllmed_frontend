@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/NeoBrutalistCarousel.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useRef, useState, useEffect } from 'react'
+<span class='ln'>2</span>import { motion } from 'framer-motion'
+<span class='ln'>3</span>import { ChevronLeft, ChevronRight } from 'lucide-react'
+<span class='ln'>4</span>import Button from './Button'
+<span class='ln'>5</span>
+<span class='ln'>6</span>export default function NeoBrutalistCarousel({ 
+<span class='ln'>7</span>  children, 
+<span class='ln'>8</span>  title, 
+<span class='ln'>9</span>  showControls = true, 
+<span class='ln'>10</span>  showTitle = true,
+<span class='ln'>11</span>  className = "",
+<span class='ln'>12</span>  itemWidth = "w-64",
+<span class='ln'>13</span>  gap = "gap-4"
+<span class='ln'>14</span>}) {
+<span class='ln'>15</span>  const carouselRef = useRef(null)
+<span class='ln'>16</span>  const [canScrollLeft, setCanScrollLeft] = useState(false)
+<span class='ln'>17</span>  const [canScrollRight, setCanScrollRight] = useState(true)
+<span class='ln'>18</span>  const [isDragging, setIsDragging] = useState(false)
+<span class='ln'>19</span>  const [startX, setStartX] = useState(0)
+<span class='ln'>20</span>  const [scrollLeft, setScrollLeft] = useState(0)
+<span class='ln'>21</span>
+<span class='ln'>22</span>  // Check scroll position to show/hide controls
+<span class='ln'>23</span>  const checkScrollPosition = () =&gt; {
+<span class='ln'>24</span>    if (carouselRef.current) {
+<span class='ln'>25</span>      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current
+<span class='ln'>26</span>      setCanScrollLeft(scrollLeft &gt; 0)
+<span class='ln'>27</span>      setCanScrollRight(scrollLeft &lt; scrollWidth - clientWidth - 10)
+<span class='ln'>28</span>    }
+<span class='ln'>29</span>  }
+<span class='ln'>30</span>
+<span class='ln'>31</span>  useEffect(() =&gt; {
+<span class='ln'>32</span>    const carousel = carouselRef.current
+<span class='ln'>33</span>    if (carousel) {
+<span class='ln'>34</span>      carousel.addEventListener('scroll', checkScrollPosition)
+<span class='ln'>35</span>      checkScrollPosition() // Initial check
+<span class='ln'>36</span>      
+<span class='ln'>37</span>      return () =&gt; carousel.removeEventListener('scroll', checkScrollPosition)
+<span class='ln'>38</span>    }
+<span class='ln'>39</span>  }, [children])
+<span class='ln'>40</span>
+<span class='ln'>41</span>  // Mouse drag handlers
+<span class='ln'>42</span>  const handleMouseDown = (e) =&gt; {
+<span class='ln'>43</span>    setIsDragging(true)
+<span class='ln'>44</span>    setStartX(e.pageX - carouselRef.current.offsetLeft)
+<span class='ln'>45</span>    setScrollLeft(carouselRef.current.scrollLeft)
+<span class='ln'>46</span>    carouselRef.current.style.cursor = 'grabbing'
+<span class='ln'>47</span>  }
+<span class='ln'>48</span>
+<span class='ln'>49</span>  const handleMouseMove = (e) =&gt; {
+<span class='ln'>50</span>    if (!isDragging) return
+<span class='ln'>51</span>    e.preventDefault()
+<span class='ln'>52</span>    const x = e.pageX - carouselRef.current.offsetLeft
+<span class='ln'>53</span>    const walk = (x - startX) * 2
+<span class='ln'>54</span>    carouselRef.current.scrollLeft = scrollLeft - walk
+<span class='ln'>55</span>  }
+<span class='ln'>56</span>
+<span class='ln'>57</span>  const handleMouseUp = () =&gt; {
+<span class='ln'>58</span>    setIsDragging(false)
+<span class='ln'>59</span>    if (carouselRef.current) {
+<span class='ln'>60</span>      carouselRef.current.style.cursor = 'grab'
+<span class='ln'>61</span>    }
+<span class='ln'>62</span>  }
+<span class='ln'>63</span>
+<span class='ln'>64</span>  // Touch handlers
+<span class='ln'>65</span>  const handleTouchStart = (e) =&gt; {
+<span class='ln'>66</span>    setIsDragging(true)
+<span class='ln'>67</span>    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft)
+<span class='ln'>68</span>    setScrollLeft(carouselRef.current.scrollLeft)
+<span class='ln'>69</span>  }
+<span class='ln'>70</span>
+<span class='ln'>71</span>  const handleTouchMove = (e) =&gt; {
+<span class='ln'>72</span>    if (!isDragging) return
+<span class='ln'>73</span>    const x = e.touches[0].pageX - carouselRef.current.offsetLeft
+<span class='ln'>74</span>    const walk = (x - startX) * 2
+<span class='ln'>75</span>    carouselRef.current.scrollLeft = scrollLeft - walk
+<span class='ln'>76</span>  }
+<span class='ln'>77</span>
+<span class='ln'>78</span>  const handleTouchEnd = () =&gt; {
+<span class='ln'>79</span>    setIsDragging(false)
+<span class='ln'>80</span>  }
+<span class='ln'>81</span>
+<span class='ln'>82</span>  // Scroll controls
+<span class='ln'>83</span>  const scrollCarousel = (direction) =&gt; {
+<span class='ln'>84</span>    if (carouselRef.current) {
+<span class='ln'>85</span>      const scrollAmount = 300
+<span class='ln'>86</span>      carouselRef.current.scrollBy({
+<span class='ln'>87</span>        left: direction === 'left' ? -scrollAmount : scrollAmount,
+<span class='ln'>88</span>        behavior: 'smooth'
+<span class='ln'>89</span>      })
+<span class='ln'>90</span>    }
+<span class='ln'>91</span>  }
+<span class='ln'>92</span>
+<span class='ln'>93</span>  // Add event listeners
+<span class='ln'>94</span>  useEffect(() =&gt; {
+<span class='ln'>95</span>    const carousel = carouselRef.current
+<span class='ln'>96</span>    if (carousel) {
+<span class='ln'>97</span>      carousel.addEventListener('mousedown', handleMouseDown)
+<span class='ln'>98</span>      carousel.addEventListener('mousemove', handleMouseMove)
+<span class='ln'>99</span>      carousel.addEventListener('mouseup', handleMouseUp)
+<span class='ln'>100</span>      carousel.addEventListener('mouseleave', handleMouseUp)
+<span class='ln'>101</span>      carousel.addEventListener('touchstart', handleTouchStart)
+<span class='ln'>102</span>      carousel.addEventListener('touchmove', handleTouchMove)
+<span class='ln'>103</span>      carousel.addEventListener('touchend', handleTouchEnd)
+<span class='ln'>104</span>
+<span class='ln'>105</span>      return () =&gt; {
+<span class='ln'>106</span>        carousel.removeEventListener('mousedown', handleMouseDown)
+<span class='ln'>107</span>        carousel.removeEventListener('mousemove', handleMouseMove)
+<span class='ln'>108</span>        carousel.removeEventListener('mouseup', handleMouseUp)
+<span class='ln'>109</span>        carousel.removeEventListener('mouseleave', handleMouseUp)
+<span class='ln'>110</span>        carousel.removeEventListener('touchstart', handleTouchStart)
+<span class='ln'>111</span>        carousel.removeEventListener('touchmove', handleTouchMove)
+<span class='ln'>112</span>        carousel.removeEventListener('touchend', handleTouchEnd)
+<span class='ln'>113</span>      }
+<span class='ln'>114</span>    }
+<span class='ln'>115</span>  }, [isDragging, startX, scrollLeft])
+<span class='ln'>116</span>
+<span class='ln'>117</span>  return (
+<span class='ln'>118</span>    &lt;div className={`relative ${className}`}&gt;
+<span class='ln'>119</span>      {/* Title and Controls */}
+<span class='ln'>120</span>      {(showTitle || showControls) &amp;&amp; (
+<span class='ln'>121</span>        &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>122</span>          {showTitle &amp;&amp; title &amp;&amp; (
+<span class='ln'>123</span>            &lt;h2 className="text-2xl md:text-3xl font-black uppercase -rotate-1"&gt;
+<span class='ln'>124</span>              {title}
+<span class='ln'>125</span>            &lt;/h2&gt;
+<span class='ln'>126</span>          )}
+<span class='ln'>127</span>          
+<span class='ln'>128</span>          {showControls &amp;&amp; (
+<span class='ln'>129</span>            &lt;div className="flex gap-2"&gt;
+<span class='ln'>130</span>              &lt;Button 
+<span class='ln'>131</span>                variant="ghost" 
+<span class='ln'>132</span>                size="sm" 
+<span class='ln'>133</span>                className={`rotate-1 ${!canScrollLeft ? 'opacity-50 cursor-not-allowed' : ''}`}
+<span class='ln'>134</span>                onClick={() =&gt; scrollCarousel('left')}
+<span class='ln'>135</span>                disabled={!canScrollLeft}
+<span class='ln'>136</span>              &gt;
+<span class='ln'>137</span>                &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>138</span>              &lt;/Button&gt;
+<span class='ln'>139</span>              &lt;Button 
+<span class='ln'>140</span>                variant="ghost" 
+<span class='ln'>141</span>                size="sm" 
+<span class='ln'>142</span>                className={`-rotate-1 ${!canScrollRight ? 'opacity-50 cursor-not-allowed' : ''}`}
+<span class='ln'>143</span>                onClick={() =&gt; scrollCarousel('right')}
+<span class='ln'>144</span>                disabled={!canScrollRight}
+<span class='ln'>145</span>              &gt;
+<span class='ln'>146</span>                &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>147</span>              &lt;/Button&gt;
+<span class='ln'>148</span>            &lt;/div&gt;
+<span class='ln'>149</span>          )}
+<span class='ln'>150</span>        &lt;/div&gt;
+<span class='ln'>151</span>      )}
+<span class='ln'>152</span>
+<span class='ln'>153</span>      {/* Carousel Container */}
+<span class='ln'>154</span>      &lt;div className="relative"&gt;
+<span class='ln'>155</span>        &lt;div 
+<span class='ln'>156</span>          ref={carouselRef}
+<span class='ln'>157</span>          className={`flex ${gap} overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-4 touch-pan-x`}
+<span class='ln'>158</span>          style={{ 
+<span class='ln'>159</span>            scrollBehavior: 'smooth',
+<span class='ln'>160</span>            userSelect: 'none'
+<span class='ln'>161</span>          }}
+<span class='ln'>162</span>        &gt;
+<span class='ln'>163</span>          {children}
+<span class='ln'>164</span>        &lt;/div&gt;
+<span class='ln'>165</span>
+<span class='ln'>166</span>        {/* Gradient Overlays for Visual Cues */}
+<span class='ln'>167</span>        {canScrollLeft &amp;&amp; (
+<span class='ln'>168</span>          &lt;div className="absolute left-0 top-0 bottom-4 w-8 bg-gradient-to-r from-neo-canvas to-transparent pointer-events-none z-10" /&gt;
+<span class='ln'>169</span>        )}
+<span class='ln'>170</span>        {canScrollRight &amp;&amp; (
+<span class='ln'>171</span>          &lt;div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-neo-canvas to-transparent pointer-events-none z-10" /&gt;
+<span class='ln'>172</span>        )}
+<span class='ln'>173</span>      &lt;/div&gt;
+<span class='ln'>174</span>
+<span class='ln'>175</span>      {/* Mobile Scroll Indicator */}
+<span class='ln'>176</span>      &lt;div className="flex justify-center mt-4 md:hidden"&gt;
+<span class='ln'>177</span>        &lt;div className="flex gap-2"&gt;
+<span class='ln'>178</span>          {Array.from({ length: Math.ceil(children?.length / 2) || 0 }).map((_, index) =&gt; (
+<span class='ln'>179</span>            &lt;div
+<span class='ln'>180</span>              key={index}
+<span class='ln'>181</span>              className="w-2 h-2 bg-neo-ink border border-neo-ink opacity-30"
+<span class='ln'>182</span>            /&gt;
+<span class='ln'>183</span>          ))}
+<span class='ln'>184</span>        &lt;/div&gt;
+<span class='ln'>185</span>      &lt;/div&gt;
+<span class='ln'>186</span>    &lt;/div&gt;
+<span class='ln'>187</span>  )
+<span class='ln'>188</span>}
+</pre></div></body></html>

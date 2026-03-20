@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/Signup.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { Link, useNavigate } from 'react-router-dom';
+<span class='ln'>3</span>import { motion } from 'framer-motion';
+<span class='ln'>4</span>import { useUser } from '../contexts/UserContext';
+<span class='ln'>5</span>import { Pill, Eye, EyeOff, Star, Zap, Shield } from 'lucide-react';
+<span class='ln'>6</span>import api from '../api/axiosConfig';
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function Signup() {
+<span class='ln'>9</span>  const [formData, setFormData] = useState({
+<span class='ln'>10</span>    name: '',
+<span class='ln'>11</span>    email: '',
+<span class='ln'>12</span>    password: '',
+<span class='ln'>13</span>    confirmPassword: ''
+<span class='ln'>14</span>  });
+<span class='ln'>15</span>  const [showPassword, setShowPassword] = useState(false);
+<span class='ln'>16</span>  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+<span class='ln'>17</span>  const [errors, setErrors] = useState({});
+<span class='ln'>18</span>  const [isLoading, setIsLoading] = useState(false);
+<span class='ln'>19</span>  const { login } = useUser();
+<span class='ln'>20</span>  const navigate = useNavigate();
+<span class='ln'>21</span>
+<span class='ln'>22</span>  const handleChange = (e) =&gt; {
+<span class='ln'>23</span>    const { name, value } = e.target;
+<span class='ln'>24</span>    setFormData(prev =&gt; ({
+<span class='ln'>25</span>      ...prev,
+<span class='ln'>26</span>      [name]: value
+<span class='ln'>27</span>    }));
+<span class='ln'>28</span>    // Clear error when user starts typing
+<span class='ln'>29</span>    if (errors[name]) {
+<span class='ln'>30</span>      setErrors(prev =&gt; ({
+<span class='ln'>31</span>        ...prev,
+<span class='ln'>32</span>        [name]: ''
+<span class='ln'>33</span>      }));
+<span class='ln'>34</span>    }
+<span class='ln'>35</span>  };
+<span class='ln'>36</span>
+<span class='ln'>37</span>  const validateForm = () =&gt; {
+<span class='ln'>38</span>    const newErrors = {};
+<span class='ln'>39</span>
+<span class='ln'>40</span>    if (!formData.name.trim()) {
+<span class='ln'>41</span>      newErrors.name = 'Name is required';
+<span class='ln'>42</span>    }
+<span class='ln'>43</span>
+<span class='ln'>44</span>    if (!formData.email.trim()) {
+<span class='ln'>45</span>      newErrors.email = 'Email is required';
+<span class='ln'>46</span>    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+<span class='ln'>47</span>      newErrors.email = 'Email is invalid';
+<span class='ln'>48</span>    }
+<span class='ln'>49</span>
+<span class='ln'>50</span>    if (!formData.password) {
+<span class='ln'>51</span>      newErrors.password = 'Password is required';
+<span class='ln'>52</span>    } else if (formData.password.length &lt; 6) {
+<span class='ln'>53</span>      newErrors.password = 'Password must be at least 6 characters';
+<span class='ln'>54</span>    }
+<span class='ln'>55</span>
+<span class='ln'>56</span>    if (!formData.confirmPassword) {
+<span class='ln'>57</span>      newErrors.confirmPassword = 'Please confirm your password';
+<span class='ln'>58</span>    } else if (formData.password !== formData.confirmPassword) {
+<span class='ln'>59</span>      newErrors.confirmPassword = 'Passwords do not match';
+<span class='ln'>60</span>    }
+<span class='ln'>61</span>
+<span class='ln'>62</span>    setErrors(newErrors);
+<span class='ln'>63</span>    return Object.keys(newErrors).length === 0;
+<span class='ln'>64</span>  };
+<span class='ln'>65</span>
+<span class='ln'>66</span>  const handleSubmit = async (e) =&gt; {
+<span class='ln'>67</span>    e.preventDefault();
+<span class='ln'>68</span>    
+<span class='ln'>69</span>    if (!validateForm()) return;
+<span class='ln'>70</span>
+<span class='ln'>71</span>    setIsLoading(true);
+<span class='ln'>72</span>    try {
+<span class='ln'>73</span>      // Send the correct format to the API
+<span class='ln'>74</span>      await api.post('/signup/', {
+<span class='ln'>75</span>        name: formData.name,
+<span class='ln'>76</span>        email: formData.email,
+<span class='ln'>77</span>        password: formData.password,
+<span class='ln'>78</span>        confirmPassword: formData.confirmPassword
+<span class='ln'>79</span>      });
+<span class='ln'>80</span>      
+<span class='ln'>81</span>      // Then login
+<span class='ln'>82</span>      await login(formData.email, formData.password);
+<span class='ln'>83</span>      navigate('/');
+<span class='ln'>84</span>    } catch (error) {
+<span class='ln'>85</span>      const errorData = error.response?.data;
+<span class='ln'>86</span>      if (errorData) {
+<span class='ln'>87</span>        setErrors(errorData);
+<span class='ln'>88</span>      } else {
+<span class='ln'>89</span>        setErrors({ submit: error.message || 'Failed to create account' });
+<span class='ln'>90</span>      }
+<span class='ln'>91</span>    } finally {
+<span class='ln'>92</span>      setIsLoading(false);
+<span class='ln'>93</span>    }
+<span class='ln'>94</span>  };
+<span class='ln'>95</span>
+<span class='ln'>96</span>  return (
+<span class='ln'>97</span>    &lt;div className="min-h-screen bg-[#FFFDF5] relative overflow-hidden"&gt;
+<span class='ln'>98</span>      {/* Background Pattern */}
+<span class='ln'>99</span>      &lt;div 
+<span class='ln'>100</span>        className="absolute inset-0 opacity-10"
+<span class='ln'>101</span>        style={{
+<span class='ln'>102</span>          backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>103</span>          backgroundSize: '20px 20px'
+<span class='ln'>104</span>        }}
+<span class='ln'>105</span>      &gt;&lt;/div&gt;
+<span class='ln'>106</span>      
+<span class='ln'>107</span>      {/* Floating Decorative Elements */}
+<span class='ln'>108</span>      &lt;div className="absolute top-10 right-4 sm:top-20 sm:right-10 rotate-12"&gt;
+<span class='ln'>109</span>        &lt;Star className="w-6 h-6 sm:w-8 sm:h-8 fill-[#FF6B6B] text-[#FF6B6B] animate-spin-slow" /&gt;
+<span class='ln'>110</span>      &lt;/div&gt;
+<span class='ln'>111</span>      &lt;div className="absolute top-32 left-4 sm:top-40 sm:left-20 -rotate-12"&gt;
+<span class='ln'>112</span>        &lt;Zap className="w-8 h-8 sm:w-12 sm:h-12 fill-[#FFD93D] text-[#FFD93D] animate-bounce" /&gt;
+<span class='ln'>113</span>      &lt;/div&gt;
+<span class='ln'>114</span>      &lt;div className="absolute bottom-20 right-8 sm:bottom-32 sm:right-32 rotate-45"&gt;
+<span class='ln'>115</span>        &lt;Shield className="w-6 h-6 sm:w-10 sm:h-10 fill-[#C4B5FD] text-[#C4B5FD]" /&gt;
+<span class='ln'>116</span>      &lt;/div&gt;
+<span class='ln'>117</span>
+<span class='ln'>118</span>      &lt;div className="relative z-10 min-h-screen flex"&gt;
+<span class='ln'>119</span>        {/* Left Side - Form */}
+<span class='ln'>120</span>        &lt;div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8"&gt;
+<span class='ln'>121</span>          &lt;motion.div
+<span class='ln'>122</span>            initial={{ opacity: 0, x: -50 }}
+<span class='ln'>123</span>            animate={{ opacity: 1, x: 0 }}
+<span class='ln'>124</span>            transition={{ duration: 0.5 }}
+<span class='ln'>125</span>            className="w-full max-w-md"
+<span class='ln'>126</span>          &gt;
+<span class='ln'>127</span>            {/* Mobile Header */}
+<span class='ln'>128</span>            &lt;div className="lg:hidden text-center mb-8"&gt;
+<span class='ln'>129</span>              &lt;div className="flex items-center justify-center space-x-3 mb-6"&gt;
+<span class='ln'>130</span>                &lt;div className="bg-[#FFD93D] border-4 border-black p-3 shadow-[6px_6px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>131</span>                  &lt;Pill className="w-8 h-8 stroke-[3px] text-black" /&gt;
+<span class='ln'>132</span>                &lt;/div&gt;
+<span class='ln'>133</span>                &lt;span className="text-3xl font-black uppercase tracking-tight text-black"&gt;genx&lt;/span&gt;
+<span class='ln'>134</span>              &lt;/div&gt;
+<span class='ln'>135</span>            &lt;/div&gt;
+<span class='ln'>136</span>
+<span class='ln'>137</span>            {/* Form Header */}
+<span class='ln'>138</span>            &lt;div className="text-center mb-8"&gt;
+<span class='ln'>139</span>              &lt;motion.h1
+<span class='ln'>140</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>141</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>142</span>                transition={{ delay: 0.2 }}
+<span class='ln'>143</span>                className="text-3xl sm:text-4xl font-black mb-4 uppercase tracking-tight text-black rotate-1"
+<span class='ln'>144</span>              &gt;
+<span class='ln'>145</span>                JOIN genx!
+<span class='ln'>146</span>              &lt;/motion.h1&gt;
+<span class='ln'>147</span>              &lt;motion.p
+<span class='ln'>148</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>149</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>150</span>                transition={{ delay: 0.3 }}
+<span class='ln'>151</span>                className="font-bold text-black/80 uppercase tracking-wide"
+<span class='ln'>152</span>              &gt;
+<span class='ln'>153</span>                CREATE YOUR ACCOUNT
+<span class='ln'>154</span>              &lt;/motion.p&gt;
+<span class='ln'>155</span>            &lt;/div&gt;
+<span class='ln'>156</span>
+<span class='ln'>157</span>            {/* Signup Form */}
+<span class='ln'>158</span>            &lt;div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[8px_8px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>159</span>              &lt;form onSubmit={handleSubmit} className="space-y-6"&gt;
+<span class='ln'>160</span>                {/* Name Field */}
+<span class='ln'>161</span>                &lt;div&gt;
+<span class='ln'>162</span>                  &lt;label htmlFor="name" className="block font-black uppercase tracking-widest text-xs text-black mb-2"&gt;
+<span class='ln'>163</span>                    FULL NAME *
+<span class='ln'>164</span>                  &lt;/label&gt;
+<span class='ln'>165</span>                  &lt;input
+<span class='ln'>166</span>                    id="name"
+<span class='ln'>167</span>                    name="name"
+<span class='ln'>168</span>                    type="text"
+<span class='ln'>169</span>                    required
+<span class='ln'>170</span>                    value={formData.name}
+<span class='ln'>171</span>                    onChange={handleChange}
+<span class='ln'>172</span>                    className={`w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>173</span>                      placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>174</span>                      focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>175</span>                      focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>176</span>                      transition-all duration-100 ${
+<span class='ln'>177</span>                        errors.name ? 'border-[#FF6B6B] bg-[#FF6B6B]/10' : ''
+<span class='ln'>178</span>                      }`}
+<span class='ln'>179</span>                    placeholder="ENTER YOUR FULL NAME"
+<span class='ln'>180</span>                  /&gt;
+<span class='ln'>181</span>                  {errors.name &amp;&amp; (
+<span class='ln'>182</span>                    &lt;p className="font-bold text-xs text-[#FF6B6B] mt-1 uppercase"&gt;{errors.name}&lt;/p&gt;
+<span class='ln'>183</span>                  )}
+<span class='ln'>184</span>                &lt;/div&gt;
+<span class='ln'>185</span>
+<span class='ln'>186</span>                {/* Email Field */}
+<span class='ln'>187</span>                &lt;div&gt;
+<span class='ln'>188</span>                  &lt;label htmlFor="email" className="block font-black uppercase tracking-widest text-xs text-black mb-2"&gt;
+<span class='ln'>189</span>                    EMAIL ADDRESS *
+<span class='ln'>190</span>                  &lt;/label&gt;
+<span class='ln'>191</span>                  &lt;input
+<span class='ln'>192</span>                    id="email"
+<span class='ln'>193</span>                    name="email"
+<span class='ln'>194</span>                    type="email"
+<span class='ln'>195</span>                    required
+<span class='ln'>196</span>                    value={formData.email}
+<span class='ln'>197</span>                    onChange={handleChange}
+<span class='ln'>198</span>                    className={`w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>199</span>                      placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>200</span>                      focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>201</span>                      focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>202</span>                      transition-all duration-100 ${
+<span class='ln'>203</span>                        errors.email ? 'border-[#FF6B6B] bg-[#FF6B6B]/10' : ''
+<span class='ln'>204</span>                      }`}
+<span class='ln'>205</span>                    placeholder="ENTER YOUR EMAIL"
+<span class='ln'>206</span>                  /&gt;
+<span class='ln'>207</span>                  {errors.email &amp;&amp; (
+<span class='ln'>208</span>                    &lt;p className="font-bold text-xs text-[#FF6B6B] mt-1 uppercase"&gt;{errors.email}&lt;/p&gt;
+<span class='ln'>209</span>                  )}
+<span class='ln'>210</span>                &lt;/div&gt;
+<span class='ln'>211</span>
+<span class='ln'>212</span>                {/* Password Field */}
+<span class='ln'>213</span>                &lt;div&gt;
+<span class='ln'>214</span>                  &lt;label htmlFor="password" className="block font-black uppercase tracking-widest text-xs text-black mb-2"&gt;
+<span class='ln'>215</span>                    PASSWORD *
+<span class='ln'>216</span>                  &lt;/label&gt;
+<span class='ln'>217</span>                  &lt;div className="relative"&gt;
+<span class='ln'>218</span>                    &lt;input
+<span class='ln'>219</span>                      id="password"
+<span class='ln'>220</span>                      name="password"
+<span class='ln'>221</span>                      type={showPassword ? "text" : "password"}
+<span class='ln'>222</span>                      required
+<span class='ln'>223</span>                      value={formData.password}
+<span class='ln'>224</span>                      onChange={handleChange}
+<span class='ln'>225</span>                      className={`w-full border-4 border-black bg-white font-bold text-base h-14 px-4 pr-16
+<span class='ln'>226</span>                        placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>227</span>                        focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>228</span>                        focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>229</span>                        transition-all duration-100 ${
+<span class='ln'>230</span>                          errors.password ? 'border-[#FF6B6B] bg-[#FF6B6B]/10' : ''
+<span class='ln'>231</span>                        }`}
+<span class='ln'>232</span>                      placeholder="CREATE PASSWORD"
+<span class='ln'>233</span>                    /&gt;
+<span class='ln'>234</span>                    &lt;button
+<span class='ln'>235</span>                      type="button"
+<span class='ln'>236</span>                      onClick={() =&gt; setShowPassword(!showPassword)}
+<span class='ln'>237</span>                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white border-2 border-black p-2
+<span class='ln'>238</span>                        hover:bg-[#C4B5FD] transition-colors duration-100"
+<span class='ln'>239</span>                    &gt;
+<span class='ln'>240</span>                      {showPassword ? (
+<span class='ln'>241</span>                        &lt;EyeOff className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>242</span>                      ) : (
+<span class='ln'>243</span>                        &lt;Eye className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>244</span>                      )}
+<span class='ln'>245</span>                    &lt;/button&gt;
+<span class='ln'>246</span>                  &lt;/div&gt;
+<span class='ln'>247</span>                  {errors.password &amp;&amp; (
+<span class='ln'>248</span>                    &lt;p className="font-bold text-xs text-[#FF6B6B] mt-1 uppercase"&gt;{errors.password}&lt;/p&gt;
+<span class='ln'>249</span>                  )}
+<span class='ln'>250</span>                &lt;/div&gt;
+<span class='ln'>251</span>
+<span class='ln'>252</span>                {/* Confirm Password Field */}
+<span class='ln'>253</span>                &lt;div&gt;
+<span class='ln'>254</span>                  &lt;label htmlFor="confirmPassword" className="block font-black uppercase tracking-widest text-xs text-black mb-2"&gt;
+<span class='ln'>255</span>                    CONFIRM PASSWORD *
+<span class='ln'>256</span>                  &lt;/label&gt;
+<span class='ln'>257</span>                  &lt;div className="relative"&gt;
+<span class='ln'>258</span>                    &lt;input
+<span class='ln'>259</span>                      id="confirmPassword"
+<span class='ln'>260</span>                      name="confirmPassword"
+<span class='ln'>261</span>                      type={showConfirmPassword ? "text" : "password"}
+<span class='ln'>262</span>                      required
+<span class='ln'>263</span>                      value={formData.confirmPassword}
+<span class='ln'>264</span>                      onChange={handleChange}
+<span class='ln'>265</span>                      className={`w-full border-4 border-black bg-white font-bold text-base h-14 px-4 pr-16
+<span class='ln'>266</span>                        placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>267</span>                        focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>268</span>                        focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>269</span>                        transition-all duration-100 ${
+<span class='ln'>270</span>                          errors.confirmPassword ? 'border-[#FF6B6B] bg-[#FF6B6B]/10' : ''
+<span class='ln'>271</span>                        }`}
+<span class='ln'>272</span>                      placeholder="CONFIRM PASSWORD"
+<span class='ln'>273</span>                    /&gt;
+<span class='ln'>274</span>                    &lt;button
+<span class='ln'>275</span>                      type="button"
+<span class='ln'>276</span>                      onClick={() =&gt; setShowConfirmPassword(!showConfirmPassword)}
+<span class='ln'>277</span>                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white border-2 border-black p-2
+<span class='ln'>278</span>                        hover:bg-[#C4B5FD] transition-colors duration-100"
+<span class='ln'>279</span>                    &gt;
+<span class='ln'>280</span>                      {showConfirmPassword ? (
+<span class='ln'>281</span>                        &lt;EyeOff className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>282</span>                      ) : (
+<span class='ln'>283</span>                        &lt;Eye className="w-4 h-4 stroke-[3px] text-black" /&gt;
+<span class='ln'>284</span>                      )}
+<span class='ln'>285</span>                    &lt;/button&gt;
+<span class='ln'>286</span>                  &lt;/div&gt;
+<span class='ln'>287</span>                  {errors.confirmPassword &amp;&amp; (
+<span class='ln'>288</span>                    &lt;p className="font-bold text-xs text-[#FF6B6B] mt-1 uppercase"&gt;{errors.confirmPassword}&lt;/p&gt;
+<span class='ln'>289</span>                  )}
+<span class='ln'>290</span>                &lt;/div&gt;
+<span class='ln'>291</span>
+<span class='ln'>292</span>                {/* Submit Error */}
+<span class='ln'>293</span>                {errors.submit &amp;&amp; (
+<span class='ln'>294</span>                  &lt;motion.div
+<span class='ln'>295</span>                    initial={{ opacity: 0, y: -10 }}
+<span class='ln'>296</span>                    animate={{ opacity: 1, y: 0 }}
+<span class='ln'>297</span>                    className="bg-[#FF6B6B] border-4 border-black p-4 rotate-1"
+<span class='ln'>298</span>                  &gt;
+<span class='ln'>299</span>                    &lt;p className="font-bold text-sm text-white text-center uppercase"&gt;{errors.submit}&lt;/p&gt;
+<span class='ln'>300</span>                  &lt;/motion.div&gt;
+<span class='ln'>301</span>                )}
+<span class='ln'>302</span>
+<span class='ln'>303</span>                {/* Submit Button */}
+<span class='ln'>304</span>                &lt;button
+<span class='ln'>305</span>                  type="submit"
+<span class='ln'>306</span>                  disabled={isLoading}
+<span class='ln'>307</span>                  className="w-full bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest text-sm py-4 h-14
+<span class='ln'>308</span>                    shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>309</span>                    hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>310</span>                    active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>311</span>                    disabled:opacity-50 disabled:cursor-not-allowed
+<span class='ln'>312</span>                    transition-all duration-100 -rotate-1"
+<span class='ln'>313</span>                &gt;
+<span class='ln'>314</span>                  {isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
+<span class='ln'>315</span>                &lt;/button&gt;
+<span class='ln'>316</span>              &lt;/form&gt;
+<span class='ln'>317</span>            &lt;/div&gt;
+<span class='ln'>318</span>
+<span class='ln'>319</span>            {/* Login Link */}
+<span class='ln'>320</span>            &lt;motion.div
+<span class='ln'>321</span>              initial={{ opacity: 0 }}
+<span class='ln'>322</span>              animate={{ opacity: 1 }}
+<span class='ln'>323</span>              transition={{ delay: 0.6 }}
+<span class='ln'>324</span>              className="text-center mt-8"
+<span class='ln'>325</span>            &gt;
+<span class='ln'>326</span>              &lt;div className="bg-[#FF6B6B] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] rotate-1"&gt;
+<span class='ln'>327</span>                &lt;p className="font-bold text-white uppercase tracking-wide"&gt;
+<span class='ln'>328</span>                  ALREADY HAVE AN ACCOUNT?{' '}
+<span class='ln'>329</span>                  &lt;Link 
+<span class='ln'>330</span>                    to="/login" 
+<span class='ln'>331</span>                    className="font-black text-white underline decoration-4 underline-offset-4 hover:text-[#FFD93D] transition-colors duration-100"
+<span class='ln'>332</span>                  &gt;
+<span class='ln'>333</span>                    SIGN IN HERE
+<span class='ln'>334</span>                  &lt;/Link&gt;
+<span class='ln'>335</span>                &lt;/p&gt;
+<span class='ln'>336</span>              &lt;/div&gt;
+<span class='ln'>337</span>            &lt;/motion.div&gt;
+<span class='ln'>338</span>
+<span class='ln'>339</span>            {/* Benefits (Mobile Only) */}
+<span class='ln'>340</span>            &lt;motion.div
+<span class='ln'>341</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>342</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>343</span>              transition={{ delay: 0.8 }}
+<span class='ln'>344</span>              className="lg:hidden mt-8"
+<span class='ln'>345</span>            &gt;
+<span class='ln'>346</span>              &lt;div className="bg-[#C4B5FD] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>347</span>                &lt;h3 className="font-black uppercase tracking-widest text-sm text-center mb-4 rotate-1"&gt;
+<span class='ln'>348</span>                  JOIN 50,000+ HAPPY CUSTOMERS!
+<span class='ln'>349</span>                &lt;/h3&gt;
+<span class='ln'>350</span>                &lt;div className="grid grid-cols-2 gap-4"&gt;
+<span class='ln'>351</span>                  &lt;div className="flex items-center space-x-2"&gt;
+<span class='ln'>352</span>                    &lt;div className="bg-[#FF6B6B] border-2 border-black w-6 h-6 flex items-center justify-center rotate-12"&gt;
+<span class='ln'>353</span>                      &lt;span className="font-black text-xs text-white"&gt;✓&lt;/span&gt;
+<span class='ln'>354</span>                    &lt;/div&gt;
+<span class='ln'>355</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;FREE DELIVERY&lt;/p&gt;
+<span class='ln'>356</span>                  &lt;/div&gt;
+<span class='ln'>357</span>                  &lt;div className="flex items-center space-x-2"&gt;
+<span class='ln'>358</span>                    &lt;div className="bg-[#FFD93D] border-2 border-black w-6 h-6 flex items-center justify-center -rotate-12"&gt;
+<span class='ln'>359</span>                      &lt;span className="font-black text-xs text-black"&gt;✓&lt;/span&gt;
+<span class='ln'>360</span>                    &lt;/div&gt;
+<span class='ln'>361</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;24/7 SUPPORT&lt;/p&gt;
+<span class='ln'>362</span>                  &lt;/div&gt;
+<span class='ln'>363</span>                  &lt;div className="flex items-center space-x-2"&gt;
+<span class='ln'>364</span>                    &lt;div className="bg-white border-2 border-black w-6 h-6 flex items-center justify-center rotate-6"&gt;
+<span class='ln'>365</span>                      &lt;span className="font-black text-xs text-black"&gt;✓&lt;/span&gt;
+<span class='ln'>366</span>                    &lt;/div&gt;
+<span class='ln'>367</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;SECURE PAYMENTS&lt;/p&gt;
+<span class='ln'>368</span>                  &lt;/div&gt;
+<span class='ln'>369</span>                  &lt;div className="flex items-center space-x-2"&gt;
+<span class='ln'>370</span>                    &lt;div className="bg-[#FF6B6B] border-2 border-black w-6 h-6 flex items-center justify-center -rotate-6"&gt;
+<span class='ln'>371</span>                      &lt;span className="font-black text-xs text-white"&gt;✓&lt;/span&gt;
+<span class='ln'>372</span>                    &lt;/div&gt;
+<span class='ln'>373</span>                    &lt;p className="font-black uppercase tracking-widest text-xs"&gt;EXPERT ADVICE&lt;/p&gt;
+<span class='ln'>374</span>                  &lt;/div&gt;
+<span class='ln'>375</span>                &lt;/div&gt;
+<span class='ln'>376</span>              &lt;/div&gt;
+<span class='ln'>377</span>            &lt;/motion.div&gt;
+<span class='ln'>378</span>          &lt;/motion.div&gt;
+<span class='ln'>379</span>        &lt;/div&gt;
+<span class='ln'>380</span>
+<span class='ln'>381</span>        {/* Right Side - Branding (Desktop) / Hidden on Mobile */}
+<span class='ln'>382</span>        &lt;div className="hidden lg:flex lg:w-1/2 bg-black border-l-4 border-black items-center justify-center p-12"&gt;
+<span class='ln'>383</span>          &lt;div className="text-center"&gt;
+<span class='ln'>384</span>            &lt;motion.div
+<span class='ln'>385</span>              initial={{ opacity: 0, scale: 0.8 }}
+<span class='ln'>386</span>              animate={{ opacity: 1, scale: 1 }}
+<span class='ln'>387</span>              transition={{ duration: 0.5 }}
+<span class='ln'>388</span>              className="mb-8"
+<span class='ln'>389</span>            &gt;
+<span class='ln'>390</span>              &lt;div className="bg-[#FF6B6B] border-4 border-white p-8 shadow-[12px_12px_0px_0px_#fff] -rotate-3"&gt;
+<span class='ln'>391</span>                &lt;Pill className="w-20 h-20 stroke-[4px] text-white mx-auto" /&gt;
+<span class='ln'>392</span>              &lt;/div&gt;
+<span class='ln'>393</span>            &lt;/motion.div&gt;
+<span class='ln'>394</span>            
+<span class='ln'>395</span>            &lt;motion.h1
+<span class='ln'>396</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>397</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>398</span>              transition={{ delay: 0.2 }}
+<span class='ln'>399</span>              className="text-6xl font-black uppercase tracking-tight text-white mb-4"
+<span class='ln'>400</span>              style={{ WebkitTextStroke: '2px white', color: 'transparent' }}
+<span class='ln'>401</span>            &gt;
+<span class='ln'>402</span>              genx
+<span class='ln'>403</span>            &lt;/motion.h1&gt;
+<span class='ln'>404</span>            
+<span class='ln'>405</span>            &lt;motion.p
+<span class='ln'>406</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>407</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>408</span>              transition={{ delay: 0.4 }}
+<span class='ln'>409</span>              className="text-xl font-bold text-white uppercase tracking-wide"
+<span class='ln'>410</span>            &gt;
+<span class='ln'>411</span>              JOIN THE HEALTHCARE REVOLUTION
+<span class='ln'>412</span>            &lt;/motion.p&gt;
+<span class='ln'>413</span>            
+<span class='ln'>414</span>            &lt;motion.div
+<span class='ln'>415</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>416</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>417</span>              transition={{ delay: 0.6 }}
+<span class='ln'>418</span>              className="mt-8 space-y-4"
+<span class='ln'>419</span>            &gt;
+<span class='ln'>420</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>421</span>                &lt;div className="bg-[#FFD93D] border-2 border-white p-2"&gt;
+<span class='ln'>422</span>                  &lt;span className="text-black font-black text-sm"&gt;🚀&lt;/span&gt;
+<span class='ln'>423</span>                &lt;/div&gt;
+<span class='ln'>424</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;FASTEST DELIVERY&lt;/span&gt;
+<span class='ln'>425</span>              &lt;/div&gt;
+<span class='ln'>426</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>427</span>                &lt;div className="bg-[#C4B5FD] border-2 border-white p-2"&gt;
+<span class='ln'>428</span>                  &lt;span className="text-black font-black text-sm"&gt;🏆&lt;/span&gt;
+<span class='ln'>429</span>                &lt;/div&gt;
+<span class='ln'>430</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;PREMIUM QUALITY&lt;/span&gt;
+<span class='ln'>431</span>              &lt;/div&gt;
+<span class='ln'>432</span>              &lt;div className="flex items-center justify-center space-x-4"&gt;
+<span class='ln'>433</span>                &lt;div className="bg-[#FF6B6B] border-2 border-white p-2"&gt;
+<span class='ln'>434</span>                  &lt;span className="text-white font-black text-sm"&gt;💝&lt;/span&gt;
+<span class='ln'>435</span>                &lt;/div&gt;
+<span class='ln'>436</span>                &lt;span className="text-white font-bold uppercase text-sm"&gt;TRUSTED BY 50K+&lt;/span&gt;
+<span class='ln'>437</span>              &lt;/div&gt;
+<span class='ln'>438</span>            &lt;/motion.div&gt;
+<span class='ln'>439</span>          &lt;/div&gt;
+<span class='ln'>440</span>        &lt;/div&gt;
+<span class='ln'>441</span>      &lt;/div&gt;
+<span class='ln'>442</span>    &lt;/div&gt;
+<span class='ln'>443</span>  );
+<span class='ln'>444</span>}
+</pre></div></body></html>

@@ -1,0 +1,676 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/ProfilePage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState, useEffect } from 'react';
+<span class='ln'>2</span>import { useUser } from '../contexts/UserContext';
+<span class='ln'>3</span>import { useAddresses } from '../contexts/AddressContext';
+<span class='ln'>4</span>import { motion } from 'framer-motion';
+<span class='ln'>5</span>import Toast from '../components/Toast';
+<span class='ln'>6</span>import { detectUserLocation } from '../utils/locationUtils';
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function ProfilePage() {
+<span class='ln'>9</span>  const { user, profile, updateProfile, fetchProfile, getActiveTime } = useUser();
+<span class='ln'>10</span>  const { addresses, createAddress, updateAddress, deleteAddress } = useAddresses();
+<span class='ln'>11</span>  const [activeTab, setActiveTab] = useState('profile');
+<span class='ln'>12</span>  const [isEditing, setIsEditing] = useState(false);
+<span class='ln'>13</span>  const [isAddingAddress, setIsAddingAddress] = useState(false);
+<span class='ln'>14</span>  const [formData, setFormData] = useState({});
+<span class='ln'>15</span>  const [addressForm, setAddressForm] = useState({
+<span class='ln'>16</span>    recievers_name: '',
+<span class='ln'>17</span>    recievers_phone: '',
+<span class='ln'>18</span>    address_type: 'Home',
+<span class='ln'>19</span>    address_line: '',
+<span class='ln'>20</span>    city: '',
+<span class='ln'>21</span>    state: '',
+<span class='ln'>22</span>    pincode: '',
+<span class='ln'>23</span>    is_default: false
+<span class='ln'>24</span>  });
+<span class='ln'>25</span>  const [loading, setLoading] = useState(true);
+<span class='ln'>26</span>  const [detectingLocation, setDetectingLocation] = useState(false);
+<span class='ln'>27</span>  const [activeTime, setActiveTime] = useState(null);
+<span class='ln'>28</span>  const [toast, setToast] = useState({ message: '', type: 'info' });
+<span class='ln'>29</span>
+<span class='ln'>30</span>  const tabs = [
+<span class='ln'>31</span>    { id: 'profile', label: 'PROFILE', icon: '👤' },
+<span class='ln'>32</span>    { id: 'addresses', label: 'ADDRESSES', icon: '📍' },
+<span class='ln'>33</span>    { id: 'orders', label: 'ORDERS', icon: '📦' }
+<span class='ln'>34</span>  ];
+<span class='ln'>35</span>
+<span class='ln'>36</span>  useEffect(() =&gt; {
+<span class='ln'>37</span>    const loadProfileData = async () =&gt; {
+<span class='ln'>38</span>      if (user) {
+<span class='ln'>39</span>        try {
+<span class='ln'>40</span>          if (!profile) {
+<span class='ln'>41</span>            await fetchProfile();
+<span class='ln'>42</span>          }
+<span class='ln'>43</span>          const timeData = await getActiveTime();
+<span class='ln'>44</span>          setActiveTime(timeData.active_time);
+<span class='ln'>45</span>        } catch (error) {
+<span class='ln'>46</span>          console.log('Profile or active time not available');
+<span class='ln'>47</span>        }
+<span class='ln'>48</span>      }
+<span class='ln'>49</span>      setLoading(false);
+<span class='ln'>50</span>    };
+<span class='ln'>51</span>    
+<span class='ln'>52</span>    loadProfileData();
+<span class='ln'>53</span>  }, [user, profile, fetchProfile, getActiveTime]);
+<span class='ln'>54</span>
+<span class='ln'>55</span>  useEffect(() =&gt; {
+<span class='ln'>56</span>    if (profile) {
+<span class='ln'>57</span>      setFormData({
+<span class='ln'>58</span>        name: profile.name || '',
+<span class='ln'>59</span>        address: profile.address || '',
+<span class='ln'>60</span>        phone: profile.phone || ''
+<span class='ln'>61</span>      });
+<span class='ln'>62</span>    }
+<span class='ln'>63</span>  }, [profile]);
+<span class='ln'>64</span>
+<span class='ln'>65</span>  const handleInputChange = (e) =&gt; {
+<span class='ln'>66</span>    const { name, value } = e.target;
+<span class='ln'>67</span>    setFormData(prev =&gt; ({ ...prev, [name]: value }));
+<span class='ln'>68</span>  };
+<span class='ln'>69</span>
+<span class='ln'>70</span>  const handleAddressInputChange = (e) =&gt; {
+<span class='ln'>71</span>    const { name, value, type, checked } = e.target;
+<span class='ln'>72</span>    setAddressForm(prev =&gt; ({ 
+<span class='ln'>73</span>      ...prev, 
+<span class='ln'>74</span>      [name]: type === 'checkbox' ? checked : value 
+<span class='ln'>75</span>    }));
+<span class='ln'>76</span>  };
+<span class='ln'>77</span>
+<span class='ln'>78</span>  const handleProfileUpdate = async (e) =&gt; {
+<span class='ln'>79</span>    e.preventDefault();
+<span class='ln'>80</span>    
+<span class='ln'>81</span>    try {
+<span class='ln'>82</span>      await updateProfile(formData);
+<span class='ln'>83</span>      setToast({ message: 'PROFILE UPDATED SUCCESSFULLY!', type: 'success' });
+<span class='ln'>84</span>      setIsEditing(false);
+<span class='ln'>85</span>    } catch (error) {
+<span class='ln'>86</span>      setToast({ message: 'FAILED TO UPDATE PROFILE. PLEASE TRY AGAIN.', type: 'error' });
+<span class='ln'>87</span>    }
+<span class='ln'>88</span>  };
+<span class='ln'>89</span>
+<span class='ln'>90</span>  const handleDetectLocation = async () =&gt; {
+<span class='ln'>91</span>    setDetectingLocation(true);
+<span class='ln'>92</span>    try {
+<span class='ln'>93</span>      const locationData = await detectUserLocation();
+<span class='ln'>94</span>      setAddressForm(prev =&gt; ({
+<span class='ln'>95</span>        ...prev,
+<span class='ln'>96</span>        address_line: locationData.address_line,
+<span class='ln'>97</span>        city: locationData.city,
+<span class='ln'>98</span>        state: locationData.state,
+<span class='ln'>99</span>        pincode: locationData.pincode
+<span class='ln'>100</span>      }));
+<span class='ln'>101</span>      setToast({ message: 'LOCATION DETECTED SUCCESSFULLY!', type: 'success' });
+<span class='ln'>102</span>    } catch (error) {
+<span class='ln'>103</span>      setToast({ message: 'FAILED TO DETECT LOCATION. PLEASE ENTER MANUALLY.', type: 'error' });
+<span class='ln'>104</span>    } finally {
+<span class='ln'>105</span>      setDetectingLocation(false);
+<span class='ln'>106</span>    }
+<span class='ln'>107</span>  };
+<span class='ln'>108</span>
+<span class='ln'>109</span>  const handleAddAddress = async (e) =&gt; {
+<span class='ln'>110</span>    e.preventDefault();
+<span class='ln'>111</span>    try {
+<span class='ln'>112</span>      await createAddress(addressForm);
+<span class='ln'>113</span>      setToast({ message: 'ADDRESS ADDED SUCCESSFULLY!', type: 'success' });
+<span class='ln'>114</span>      setIsAddingAddress(false);
+<span class='ln'>115</span>      setAddressForm({
+<span class='ln'>116</span>        recievers_name: '',
+<span class='ln'>117</span>        recievers_phone: '',
+<span class='ln'>118</span>        address_type: 'Home',
+<span class='ln'>119</span>        address_line: '',
+<span class='ln'>120</span>        city: '',
+<span class='ln'>121</span>        state: '',
+<span class='ln'>122</span>        pincode: '',
+<span class='ln'>123</span>        is_default: false
+<span class='ln'>124</span>      });
+<span class='ln'>125</span>    } catch (error) {
+<span class='ln'>126</span>      setToast({ message: 'FAILED TO ADD ADDRESS. PLEASE TRY AGAIN.', type: 'error' });
+<span class='ln'>127</span>    }
+<span class='ln'>128</span>  };
+<span class='ln'>129</span>
+<span class='ln'>130</span>  const handleDeleteAddress = async (addressId) =&gt; {
+<span class='ln'>131</span>    if (window.confirm('ARE YOU SURE YOU WANT TO DELETE THIS ADDRESS?')) {
+<span class='ln'>132</span>      try {
+<span class='ln'>133</span>        await deleteAddress(addressId);
+<span class='ln'>134</span>        setToast({ message: 'ADDRESS DELETED SUCCESSFULLY!', type: 'success' });
+<span class='ln'>135</span>      } catch (error) {
+<span class='ln'>136</span>        setToast({ message: 'FAILED TO DELETE ADDRESS.', type: 'error' });
+<span class='ln'>137</span>      }
+<span class='ln'>138</span>    }
+<span class='ln'>139</span>  };
+<span class='ln'>140</span>  
+<span class='ln'>141</span>  if (loading) {
+<span class='ln'>142</span>    return (
+<span class='ln'>143</span>      &lt;div className="min-h-screen bg-[#FFFDF5] p-4"&gt;
+<span class='ln'>144</span>        &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>145</span>          &lt;div className="text-center py-20"&gt;
+<span class='ln'>146</span>            &lt;div className="w-16 h-16 border-4 border-black bg-white mx-auto mb-4 animate-spin"&gt;&lt;/div&gt;
+<span class='ln'>147</span>            &lt;p className="font-black uppercase tracking-widest text-sm"&gt;LOADING PROFILE...&lt;/p&gt;
+<span class='ln'>148</span>          &lt;/div&gt;
+<span class='ln'>149</span>        &lt;/div&gt;
+<span class='ln'>150</span>      &lt;/div&gt;
+<span class='ln'>151</span>    );
+<span class='ln'>152</span>  }
+<span class='ln'>153</span>
+<span class='ln'>154</span>  // Generate profile image from user's name
+<span class='ln'>155</span>  const profileImageUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${profile?.name || user?.email || 'User'}`;
+<span class='ln'>156</span>  
+<span class='ln'>157</span>  return (
+<span class='ln'>158</span>    &lt;&gt;
+<span class='ln'>159</span>      &lt;Toast message={toast.message} type={toast.type} /&gt;
+<span class='ln'>160</span>      
+<span class='ln'>161</span>      &lt;motion.div
+<span class='ln'>162</span>        initial={{ opacity: 0, y: 20 }}
+<span class='ln'>163</span>        animate={{ opacity: 1, y: 0 }}
+<span class='ln'>164</span>        className="min-h-screen bg-[#FFFDF5]"
+<span class='ln'>165</span>      &gt;
+<span class='ln'>166</span>        {/* Background Pattern */}
+<span class='ln'>167</span>        &lt;div 
+<span class='ln'>168</span>          className="absolute inset-0 opacity-5"
+<span class='ln'>169</span>          style={{
+<span class='ln'>170</span>            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>171</span>            backgroundSize: '20px 20px'
+<span class='ln'>172</span>          }}
+<span class='ln'>173</span>        &gt;&lt;/div&gt;
+<span class='ln'>174</span>
+<span class='ln'>175</span>        &lt;div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8"&gt;
+<span class='ln'>176</span>          {/* Header */}
+<span class='ln'>177</span>          &lt;div className="text-center mb-8"&gt;
+<span class='ln'>178</span>            &lt;h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight mb-4 -rotate-1"&gt;
+<span class='ln'>179</span>              MY PROFILE
+<span class='ln'>180</span>            &lt;/h1&gt;
+<span class='ln'>181</span>            &lt;div className="bg-[#FFD93D] border-4 border-black shadow-[6px_6px_0px_0px_#000] p-4 rotate-1 inline-block"&gt;
+<span class='ln'>182</span>              &lt;p className="font-bold uppercase tracking-wide"&gt;MANAGE YOUR ACCOUNT SETTINGS&lt;/p&gt;
+<span class='ln'>183</span>            &lt;/div&gt;
+<span class='ln'>184</span>          &lt;/div&gt;
+<span class='ln'>185</span>
+<span class='ln'>186</span>          {/* Profile Header Card */}
+<span class='ln'>187</span>          &lt;div className="bg-black border-4 border-black shadow-[8px_8px_0px_0px_#000] mb-8 overflow-hidden"&gt;
+<span class='ln'>188</span>            &lt;div className="p-6 sm:p-8"&gt;
+<span class='ln'>189</span>              &lt;div className="flex flex-col sm:flex-row items-center sm:items-start gap-6"&gt;
+<span class='ln'>190</span>                &lt;div className="relative"&gt;
+<span class='ln'>191</span>                  &lt;div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-[4px_4px_0px_0px_#fff] overflow-hidden"&gt;
+<span class='ln'>192</span>                    &lt;img src={profileImageUrl} alt="Profile" className="w-full h-full object-cover" /&gt;
+<span class='ln'>193</span>                  &lt;/div&gt;
+<span class='ln'>194</span>                  &lt;button className="absolute -bottom-2 -right-2 bg-[#FFD93D] border-4 border-white w-10 h-10 flex items-center justify-center shadow-[2px_2px_0px_0px_#fff]"&gt;
+<span class='ln'>195</span>                    &lt;svg className="w-5 h-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>196</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z" /&gt;
+<span class='ln'>197</span>                    &lt;/svg&gt;
+<span class='ln'>198</span>                  &lt;/button&gt;
+<span class='ln'>199</span>                &lt;/div&gt;
+<span class='ln'>200</span>                
+<span class='ln'>201</span>                &lt;div className="text-center sm:text-left text-white"&gt;
+<span class='ln'>202</span>                  &lt;h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-2"&gt;
+<span class='ln'>203</span>                    {profile?.name || 'NOT SET'}
+<span class='ln'>204</span>                  &lt;/h2&gt;
+<span class='ln'>205</span>                  &lt;p className="font-bold text-lg mb-2"&gt;{user?.email}&lt;/p&gt;
+<span class='ln'>206</span>                  {activeTime &amp;&amp; (
+<span class='ln'>207</span>                    &lt;div className="bg-[#C4B5FD] border-2 border-white px-3 py-1 inline-block"&gt;
+<span class='ln'>208</span>                      &lt;p className="font-black uppercase tracking-widest text-xs text-black"&gt;
+<span class='ln'>209</span>                        ACTIVE TIME: {activeTime.hours}H {activeTime.minutes}M
+<span class='ln'>210</span>                      &lt;/p&gt;
+<span class='ln'>211</span>                    &lt;/div&gt;
+<span class='ln'>212</span>                  )}
+<span class='ln'>213</span>                &lt;/div&gt;
+<span class='ln'>214</span>              &lt;/div&gt;
+<span class='ln'>215</span>            &lt;/div&gt;
+<span class='ln'>216</span>          &lt;/div&gt;
+<span class='ln'>217</span>
+<span class='ln'>218</span>          {/* Tab Navigation */}
+<span class='ln'>219</span>          &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] mb-8 overflow-hidden"&gt;
+<span class='ln'>220</span>            &lt;div className="flex overflow-x-auto"&gt;
+<span class='ln'>221</span>              {tabs.map((tab) =&gt; (
+<span class='ln'>222</span>                &lt;button
+<span class='ln'>223</span>                  key={tab.id}
+<span class='ln'>224</span>                  onClick={() =&gt; setActiveTab(tab.id)}
+<span class='ln'>225</span>                  className={`flex-shrink-0 flex items-center gap-3 px-6 py-4 font-black uppercase tracking-widest text-sm border-r-4 border-black last:border-r-0 transition-colors duration-100 ${
+<span class='ln'>226</span>                    activeTab === tab.id 
+<span class='ln'>227</span>                      ? 'bg-black text-white' 
+<span class='ln'>228</span>                      : 'hover:bg-[#FFD93D]'
+<span class='ln'>229</span>                  }`}
+<span class='ln'>230</span>                &gt;
+<span class='ln'>231</span>                  &lt;span className="text-lg"&gt;{tab.icon}&lt;/span&gt;
+<span class='ln'>232</span>                  {tab.label}
+<span class='ln'>233</span>                &lt;/button&gt;
+<span class='ln'>234</span>              ))}
+<span class='ln'>235</span>            &lt;/div&gt;
+<span class='ln'>236</span>          &lt;/div&gt;
+<span class='ln'>237</span>
+<span class='ln'>238</span>          {/* Tab Content */}
+<span class='ln'>239</span>          &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>240</span>            {/* Profile Tab */}
+<span class='ln'>241</span>            {activeTab === 'profile' &amp;&amp; (
+<span class='ln'>242</span>              &lt;div&gt;
+<span class='ln'>243</span>                &lt;div className="bg-[#C4B5FD] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>244</span>                  &lt;h3 className="font-black uppercase tracking-widest text-sm"&gt;PROFILE INFORMATION&lt;/h3&gt;
+<span class='ln'>245</span>                &lt;/div&gt;
+<span class='ln'>246</span>                
+<span class='ln'>247</span>                &lt;div className="p-6 sm:p-8"&gt;
+<span class='ln'>248</span>                  {!isEditing ? (
+<span class='ln'>249</span>                    &lt;div className="space-y-6"&gt;
+<span class='ln'>250</span>                      &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-6"&gt;
+<span class='ln'>251</span>                        &lt;div className="bg-[#FFFDF5] border-4 border-black p-4"&gt;
+<span class='ln'>252</span>                          &lt;label className="font-black uppercase tracking-widest text-xs mb-2 block"&gt;FULL NAME&lt;/label&gt;
+<span class='ln'>253</span>                          &lt;p className="font-bold text-lg"&gt;{profile?.name || 'NOT SET'}&lt;/p&gt;
+<span class='ln'>254</span>                        &lt;/div&gt;
+<span class='ln'>255</span>                        &lt;div className="bg-[#FFFDF5] border-4 border-black p-4"&gt;
+<span class='ln'>256</span>                          &lt;label className="font-black uppercase tracking-widest text-xs mb-2 block"&gt;EMAIL&lt;/label&gt;
+<span class='ln'>257</span>                          &lt;p className="font-bold text-lg"&gt;{user?.email}&lt;/p&gt;
+<span class='ln'>258</span>                        &lt;/div&gt;
+<span class='ln'>259</span>                        &lt;div className="bg-[#FFFDF5] border-4 border-black p-4"&gt;
+<span class='ln'>260</span>                          &lt;label className="font-black uppercase tracking-widest text-xs mb-2 block"&gt;PHONE&lt;/label&gt;
+<span class='ln'>261</span>                          &lt;p className="font-bold text-lg"&gt;{profile?.phone || 'NOT SET'}&lt;/p&gt;
+<span class='ln'>262</span>                        &lt;/div&gt;
+<span class='ln'>263</span>                        &lt;div className="bg-[#FFFDF5] border-4 border-black p-4"&gt;
+<span class='ln'>264</span>                          &lt;label className="font-black uppercase tracking-widest text-xs mb-2 block"&gt;ADDRESS&lt;/label&gt;
+<span class='ln'>265</span>                          &lt;p className="font-bold text-lg"&gt;{profile?.address || 'NOT SET'}&lt;/p&gt;
+<span class='ln'>266</span>                        &lt;/div&gt;
+<span class='ln'>267</span>                      &lt;/div&gt;
+<span class='ln'>268</span>                      
+<span class='ln'>269</span>                      &lt;button 
+<span class='ln'>270</span>                        onClick={() =&gt; setIsEditing(true)} 
+<span class='ln'>271</span>                        className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>272</span>                          text-sm px-6 py-4 h-14 w-full sm:w-auto
+<span class='ln'>273</span>                          shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>274</span>                          hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>275</span>                          active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>276</span>                          transition-all duration-100"
+<span class='ln'>277</span>                      &gt;
+<span class='ln'>278</span>                        EDIT PROFILE
+<span class='ln'>279</span>                      &lt;/button&gt;
+<span class='ln'>280</span>                    &lt;/div&gt;
+<span class='ln'>281</span>                  ) : (
+<span class='ln'>282</span>                    &lt;form onSubmit={handleProfileUpdate} className="space-y-6"&gt;
+<span class='ln'>283</span>                      &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-6"&gt;
+<span class='ln'>284</span>                        &lt;div&gt;
+<span class='ln'>285</span>                          &lt;label htmlFor="name" className="block font-black uppercase tracking-widest text-xs mb-2"&gt;FULL NAME&lt;/label&gt;
+<span class='ln'>286</span>                          &lt;input 
+<span class='ln'>287</span>                            type="text" 
+<span class='ln'>288</span>                            name="name" 
+<span class='ln'>289</span>                            id="name" 
+<span class='ln'>290</span>                            value={formData.name || ''} 
+<span class='ln'>291</span>                            onChange={handleInputChange} 
+<span class='ln'>292</span>                            className="w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>293</span>                              focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>294</span>                              focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>295</span>                              transition-all duration-100" 
+<span class='ln'>296</span>                          /&gt;
+<span class='ln'>297</span>                        &lt;/div&gt;
+<span class='ln'>298</span>                        &lt;div&gt;
+<span class='ln'>299</span>                          &lt;label htmlFor="phone" className="block font-black uppercase tracking-widest text-xs mb-2"&gt;PHONE&lt;/label&gt;
+<span class='ln'>300</span>                          &lt;input 
+<span class='ln'>301</span>                            type="text" 
+<span class='ln'>302</span>                            name="phone" 
+<span class='ln'>303</span>                            id="phone" 
+<span class='ln'>304</span>                            value={formData.phone || ''} 
+<span class='ln'>305</span>                            onChange={handleInputChange} 
+<span class='ln'>306</span>                            className="w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>307</span>                              focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>308</span>                              focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>309</span>                              transition-all duration-100" 
+<span class='ln'>310</span>                          /&gt;
+<span class='ln'>311</span>                        &lt;/div&gt;
+<span class='ln'>312</span>                      &lt;/div&gt;
+<span class='ln'>313</span>                      &lt;div&gt;
+<span class='ln'>314</span>                        &lt;label htmlFor="address" className="block font-black uppercase tracking-widest text-xs mb-2"&gt;ADDRESS&lt;/label&gt;
+<span class='ln'>315</span>                        &lt;input 
+<span class='ln'>316</span>                          type="text" 
+<span class='ln'>317</span>                          name="address" 
+<span class='ln'>318</span>                          id="address" 
+<span class='ln'>319</span>                          value={formData.address || ''} 
+<span class='ln'>320</span>                          onChange={handleInputChange} 
+<span class='ln'>321</span>                          className="w-full border-4 border-black bg-white font-bold text-base h-14 px-4
+<span class='ln'>322</span>                            focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>323</span>                            focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>324</span>                            transition-all duration-100" 
+<span class='ln'>325</span>                        /&gt;
+<span class='ln'>326</span>                      &lt;/div&gt;
+<span class='ln'>327</span>                      &lt;div className="flex flex-col sm:flex-row gap-4"&gt;
+<span class='ln'>328</span>                        &lt;button 
+<span class='ln'>329</span>                          type="submit" 
+<span class='ln'>330</span>                          className="bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>331</span>                            text-sm px-6 py-4 h-14 w-full sm:w-auto
+<span class='ln'>332</span>                            shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>333</span>                            hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>334</span>                            active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>335</span>                            transition-all duration-100"
+<span class='ln'>336</span>                        &gt;
+<span class='ln'>337</span>                          SAVE CHANGES
+<span class='ln'>338</span>                        &lt;/button&gt;
+<span class='ln'>339</span>                        &lt;button 
+<span class='ln'>340</span>                          type="button" 
+<span class='ln'>341</span>                          onClick={() =&gt; { setIsEditing(false); setFormData({...profile}); }} 
+<span class='ln'>342</span>                          className="bg-white border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>343</span>                            text-sm px-6 py-4 h-14 w-full sm:w-auto
+<span class='ln'>344</span>                            shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>345</span>                            hover:bg-[#C4B5FD] hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>346</span>                            active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>347</span>                            transition-all duration-100"
+<span class='ln'>348</span>                        &gt;
+<span class='ln'>349</span>                          CANCEL
+<span class='ln'>350</span>                        &lt;/button&gt;
+<span class='ln'>351</span>                      &lt;/div&gt;
+<span class='ln'>352</span>                    &lt;/form&gt;
+<span class='ln'>353</span>                  )}
+<span class='ln'>354</span>                &lt;/div&gt;
+<span class='ln'>355</span>              &lt;/div&gt;
+<span class='ln'>356</span>            )}
+<span class='ln'>357</span>
+<span class='ln'>358</span>            {/* Addresses Tab */}
+<span class='ln'>359</span>            {activeTab === 'addresses' &amp;&amp; (
+<span class='ln'>360</span>              &lt;div&gt;
+<span class='ln'>361</span>                &lt;div className="bg-[#FFD93D] border-b-4 border-black p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"&gt;
+<span class='ln'>362</span>                  &lt;h3 className="font-black uppercase tracking-widest text-sm"&gt;MY ADDRESSES&lt;/h3&gt;
+<span class='ln'>363</span>                  &lt;button 
+<span class='ln'>364</span>                    onClick={() =&gt; setIsAddingAddress(true)}
+<span class='ln'>365</span>                    className="bg-black border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>366</span>                      text-xs px-4 py-3 h-12 w-full sm:w-auto text-white
+<span class='ln'>367</span>                      shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>368</span>                      hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
+<span class='ln'>369</span>                      active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
+<span class='ln'>370</span>                      transition-all duration-100"
+<span class='ln'>371</span>                  &gt;
+<span class='ln'>372</span>                    ADD NEW ADDRESS
+<span class='ln'>373</span>                  &lt;/button&gt;
+<span class='ln'>374</span>                &lt;/div&gt;
+<span class='ln'>375</span>
+<span class='ln'>376</span>                &lt;div className="p-6 sm:p-8"&gt;
+<span class='ln'>377</span>                  {/* Add Address Form */}
+<span class='ln'>378</span>                  {isAddingAddress &amp;&amp; (
+<span class='ln'>379</span>                    &lt;motion.div
+<span class='ln'>380</span>                      initial={{ opacity: 0, height: 0 }}
+<span class='ln'>381</span>                      animate={{ opacity: 1, height: 'auto' }}
+<span class='ln'>382</span>                      className="bg-[#C4B5FD] border-4 border-black shadow-[6px_6px_0px_0px_#000] p-6 mb-8 overflow-hidden"
+<span class='ln'>383</span>                    &gt;
+<span class='ln'>384</span>                      &lt;div className="bg-black border-b-4 border-black p-4 -m-6 mb-6"&gt;
+<span class='ln'>385</span>                        &lt;h4 className="font-black uppercase tracking-widest text-sm text-white"&gt;ADD NEW ADDRESS&lt;/h4&gt;
+<span class='ln'>386</span>                      &lt;/div&gt;
+<span class='ln'>387</span>                      
+<span class='ln'>388</span>                      &lt;form onSubmit={handleAddAddress} className="space-y-4"&gt;
+<span class='ln'>389</span>                        &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>390</span>                          &lt;div&gt;
+<span class='ln'>391</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs mb-2"&gt;RECEIVER'S NAME *&lt;/label&gt;
+<span class='ln'>392</span>                            &lt;input 
+<span class='ln'>393</span>                              type="text" 
+<span class='ln'>394</span>                              name="recievers_name" 
+<span class='ln'>395</span>                              value={addressForm.recievers_name} 
+<span class='ln'>396</span>                              onChange={handleAddressInputChange}
+<span class='ln'>397</span>                              className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>398</span>                                focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>399</span>                                focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>400</span>                                transition-all duration-100"
+<span class='ln'>401</span>                              required
+<span class='ln'>402</span>                            /&gt;
+<span class='ln'>403</span>                          &lt;/div&gt;
+<span class='ln'>404</span>                          &lt;div&gt;
+<span class='ln'>405</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs mb-2"&gt;PHONE NUMBER *&lt;/label&gt;
+<span class='ln'>406</span>                            &lt;input 
+<span class='ln'>407</span>                              type="tel" 
+<span class='ln'>408</span>                              name="recievers_phone" 
+<span class='ln'>409</span>                              value={addressForm.recievers_phone} 
+<span class='ln'>410</span>                              onChange={handleAddressInputChange}
+<span class='ln'>411</span>                              className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>412</span>                                focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>413</span>                                focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>414</span>                                transition-all duration-100"
+<span class='ln'>415</span>                              required
+<span class='ln'>416</span>                            /&gt;
+<span class='ln'>417</span>                          &lt;/div&gt;
+<span class='ln'>418</span>                        &lt;/div&gt;
+<span class='ln'>419</span>
+<span class='ln'>420</span>                        &lt;div className="grid grid-cols-1 sm:grid-cols-3 gap-4"&gt;
+<span class='ln'>421</span>                          &lt;div&gt;
+<span class='ln'>422</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs mb-2"&gt;ADDRESS TYPE&lt;/label&gt;
+<span class='ln'>423</span>                            &lt;select 
+<span class='ln'>424</span>                              name="address_type" 
+<span class='ln'>425</span>                              value={addressForm.address_type} 
+<span class='ln'>426</span>                              onChange={handleAddressInputChange}
+<span class='ln'>427</span>                              className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>428</span>                                focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
+<span class='ln'>429</span>                            &gt;
+<span class='ln'>430</span>                              &lt;option value="Home"&gt;HOME&lt;/option&gt;
+<span class='ln'>431</span>                              &lt;option value="Office"&gt;OFFICE&lt;/option&gt;
+<span class='ln'>432</span>                              &lt;option value="Other"&gt;OTHER&lt;/option&gt;
+<span class='ln'>433</span>                            &lt;/select&gt;
+<span class='ln'>434</span>                          &lt;/div&gt;
+<span class='ln'>435</span>                          &lt;div&gt;
+<span class='ln'>436</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs mb-2"&gt;CITY *&lt;/label&gt;
+<span class='ln'>437</span>                            &lt;input 
+<span class='ln'>438</span>                              type="text" 
+<span class='ln'>439</span>                              name="city" 
+<span class='ln'>440</span>                              value={addressForm.city} 
+<span class='ln'>441</span>                              onChange={handleAddressInputChange}
+<span class='ln'>442</span>                              className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>443</span>                                focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>444</span>                                focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>445</span>                                transition-all duration-100"
+<span class='ln'>446</span>                              required
+<span class='ln'>447</span>                            /&gt;
+<span class='ln'>448</span>                          &lt;/div&gt;
+<span class='ln'>449</span>                          &lt;div&gt;
+<span class='ln'>450</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs mb-2"&gt;PINCODE *&lt;/label&gt;
+<span class='ln'>451</span>                            &lt;input 
+<span class='ln'>452</span>                              type="text" 
+<span class='ln'>453</span>                              name="pincode" 
+<span class='ln'>454</span>                              value={addressForm.pincode} 
+<span class='ln'>455</span>                              onChange={handleAddressInputChange}
+<span class='ln'>456</span>                              className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>457</span>                                focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>458</span>                                focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>459</span>                                transition-all duration-100"
+<span class='ln'>460</span>                              required
+<span class='ln'>461</span>                            /&gt;
+<span class='ln'>462</span>                          &lt;/div&gt;
+<span class='ln'>463</span>                        &lt;/div&gt;
+<span class='ln'>464</span>
+<span class='ln'>465</span>                        &lt;div&gt;
+<span class='ln'>466</span>                          &lt;div className="flex justify-between items-center mb-2"&gt;
+<span class='ln'>467</span>                            &lt;label className="block font-black uppercase tracking-widest text-xs"&gt;ADDRESS LINE *&lt;/label&gt;
+<span class='ln'>468</span>                            &lt;button
+<span class='ln'>469</span>                              type="button"
+<span class='ln'>470</span>                              onClick={handleDetectLocation}
+<span class='ln'>471</span>                              disabled={detectingLocation}
+<span class='ln'>472</span>                              className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>473</span>                                text-xs px-4 py-2 h-10 disabled:opacity-50 disabled:cursor-not-allowed
+<span class='ln'>474</span>                                shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>475</span>                                hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
+<span class='ln'>476</span>                                active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
+<span class='ln'>477</span>                                transition-all duration-100"
+<span class='ln'>478</span>                            &gt;
+<span class='ln'>479</span>                              {detectingLocation ? 'DETECTING...' : 'DETECT LOCATION'}
+<span class='ln'>480</span>                            &lt;/button&gt;
+<span class='ln'>481</span>                          &lt;/div&gt;
+<span class='ln'>482</span>                          &lt;input 
+<span class='ln'>483</span>                            type="text" 
+<span class='ln'>484</span>                            name="address_line" 
+<span class='ln'>485</span>                            value={addressForm.address_line} 
+<span class='ln'>486</span>                            onChange={handleAddressInputChange}
+<span class='ln'>487</span>                            className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>488</span>                              focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>489</span>                              focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>490</span>                              transition-all duration-100"
+<span class='ln'>491</span>                            required
+<span class='ln'>492</span>                          /&gt;
+<span class='ln'>493</span>                        &lt;/div&gt;
+<span class='ln'>494</span>
+<span class='ln'>495</span>                        &lt;div&gt;
+<span class='ln'>496</span>                          &lt;input 
+<span class='ln'>497</span>                            type="text" 
+<span class='ln'>498</span>                            name="state" 
+<span class='ln'>499</span>                            value={addressForm.state} 
+<span class='ln'>500</span>                            onChange={handleAddressInputChange}
+<span class='ln'>501</span>                            placeholder="STATE"
+<span class='ln'>502</span>                            className="w-full border-4 border-black bg-white font-bold text-base h-12 px-4
+<span class='ln'>503</span>                              placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>504</span>                              focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>505</span>                              focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>506</span>                              transition-all duration-100"
+<span class='ln'>507</span>                            required
+<span class='ln'>508</span>                          /&gt;
+<span class='ln'>509</span>                        &lt;/div&gt;
+<span class='ln'>510</span>
+<span class='ln'>511</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>512</span>                          &lt;div className="relative"&gt;
+<span class='ln'>513</span>                            &lt;input 
+<span class='ln'>514</span>                              type="checkbox" 
+<span class='ln'>515</span>                              name="is_default" 
+<span class='ln'>516</span>                              checked={addressForm.is_default} 
+<span class='ln'>517</span>                              onChange={handleAddressInputChange}
+<span class='ln'>518</span>                              className="sr-only"
+<span class='ln'>519</span>                            /&gt;
+<span class='ln'>520</span>                            &lt;div className={`w-6 h-6 border-4 border-black ${
+<span class='ln'>521</span>                              addressForm.is_default ? 'bg-[#FF6B6B]' : 'bg-white'
+<span class='ln'>522</span>                            } transition-colors duration-100 cursor-pointer`}
+<span class='ln'>523</span>                              onClick={() =&gt; setAddressForm(prev =&gt; ({ ...prev, is_default: !prev.is_default }))}
+<span class='ln'>524</span>                            &gt;
+<span class='ln'>525</span>                              {addressForm.is_default &amp;&amp; (
+<span class='ln'>526</span>                                &lt;svg className="w-4 h-4 text-white stroke-[3px] absolute inset-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>527</span>                                  &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /&gt;
+<span class='ln'>528</span>                                &lt;/svg&gt;
+<span class='ln'>529</span>                              )}
+<span class='ln'>530</span>                            &lt;/div&gt;
+<span class='ln'>531</span>                          &lt;/div&gt;
+<span class='ln'>532</span>                          &lt;label className="font-bold uppercase tracking-wide text-sm cursor-pointer"
+<span class='ln'>533</span>                            onClick={() =&gt; setAddressForm(prev =&gt; ({ ...prev, is_default: !prev.is_default }))}
+<span class='ln'>534</span>                          &gt;
+<span class='ln'>535</span>                            SET AS DEFAULT ADDRESS
+<span class='ln'>536</span>                          &lt;/label&gt;
+<span class='ln'>537</span>                        &lt;/div&gt;
+<span class='ln'>538</span>
+<span class='ln'>539</span>                        &lt;div className="flex flex-col sm:flex-row gap-4 pt-4"&gt;
+<span class='ln'>540</span>                          &lt;button 
+<span class='ln'>541</span>                            type="submit" 
+<span class='ln'>542</span>                            className="bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>543</span>                              text-sm px-6 py-4 h-14 w-full sm:w-auto
+<span class='ln'>544</span>                              shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>545</span>                              hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>546</span>                              active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>547</span>                              transition-all duration-100"
+<span class='ln'>548</span>                          &gt;
+<span class='ln'>549</span>                            SAVE ADDRESS
+<span class='ln'>550</span>                          &lt;/button&gt;
+<span class='ln'>551</span>                          &lt;button 
+<span class='ln'>552</span>                            type="button" 
+<span class='ln'>553</span>                            onClick={() =&gt; setIsAddingAddress(false)}
+<span class='ln'>554</span>                            className="bg-white border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>555</span>                              text-sm px-6 py-4 h-14 w-full sm:w-auto
+<span class='ln'>556</span>                              shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>557</span>                              hover:bg-[#C4B5FD] hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>558</span>                              active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>559</span>                              transition-all duration-100"
+<span class='ln'>560</span>                          &gt;
+<span class='ln'>561</span>                            CANCEL
+<span class='ln'>562</span>                          &lt;/button&gt;
+<span class='ln'>563</span>                        &lt;/div&gt;
+<span class='ln'>564</span>                      &lt;/form&gt;
+<span class='ln'>565</span>                    &lt;/motion.div&gt;
+<span class='ln'>566</span>                  )}
+<span class='ln'>567</span>
+<span class='ln'>568</span>                  {/* Address List */}
+<span class='ln'>569</span>                  &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;
+<span class='ln'>570</span>                    {addresses.map(address =&gt; (
+<span class='ln'>571</span>                      &lt;div key={address.id} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] overflow-hidden relative"&gt;
+<span class='ln'>572</span>                        {address.is_default &amp;&amp; (
+<span class='ln'>573</span>                          &lt;div className="absolute -top-3 -right-3 bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest text-xs px-3 py-1 shadow-[4px_4px_0px_0px_#000] rotate-12 z-10"&gt;
+<span class='ln'>574</span>                            DEFAULT
+<span class='ln'>575</span>                          &lt;/div&gt;
+<span class='ln'>576</span>                        )}
+<span class='ln'>577</span>                        
+<span class='ln'>578</span>                        &lt;div className="bg-[#C4B5FD] border-b-4 border-black p-4"&gt;
+<span class='ln'>579</span>                          &lt;div className="flex items-center justify-between"&gt;
+<span class='ln'>580</span>                            &lt;span className="bg-black border-2 border-black text-white font-black uppercase tracking-widest text-xs px-3 py-1"&gt;
+<span class='ln'>581</span>                              {address.address_type}
+<span class='ln'>582</span>                            &lt;/span&gt;
+<span class='ln'>583</span>                          &lt;/div&gt;
+<span class='ln'>584</span>                        &lt;/div&gt;
+<span class='ln'>585</span>                        
+<span class='ln'>586</span>                        &lt;div className="p-4"&gt;
+<span class='ln'>587</span>                          &lt;h4 className="font-black text-lg uppercase tracking-tight mb-2"&gt;{address.recievers_name}&lt;/h4&gt;
+<span class='ln'>588</span>                          &lt;p className="font-bold mb-1"&gt;{address.address_line}&lt;/p&gt;
+<span class='ln'>589</span>                          &lt;p className="font-bold mb-1"&gt;{address.city}, {address.state} - {address.pincode}&lt;/p&gt;
+<span class='ln'>590</span>                          &lt;div className="bg-[#FFFDF5] border-2 border-black px-3 py-1 inline-block mb-4"&gt;
+<span class='ln'>591</span>                            &lt;p className="font-bold text-sm"&gt;PHONE: {address.recievers_phone}&lt;/p&gt;
+<span class='ln'>592</span>                          &lt;/div&gt;
+<span class='ln'>593</span>                          
+<span class='ln'>594</span>                          &lt;div className="flex gap-2"&gt;
+<span class='ln'>595</span>                            &lt;button 
+<span class='ln'>596</span>                              onClick={() =&gt; handleDeleteAddress(address.id)}
+<span class='ln'>597</span>                              className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>598</span>                                text-xs px-4 py-2 h-10 flex-1
+<span class='ln'>599</span>                                shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>600</span>                                hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
+<span class='ln'>601</span>                                active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
+<span class='ln'>602</span>                                transition-all duration-100"
+<span class='ln'>603</span>                            &gt;
+<span class='ln'>604</span>                              DELETE
+<span class='ln'>605</span>                            &lt;/button&gt;
+<span class='ln'>606</span>                          &lt;/div&gt;
+<span class='ln'>607</span>                        &lt;/div&gt;
+<span class='ln'>608</span>                      &lt;/div&gt;
+<span class='ln'>609</span>                    ))}
+<span class='ln'>610</span>                  &lt;/div&gt;
+<span class='ln'>611</span>
+<span class='ln'>612</span>                  {addresses.length === 0 &amp;&amp; !isAddingAddress &amp;&amp; (
+<span class='ln'>613</span>                    &lt;div className="text-center py-16"&gt;
+<span class='ln'>614</span>                      &lt;div className="bg-[#C4B5FD] border-4 border-black shadow-[8px_8px_0px_0px_#000] p-8 inline-block -rotate-1"&gt;
+<span class='ln'>615</span>                        &lt;div className="w-16 h-16 bg-white border-4 border-black mx-auto mb-4 flex items-center justify-center"&gt;
+<span class='ln'>616</span>                          &lt;svg className="w-8 h-8 stroke-[4px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>617</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /&gt;
+<span class='ln'>618</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /&gt;
+<span class='ln'>619</span>                          &lt;/svg&gt;
+<span class='ln'>620</span>                        &lt;/div&gt;
+<span class='ln'>621</span>                        &lt;p className="font-black uppercase tracking-tight text-lg mb-4"&gt;NO ADDRESSES ADDED YET&lt;/p&gt;
+<span class='ln'>622</span>                        &lt;button 
+<span class='ln'>623</span>                          onClick={() =&gt; setIsAddingAddress(true)}
+<span class='ln'>624</span>                          className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>625</span>                            text-sm px-6 py-4 h-14
+<span class='ln'>626</span>                            shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>627</span>                            hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>628</span>                            active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>629</span>                            transition-all duration-100"
+<span class='ln'>630</span>                        &gt;
+<span class='ln'>631</span>                          ADD YOUR FIRST ADDRESS
+<span class='ln'>632</span>                        &lt;/button&gt;
+<span class='ln'>633</span>                      &lt;/div&gt;
+<span class='ln'>634</span>                    &lt;/div&gt;
+<span class='ln'>635</span>                  )}
+<span class='ln'>636</span>                &lt;/div&gt;
+<span class='ln'>637</span>              &lt;/div&gt;
+<span class='ln'>638</span>            )}
+<span class='ln'>639</span>
+<span class='ln'>640</span>            {/* Orders Tab */}
+<span class='ln'>641</span>            {activeTab === 'orders' &amp;&amp; (
+<span class='ln'>642</span>              &lt;div&gt;
+<span class='ln'>643</span>                &lt;div className="bg-[#FF6B6B] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>644</span>                  &lt;h3 className="font-black uppercase tracking-widest text-sm text-white"&gt;MY ORDERS&lt;/h3&gt;
+<span class='ln'>645</span>                &lt;/div&gt;
+<span class='ln'>646</span>                
+<span class='ln'>647</span>                &lt;div className="p-6 sm:p-8 text-center"&gt;
+<span class='ln'>648</span>                  &lt;div className="bg-[#FFD93D] border-4 border-black shadow-[8px_8px_0px_0px_#000] p-8 inline-block rotate-1"&gt;
+<span class='ln'>649</span>                    &lt;div className="w-16 h-16 bg-black border-4 border-black mx-auto mb-4 flex items-center justify-center"&gt;
+<span class='ln'>650</span>                      &lt;svg className="w-8 h-8 stroke-[4px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>651</span>                        &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /&gt;
+<span class='ln'>652</span>                      &lt;/svg&gt;
+<span class='ln'>653</span>                    &lt;/div&gt;
+<span class='ln'>654</span>                    &lt;p className="font-black uppercase tracking-tight text-lg mb-4"&gt;VIEW YOUR ORDER HISTORY&lt;/p&gt;
+<span class='ln'>655</span>                    &lt;a 
+<span class='ln'>656</span>                      href="/orders"
+<span class='ln'>657</span>                      className="bg-black border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>658</span>                        text-sm px-6 py-4 h-14 inline-block text-white
+<span class='ln'>659</span>                        shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>660</span>                        hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>661</span>                        active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>662</span>                        transition-all duration-100"
+<span class='ln'>663</span>                    &gt;
+<span class='ln'>664</span>                      GO TO ORDERS
+<span class='ln'>665</span>                    &lt;/a&gt;
+<span class='ln'>666</span>                  &lt;/div&gt;
+<span class='ln'>667</span>                &lt;/div&gt;
+<span class='ln'>668</span>              &lt;/div&gt;
+<span class='ln'>669</span>            )}
+<span class='ln'>670</span>          &lt;/div&gt;
+<span class='ln'>671</span>        &lt;/div&gt;
+<span class='ln'>672</span>      &lt;/motion.div&gt;
+<span class='ln'>673</span>    &lt;/&gt;
+<span class='ln'>674</span>  );
+<span class='ln'>675</span>}
+</pre></div></body></html>

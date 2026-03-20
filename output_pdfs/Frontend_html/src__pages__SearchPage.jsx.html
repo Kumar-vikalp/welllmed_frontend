@@ -1,0 +1,322 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/SearchPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useEffect, useState } from 'react'
+<span class='ln'>2</span>import { useSearchParams } from 'react-router-dom'
+<span class='ln'>3</span>import api from '../api/axiosConfig'
+<span class='ln'>4</span>import ProductCard from '../components/ProductCard'
+<span class='ln'>5</span>import Skeleton from '../components/Skeleton'
+<span class='ln'>6</span>import { motion } from 'framer-motion'
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function SearchPage() {
+<span class='ln'>9</span>  const [searchParams] = useSearchParams()
+<span class='ln'>10</span>  const [products, setProducts] = useState([])
+<span class='ln'>11</span>  const [loading, setLoading] = useState(true)
+<span class='ln'>12</span>  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
+<span class='ln'>13</span>  const [recentSearches] = useState(['PARACETAMOL', 'VITAMIN C', 'COUGH SYRUP', 'ANTIBIOTICS'])
+<span class='ln'>14</span>  const [popularCategories] = useState([
+<span class='ln'>15</span>    'FEVER &amp; PAIN', 'ALLERGY &amp; COLD', 'DIGESTIVE HEALTH', 'VITAMINS &amp; SUPPLEMENTS'
+<span class='ln'>16</span>  ])
+<span class='ln'>17</span>
+<span class='ln'>18</span>  useEffect(() =&gt; {
+<span class='ln'>19</span>    const query = searchParams.get('q')
+<span class='ln'>20</span>    if (query) {
+<span class='ln'>21</span>      setSearchQuery(query)
+<span class='ln'>22</span>      searchProducts(query)
+<span class='ln'>23</span>    } else {
+<span class='ln'>24</span>      setLoading(false)
+<span class='ln'>25</span>    }
+<span class='ln'>26</span>  }, [searchParams])
+<span class='ln'>27</span>
+<span class='ln'>28</span>  const searchProducts = async (query) =&gt; {
+<span class='ln'>29</span>    setLoading(true)
+<span class='ln'>30</span>    try {
+<span class='ln'>31</span>      const response = await api.get(`/products/?search=${encodeURIComponent(query)}`)
+<span class='ln'>32</span>      const data = response.data
+<span class='ln'>33</span>      const productsData = data.results || (Array.isArray(data) ? data : [data])
+<span class='ln'>34</span>      
+<span class='ln'>35</span>      const transformedProducts = productsData.map(transformProduct)
+<span class='ln'>36</span>      setProducts(transformedProducts)
+<span class='ln'>37</span>    } catch (error) {
+<span class='ln'>38</span>      console.error('Failed to search products', error)
+<span class='ln'>39</span>      setProducts([])
+<span class='ln'>40</span>    } finally {
+<span class='ln'>41</span>      setLoading(false)
+<span class='ln'>42</span>    }
+<span class='ln'>43</span>  }
+<span class='ln'>44</span>
+<span class='ln'>45</span>  const transformProduct = (product) =&gt; ({
+<span class='ln'>46</span>    product_id: product.product_id,
+<span class='ln'>47</span>    slug: product.slug,
+<span class='ln'>48</span>    name: product.name,
+<span class='ln'>49</span>    company: product.company,
+<span class='ln'>50</span>    disease_category: product.disease_category,
+<span class='ln'>51</span>    mrp: parseFloat(product.mrp),
+<span class='ln'>52</span>    discount: product.discount,
+<span class='ln'>53</span>    discounted_price: parseFloat(product.discounted_price),
+<span class='ln'>54</span>    images: product.images?.map(img =&gt; img.stream_url) || ['/images/placeholder.jpg'],
+<span class='ln'>55</span>    trending: product.trending,
+<span class='ln'>56</span>    available_stock: product.available_stock || 100,
+<span class='ln'>57</span>    description: product.description || `${product.name} from ${product.company}. Effective treatment for ${product.disease_category}.`
+<span class='ln'>58</span>  })
+<span class='ln'>59</span>
+<span class='ln'>60</span>  const handleSearch = (query) =&gt; {
+<span class='ln'>61</span>    if (query.trim()) {
+<span class='ln'>62</span>      const newUrl = `/search?q=${encodeURIComponent(query.trim())}`
+<span class='ln'>63</span>      window.history.pushState({}, '', newUrl)
+<span class='ln'>64</span>      // Update the search params to trigger useEffect
+<span class='ln'>65</span>      const newSearchParams = new URLSearchParams(newUrl.split('?')[1])
+<span class='ln'>66</span>      setSearchParams(newSearchParams)
+<span class='ln'>67</span>      searchProducts(query.trim())
+<span class='ln'>68</span>    }
+<span class='ln'>69</span>  }
+<span class='ln'>70</span>
+<span class='ln'>71</span>  return (
+<span class='ln'>72</span>    &lt;motion.div 
+<span class='ln'>73</span>      initial={{ opacity: 0 }} 
+<span class='ln'>74</span>      animate={{ opacity: 1 }} 
+<span class='ln'>75</span>      className="min-h-screen bg-[#FFFDF5]"
+<span class='ln'>76</span>    &gt;
+<span class='ln'>77</span>      {/* Background Pattern */}
+<span class='ln'>78</span>      &lt;div 
+<span class='ln'>79</span>        className="absolute inset-0 opacity-5"
+<span class='ln'>80</span>        style={{
+<span class='ln'>81</span>          backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>82</span>          backgroundSize: '20px 20px'
+<span class='ln'>83</span>        }}
+<span class='ln'>84</span>      &gt;&lt;/div&gt;
+<span class='ln'>85</span>
+<span class='ln'>86</span>      {/* Search Header */}
+<span class='ln'>87</span>      {/* &lt;div className="relative z-10 bg-[#C4B5FD] border-b-8 border-black sticky top-16 lg:top-16"&gt; */}
+<span class='ln'>88</span>        &lt;div className="sticky top-16 z-50 bg-[#C4B5FD] border-b-8 border-black"&gt;
+<span class='ln'>89</span>        &lt;div className="max-w-7xl mx-auto p-4 sm:p-6"&gt;
+<span class='ln'>90</span>          &lt;div className="relative"&gt;
+<span class='ln'>91</span>            &lt;input
+<span class='ln'>92</span>              type="text"
+<span class='ln'>93</span>              value={searchQuery}
+<span class='ln'>94</span>              onChange={(e) =&gt; setSearchQuery(e.target.value)}
+<span class='ln'>95</span>              onKeyPress={(e) =&gt; e.key === 'Enter' &amp;&amp; handleSearch(searchQuery)}
+<span class='ln'>96</span>              placeholder="SEARCH FOR MEDICINES, HEALTH PRODUCTS..."
+<span class='ln'>97</span>              className="w-full border-4 border-black bg-white font-bold text-base h-14 pl-14 pr-4
+<span class='ln'>98</span>                placeholder:text-black/40 placeholder:font-bold placeholder:uppercase
+<span class='ln'>99</span>                focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>100</span>                focus-visible:outline-none focus-visible:ring-0
+<span class='ln'>101</span>                transition-all duration-100"
+<span class='ln'>102</span>            /&gt;
+<span class='ln'>103</span>            &lt;button 
+<span class='ln'>104</span>              onClick={() =&gt; handleSearch(searchQuery)}
+<span class='ln'>105</span>              className="absolute left-4 top-1/2 transform -translate-y-1/2 hover:scale-110 transition-transform duration-100"
+<span class='ln'>106</span>            &gt;
+<span class='ln'>107</span>              &lt;svg className="w-6 h-6 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>108</span>                &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>109</span>              &lt;/svg&gt;
+<span class='ln'>110</span>            &lt;/button&gt;
+<span class='ln'>111</span>          &lt;/div&gt;
+<span class='ln'>112</span>        &lt;/div&gt;
+<span class='ln'>113</span>      &lt;/div&gt;
+<span class='ln'>114</span>
+<span class='ln'>115</span>      &lt;div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8"&gt;
+<span class='ln'>116</span>        {!searchQuery ? (
+<span class='ln'>117</span>          /* Search Suggestions */
+<span class='ln'>118</span>          &lt;div className="space-y-8"&gt;
+<span class='ln'>119</span>            {/* Header */}
+<span class='ln'>120</span>            &lt;div className="text-center"&gt;
+<span class='ln'>121</span>              &lt;h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight mb-4 -rotate-1"&gt;
+<span class='ln'>122</span>                SEARCH MEDICINES
+<span class='ln'>123</span>              &lt;/h1&gt;
+<span class='ln'>124</span>              &lt;div className="bg-[#FFD93D] border-4 border-black shadow-[6px_6px_0px_0px_#000] p-4 rotate-1 inline-block"&gt;
+<span class='ln'>125</span>                &lt;p className="font-bold uppercase tracking-wide"&gt;FIND EXACTLY WHAT YOU NEED&lt;/p&gt;
+<span class='ln'>126</span>              &lt;/div&gt;
+<span class='ln'>127</span>            &lt;/div&gt;
+<span class='ln'>128</span>
+<span class='ln'>129</span>            {/* Recent Searches */}
+<span class='ln'>130</span>            &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>131</span>              &lt;div className="bg-[#FF6B6B] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>132</span>                &lt;h2 className="font-black uppercase tracking-widest text-sm text-white"&gt;RECENT SEARCHES&lt;/h2&gt;
+<span class='ln'>133</span>              &lt;/div&gt;
+<span class='ln'>134</span>              &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>135</span>                &lt;div className="flex flex-wrap gap-3"&gt;
+<span class='ln'>136</span>                  {recentSearches.map((search, index) =&gt; (
+<span class='ln'>137</span>                    &lt;button
+<span class='ln'>138</span>                      key={index}
+<span class='ln'>139</span>                      onClick={() =&gt; handleSearch(search)}
+<span class='ln'>140</span>                      className="bg-white border-4 border-black font-bold uppercase tracking-wide text-sm px-4 py-3 h-12
+<span class='ln'>141</span>                        shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>142</span>                        hover:bg-[#C4B5FD] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
+<span class='ln'>143</span>                        active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
+<span class='ln'>144</span>                        transition-all duration-100"
+<span class='ln'>145</span>                    &gt;
+<span class='ln'>146</span>                      {search}
+<span class='ln'>147</span>                    &lt;/button&gt;
+<span class='ln'>148</span>                  ))}
+<span class='ln'>149</span>                &lt;/div&gt;
+<span class='ln'>150</span>              &lt;/div&gt;
+<span class='ln'>151</span>            &lt;/div&gt;
+<span class='ln'>152</span>
+<span class='ln'>153</span>            {/* Popular Categories */}
+<span class='ln'>154</span>            &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>155</span>              &lt;div className="bg-[#FFD93D] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>156</span>                &lt;h2 className="font-black uppercase tracking-widest text-sm"&gt;POPULAR CATEGORIES&lt;/h2&gt;
+<span class='ln'>157</span>              &lt;/div&gt;
+<span class='ln'>158</span>              &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>159</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"&gt;
+<span class='ln'>160</span>                  {popularCategories.map((category, index) =&gt; (
+<span class='ln'>161</span>                    &lt;button
+<span class='ln'>162</span>                      key={index}
+<span class='ln'>163</span>                      onClick={() =&gt; handleSearch(category)}
+<span class='ln'>164</span>                      className="bg-white border-4 border-black p-4 sm:p-6 text-left shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>165</span>                        hover:bg-[#C4B5FD] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1
+<span class='ln'>166</span>                        transition-all duration-200"
+<span class='ln'>167</span>                      style={{ transform: `rotate(${Math.random() &gt; 0.5 ? 1 : -1}deg)` }}
+<span class='ln'>168</span>                    &gt;
+<span class='ln'>169</span>                      &lt;div className="w-12 h-12 bg-[#FF6B6B] border-4 border-black mb-4 flex items-center justify-center"&gt;
+<span class='ln'>170</span>                        &lt;span className="text-xl font-black text-white"&gt;💊&lt;/span&gt;
+<span class='ln'>171</span>                      &lt;/div&gt;
+<span class='ln'>172</span>                      &lt;div className="font-black uppercase tracking-tight text-sm mb-2"&gt;{category}&lt;/div&gt;
+<span class='ln'>173</span>                      &lt;div className="font-bold uppercase tracking-wide text-xs opacity-60"&gt;EXPLORE PRODUCTS&lt;/div&gt;
+<span class='ln'>174</span>                    &lt;/button&gt;
+<span class='ln'>175</span>                  ))}
+<span class='ln'>176</span>                &lt;/div&gt;
+<span class='ln'>177</span>              &lt;/div&gt;
+<span class='ln'>178</span>            &lt;/div&gt;
+<span class='ln'>179</span>
+<span class='ln'>180</span>            {/* Explore More */}
+<span class='ln'>181</span>            &lt;div className="bg-black border-4 border-black shadow-[12px_12px_0px_0px_#000] p-8 sm:p-12 text-center -rotate-1"&gt;
+<span class='ln'>182</span>              &lt;h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-4 rotate-1"&gt;
+<span class='ln'>183</span>                EXPLORE MORE
+<span class='ln'>184</span>              &lt;/h2&gt;
+<span class='ln'>185</span>              &lt;div className="bg-[#FFD93D] border-4 border-white p-4 shadow-[6px_6px_0px_0px_#fff] inline-block mb-6"&gt;
+<span class='ln'>186</span>                &lt;p className="font-bold uppercase tracking-wide text-black"&gt;DISCOVER OUR WIDE RANGE OF MEDICINES AND HEALTH PRODUCTS&lt;/p&gt;
+<span class='ln'>187</span>              &lt;/div&gt;
+<span class='ln'>188</span>              &lt;button
+<span class='ln'>189</span>                onClick={() =&gt; window.location.href = '/products'}
+<span class='ln'>190</span>                className="bg-[#FF6B6B] border-4 border-white font-black uppercase tracking-widest 
+<span class='ln'>191</span>                  text-sm px-8 py-4 h-14 text-white
+<span class='ln'>192</span>                  shadow-[6px_6px_0px_0px_#fff]
+<span class='ln'>193</span>                  hover:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>194</span>                  active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>195</span>                  transition-all duration-100"
+<span class='ln'>196</span>              &gt;
+<span class='ln'>197</span>                BROWSE ALL PRODUCTS
+<span class='ln'>198</span>              &lt;/button&gt;
+<span class='ln'>199</span>            &lt;/div&gt;
+<span class='ln'>200</span>          &lt;/div&gt;
+<span class='ln'>201</span>        ) : (
+<span class='ln'>202</span>          /* Search Results */
+<span class='ln'>203</span>          &lt;div&gt;
+<span class='ln'>204</span>            {/* Results Header */}
+<span class='ln'>205</span>            &lt;div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8"&gt;
+<span class='ln'>206</span>              &lt;div&gt;
+<span class='ln'>207</span>                &lt;h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight mb-2"&gt;
+<span class='ln'>208</span>                  SEARCH RESULTS
+<span class='ln'>209</span>                &lt;/h2&gt;
+<span class='ln'>210</span>                &lt;div className="bg-[#C4B5FD] border-4 border-black shadow-[4px_4px_0px_0px_#000] p-3 -rotate-1 inline-block"&gt;
+<span class='ln'>211</span>                  &lt;p className="font-bold uppercase tracking-wide text-sm"&gt;
+<span class='ln'>212</span>                    FOR "{searchQuery}" - {!loading &amp;&amp; `${products.length} PRODUCTS FOUND`}
+<span class='ln'>213</span>                  &lt;/p&gt;
+<span class='ln'>214</span>                &lt;/div&gt;
+<span class='ln'>215</span>              &lt;/div&gt;
+<span class='ln'>216</span>              
+<span class='ln'>217</span>              &lt;button
+<span class='ln'>218</span>                onClick={() =&gt; {
+<span class='ln'>219</span>                  setSearchQuery('')
+<span class='ln'>220</span>                  window.history.pushState({}, '', '/search')
+<span class='ln'>221</span>                }}
+<span class='ln'>222</span>                className="bg-white border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>223</span>                  text-xs px-4 py-3 h-12 w-full sm:w-auto
+<span class='ln'>224</span>                  shadow-[4px_4px_0px_0px_#000]
+<span class='ln'>225</span>                  hover:bg-[#FFD93D] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
+<span class='ln'>226</span>                  active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
+<span class='ln'>227</span>                  transition-all duration-100"
+<span class='ln'>228</span>              &gt;
+<span class='ln'>229</span>                CLEAR SEARCH
+<span class='ln'>230</span>              &lt;/button&gt;
+<span class='ln'>231</span>            &lt;/div&gt;
+<span class='ln'>232</span>
+<span class='ln'>233</span>            {loading ? (
+<span class='ln'>234</span>              &lt;div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"&gt;
+<span class='ln'>235</span>                {Array(10).fill(0).map((_, i) =&gt; (
+<span class='ln'>236</span>                  &lt;div key={i} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] h-80"&gt;&lt;/div&gt;
+<span class='ln'>237</span>                ))}
+<span class='ln'>238</span>              &lt;/div&gt;
+<span class='ln'>239</span>            ) : products.length &gt; 0 ? (
+<span class='ln'>240</span>              &lt;div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"&gt;
+<span class='ln'>241</span>                {products.map(product =&gt; (
+<span class='ln'>242</span>                  &lt;ProductCard key={product.product_id} product={product} /&gt;
+<span class='ln'>243</span>                ))}
+<span class='ln'>244</span>              &lt;/div&gt;
+<span class='ln'>245</span>            ) : (
+<span class='ln'>246</span>              /* No Results */
+<span class='ln'>247</span>              &lt;div className="text-center py-16"&gt;
+<span class='ln'>248</span>                &lt;div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000] p-8 sm:p-12 inline-block rotate-1"&gt;
+<span class='ln'>249</span>                  &lt;div className="w-24 h-24 bg-[#FF6B6B] border-4 border-black mx-auto mb-6 flex items-center justify-center -rotate-12"&gt;
+<span class='ln'>250</span>                    &lt;svg className="w-12 h-12 stroke-[4px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>251</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>252</span>                    &lt;/svg&gt;
+<span class='ln'>253</span>                  &lt;/div&gt;
+<span class='ln'>254</span>                  &lt;h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight mb-4"&gt;NO PRODUCTS FOUND&lt;/h3&gt;
+<span class='ln'>255</span>                  &lt;p className="font-bold uppercase tracking-wide mb-6"&gt;TRY SEARCHING WITH DIFFERENT KEYWORDS&lt;/p&gt;
+<span class='ln'>256</span>                  &lt;button
+<span class='ln'>257</span>                    onClick={() =&gt; {
+<span class='ln'>258</span>                      setSearchQuery('')
+<span class='ln'>259</span>                      window.history.pushState({}, '', '/search')
+<span class='ln'>260</span>                    }}
+<span class='ln'>261</span>                    className="bg-[#FFD93D] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>262</span>                      text-sm px-6 py-4 h-14
+<span class='ln'>263</span>                      shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>264</span>                      hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>265</span>                      active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>266</span>                      transition-all duration-100"
+<span class='ln'>267</span>                  &gt;
+<span class='ln'>268</span>                    CLEAR SEARCH
+<span class='ln'>269</span>                  &lt;/button&gt;
+<span class='ln'>270</span>                &lt;/div&gt;
+<span class='ln'>271</span>              &lt;/div&gt;
+<span class='ln'>272</span>            )}
+<span class='ln'>273</span>
+<span class='ln'>274</span>            {/* Search Tips */}
+<span class='ln'>275</span>            {!loading &amp;&amp; products.length === 0 &amp;&amp; (
+<span class='ln'>276</span>              &lt;div className="mt-12"&gt;
+<span class='ln'>277</span>                &lt;div className="bg-[#C4B5FD] border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>278</span>                  &lt;div className="bg-black border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>279</span>                    &lt;h3 className="font-black uppercase tracking-widest text-sm text-white"&gt;SEARCH TIPS&lt;/h3&gt;
+<span class='ln'>280</span>                  &lt;/div&gt;
+<span class='ln'>281</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>282</span>                    &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>283</span>                      &lt;div className="space-y-3"&gt;
+<span class='ln'>284</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>285</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>286</span>                          &lt;span className="font-bold text-sm uppercase"&gt;TRY GENERIC NAMES&lt;/span&gt;
+<span class='ln'>287</span>                        &lt;/div&gt;
+<span class='ln'>288</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>289</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>290</span>                          &lt;span className="font-bold text-sm uppercase"&gt;CHECK SPELLING&lt;/span&gt;
+<span class='ln'>291</span>                        &lt;/div&gt;
+<span class='ln'>292</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>293</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>294</span>                          &lt;span className="font-bold text-sm uppercase"&gt;USE FEWER WORDS&lt;/span&gt;
+<span class='ln'>295</span>                        &lt;/div&gt;
+<span class='ln'>296</span>                      &lt;/div&gt;
+<span class='ln'>297</span>                      &lt;div className="space-y-3"&gt;
+<span class='ln'>298</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>299</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>300</span>                          &lt;span className="font-bold text-sm uppercase"&gt;SEARCH BY CONDITION&lt;/span&gt;
+<span class='ln'>301</span>                        &lt;/div&gt;
+<span class='ln'>302</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>303</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>304</span>                          &lt;span className="font-bold text-sm uppercase"&gt;TRY BRAND NAMES&lt;/span&gt;
+<span class='ln'>305</span>                        &lt;/div&gt;
+<span class='ln'>306</span>                        &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>307</span>                          &lt;div className="w-2 h-2 bg-black"&gt;&lt;/div&gt;
+<span class='ln'>308</span>                          &lt;span className="font-bold text-sm uppercase"&gt;BROWSE CATEGORIES&lt;/span&gt;
+<span class='ln'>309</span>                        &lt;/div&gt;
+<span class='ln'>310</span>                      &lt;/div&gt;
+<span class='ln'>311</span>                    &lt;/div&gt;
+<span class='ln'>312</span>                  &lt;/div&gt;
+<span class='ln'>313</span>                &lt;/div&gt;
+<span class='ln'>314</span>              &lt;/div&gt;
+<span class='ln'>315</span>            )}
+<span class='ln'>316</span>          &lt;/div&gt;
+<span class='ln'>317</span>        )}
+<span class='ln'>318</span>      &lt;/div&gt;
+<span class='ln'>319</span>    &lt;/motion.div&gt;
+<span class='ln'>320</span>  )
+<span class='ln'>321</span>}
+</pre></div></body></html>

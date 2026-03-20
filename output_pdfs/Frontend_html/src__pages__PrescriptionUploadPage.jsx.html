@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/PrescriptionUploadPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { motion } from 'framer-motion';
+<span class='ln'>3</span>import { useNavigate } from 'react-router-dom';
+<span class='ln'>4</span>
+<span class='ln'>5</span>export default function PrescriptionUploadPage() {
+<span class='ln'>6</span>  const [uploadedFiles, setUploadedFiles] = useState([]);
+<span class='ln'>7</span>  const [uploading, setUploading] = useState(false);
+<span class='ln'>8</span>  const [dragOver, setDragOver] = useState(false);
+<span class='ln'>9</span>  const navigate = useNavigate();
+<span class='ln'>10</span>
+<span class='ln'>11</span>  const handleFileUpload = (event) =&gt; {
+<span class='ln'>12</span>    const files = Array.from(event.target.files);
+<span class='ln'>13</span>    setUploading(true);
+<span class='ln'>14</span>    
+<span class='ln'>15</span>    setTimeout(() =&gt; {
+<span class='ln'>16</span>      const newFiles = files.map(file =&gt; ({
+<span class='ln'>17</span>        id: Date.now() + Math.random(),
+<span class='ln'>18</span>        name: file.name,
+<span class='ln'>19</span>        url: URL.createObjectURL(file),
+<span class='ln'>20</span>        size: (file.size / 1024).toFixed(2) + ' KB'
+<span class='ln'>21</span>      }));
+<span class='ln'>22</span>      
+<span class='ln'>23</span>      setUploadedFiles([...uploadedFiles, ...newFiles]);
+<span class='ln'>24</span>      setUploading(false);
+<span class='ln'>25</span>    }, 1000);
+<span class='ln'>26</span>  };
+<span class='ln'>27</span>
+<span class='ln'>28</span>  const handleDragOver = (e) =&gt; {
+<span class='ln'>29</span>    e.preventDefault();
+<span class='ln'>30</span>    setDragOver(true);
+<span class='ln'>31</span>  };
+<span class='ln'>32</span>
+<span class='ln'>33</span>  const handleDragLeave = (e) =&gt; {
+<span class='ln'>34</span>    e.preventDefault();
+<span class='ln'>35</span>    setDragOver(false);
+<span class='ln'>36</span>  };
+<span class='ln'>37</span>
+<span class='ln'>38</span>  const handleDrop = (e) =&gt; {
+<span class='ln'>39</span>    e.preventDefault();
+<span class='ln'>40</span>    setDragOver(false);
+<span class='ln'>41</span>    const files = Array.from(e.dataTransfer.files);
+<span class='ln'>42</span>    if (files.length &gt; 0) {
+<span class='ln'>43</span>      const event = { target: { files } };
+<span class='ln'>44</span>      handleFileUpload(event);
+<span class='ln'>45</span>    }
+<span class='ln'>46</span>  };
+<span class='ln'>47</span>
+<span class='ln'>48</span>  const removeFile = (id) =&gt; {
+<span class='ln'>49</span>    setUploadedFiles(uploadedFiles.filter(file =&gt; file.id !== id));
+<span class='ln'>50</span>  };
+<span class='ln'>51</span>
+<span class='ln'>52</span>  const handleSubmit = () =&gt; {
+<span class='ln'>53</span>    if (uploadedFiles.length === 0) {
+<span class='ln'>54</span>      alert('Please upload at least one prescription');
+<span class='ln'>55</span>      return;
+<span class='ln'>56</span>    }
+<span class='ln'>57</span>    // Here you would send the files to your backend
+<span class='ln'>58</span>    alert('Prescriptions uploaded successfully!');
+<span class='ln'>59</span>    navigate('/products');
+<span class='ln'>60</span>  };
+<span class='ln'>61</span>
+<span class='ln'>62</span>  return (
+<span class='ln'>63</span>    &lt;div className="min-h-screen bg-[#FFFDF5] py-8 px-4 sm:px-8"&gt;
+<span class='ln'>64</span>      &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>65</span>        &lt;motion.div
+<span class='ln'>66</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>67</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>68</span>          className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"
+<span class='ln'>69</span>        &gt;
+<span class='ln'>70</span>          {/* Header */}
+<span class='ln'>71</span>          &lt;div className="bg-[#FF6B6B] border-b-8 border-black p-6 sm:p-8 text-center"&gt;
+<span class='ln'>72</span>            &lt;h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight mb-4 text-white -rotate-1"&gt;
+<span class='ln'>73</span>              UPLOAD PRESCRIPTIONS
+<span class='ln'>74</span>            &lt;/h1&gt;
+<span class='ln'>75</span>            &lt;div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_#000] rotate-1 inline-block"&gt;
+<span class='ln'>76</span>              &lt;p className="font-bold uppercase tracking-wide text-black"&gt;UPLOAD YOUR PRESCRIPTIONS TO ORDER MEDICINES&lt;/p&gt;
+<span class='ln'>77</span>            &lt;/div&gt;
+<span class='ln'>78</span>          &lt;/div&gt;
+<span class='ln'>79</span>
+<span class='ln'>80</span>          &lt;div className="p-6 sm:p-8"&gt;
+<span class='ln'>81</span>            &lt;div className="grid grid-cols-1 lg:grid-cols-2 gap-8"&gt;
+<span class='ln'>82</span>              {/* Left Section - Upload Options */}
+<span class='ln'>83</span>              &lt;div&gt;
+<span class='ln'>84</span>                &lt;h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-6 border-b-4 border-black pb-2"&gt;
+<span class='ln'>85</span>                  CHOOSE FROM THE FOLLOWING TO UPLOAD PRESCRIPTION:
+<span class='ln'>86</span>                &lt;/h3&gt;
+<span class='ln'>87</span>                
+<span class='ln'>88</span>                &lt;div className="space-y-6"&gt;
+<span class='ln'>89</span>                  {/* Gallery Upload */}
+<span class='ln'>90</span>                  &lt;div 
+<span class='ln'>91</span>                    className={`border-4 border-dashed border-black p-6 sm:p-8 cursor-pointer transition-all duration-100 ${
+<span class='ln'>92</span>                      dragOver 
+<span class='ln'>93</span>                        ? 'bg-[#FFD93D] border-solid shadow-[4px_4px_0px_0px_#000]' 
+<span class='ln'>94</span>                        : 'bg-white hover:bg-[#C4B5FD] hover:shadow-[4px_4px_0px_0px_#000]'
+<span class='ln'>95</span>                    }`}
+<span class='ln'>96</span>                    onDragOver={handleDragOver}
+<span class='ln'>97</span>                    onDragLeave={handleDragLeave}
+<span class='ln'>98</span>                    onDrop={handleDrop}
+<span class='ln'>99</span>                  &gt;
+<span class='ln'>100</span>                    &lt;input
+<span class='ln'>101</span>                      id="file-upload"
+<span class='ln'>102</span>                      type="file"
+<span class='ln'>103</span>                      accept="image/*,.pdf"
+<span class='ln'>104</span>                      multiple
+<span class='ln'>105</span>                      className="hidden"
+<span class='ln'>106</span>                      onChange={handleFileUpload}
+<span class='ln'>107</span>                    /&gt;
+<span class='ln'>108</span>                    &lt;label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center"&gt;
+<span class='ln'>109</span>                      &lt;div className="w-16 h-16 bg-[#C4B5FD] border-4 border-black flex items-center justify-center mb-4 rotate-12"&gt;
+<span class='ln'>110</span>                        &lt;svg className="w-8 h-8 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>111</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /&gt;
+<span class='ln'>112</span>                        &lt;/svg&gt;
+<span class='ln'>113</span>                      &lt;/div&gt;
+<span class='ln'>114</span>                      &lt;p className="text-lg font-black uppercase tracking-wide mb-2"&gt;CHOOSE FROM GALLERY&lt;/p&gt;
+<span class='ln'>115</span>                      &lt;div className="bg-[#FFD93D] border-2 border-black px-3 py-1"&gt;
+<span class='ln'>116</span>                        &lt;p className="text-xs font-black uppercase tracking-widest"&gt;SUPPORTED: JPG, PNG, PDF&lt;/p&gt;
+<span class='ln'>117</span>                      &lt;/div&gt;
+<span class='ln'>118</span>                    &lt;/label&gt;
+<span class='ln'>119</span>                  &lt;/div&gt;
+<span class='ln'>120</span>
+<span class='ln'>121</span>                  &lt;div className="text-center"&gt;
+<span class='ln'>122</span>                    &lt;div className="bg-black text-white border-4 border-black p-2 inline-block font-black uppercase tracking-widest text-sm"&gt;
+<span class='ln'>123</span>                      OR
+<span class='ln'>124</span>                    &lt;/div&gt;
+<span class='ln'>125</span>                  &lt;/div&gt;
+<span class='ln'>126</span>
+<span class='ln'>127</span>                  {/* E-Prescription */}
+<span class='ln'>128</span>                  &lt;div className="border-4 border-black p-6 sm:p-8 cursor-pointer bg-white hover:bg-[#C4B5FD] hover:shadow-[4px_4px_0px_0px_#000] transition-all duration-100"&gt;
+<span class='ln'>129</span>                    &lt;div className="flex flex-col items-center"&gt;
+<span class='ln'>130</span>                      &lt;div className="w-16 h-16 bg-[#FFD93D] border-4 border-black flex items-center justify-center mb-4 -rotate-12"&gt;
+<span class='ln'>131</span>                        &lt;svg className="w-8 h-8 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>132</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /&gt;
+<span class='ln'>133</span>                        &lt;/svg&gt;
+<span class='ln'>134</span>                      &lt;/div&gt;
+<span class='ln'>135</span>                      &lt;p className="text-lg font-black uppercase tracking-wide"&gt;SELECT FROM E-PRESCRIPTION&lt;/p&gt;
+<span class='ln'>136</span>                    &lt;/div&gt;
+<span class='ln'>137</span>                  &lt;/div&gt;
+<span class='ln'>138</span>
+<span class='ln'>139</span>                  {/* Uploaded Files Display */}
+<span class='ln'>140</span>                  {uploadedFiles.length &gt; 0 &amp;&amp; (
+<span class='ln'>141</span>                    &lt;div className="bg-[#C4B5FD] border-4 border-black p-4 sm:p-6 shadow-[4px_4px_0px_0px_#000]"&gt;
+<span class='ln'>142</span>                      &lt;h4 className="font-black uppercase tracking-widest text-sm mb-4 border-b-2 border-black pb-2"&gt;
+<span class='ln'>143</span>                        UPLOADED PRESCRIPTIONS:
+<span class='ln'>144</span>                      &lt;/h4&gt;
+<span class='ln'>145</span>                      &lt;div className="space-y-3"&gt;
+<span class='ln'>146</span>                        {uploadedFiles.map((file) =&gt; (
+<span class='ln'>147</span>                          &lt;motion.div
+<span class='ln'>148</span>                            key={file.id}
+<span class='ln'>149</span>                            initial={{ opacity: 0, x: -20 }}
+<span class='ln'>150</span>                            animate={{ opacity: 1, x: 0 }}
+<span class='ln'>151</span>                            className="flex items-center justify-between bg-white border-4 border-black p-4 shadow-[2px_2px_0px_0px_#000]"
+<span class='ln'>152</span>                          &gt;
+<span class='ln'>153</span>                            &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>154</span>                              &lt;div className="w-12 h-12 bg-[#FFD93D] border-4 border-black flex items-center justify-center"&gt;
+<span class='ln'>155</span>                                &lt;svg className="w-6 h-6 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>156</span>                                  &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /&gt;
+<span class='ln'>157</span>                                &lt;/svg&gt;
+<span class='ln'>158</span>                              &lt;/div&gt;
+<span class='ln'>159</span>                              &lt;div&gt;
+<span class='ln'>160</span>                                &lt;p className="font-black text-sm uppercase tracking-wide"&gt;{file.name}&lt;/p&gt;
+<span class='ln'>161</span>                                &lt;p className="font-bold text-xs uppercase tracking-widest"&gt;{file.size}&lt;/p&gt;
+<span class='ln'>162</span>                              &lt;/div&gt;
+<span class='ln'>163</span>                            &lt;/div&gt;
+<span class='ln'>164</span>                            &lt;button
+<span class='ln'>165</span>                              onClick={() =&gt; removeFile(file.id)}
+<span class='ln'>166</span>                              className="bg-[#FF6B6B] border-2 border-black w-8 h-8 flex items-center justify-center
+<span class='ln'>167</span>                                hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px]
+<span class='ln'>168</span>                                active:shadow-none active:translate-x-[2px] active:translate-y-[2px]
+<span class='ln'>169</span>                                transition-all duration-100"
+<span class='ln'>170</span>                            &gt;
+<span class='ln'>171</span>                              &lt;svg className="w-4 h-4 stroke-[3px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>172</span>                                &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /&gt;
+<span class='ln'>173</span>                              &lt;/svg&gt;
+<span class='ln'>174</span>                            &lt;/button&gt;
+<span class='ln'>175</span>                          &lt;/motion.div&gt;
+<span class='ln'>176</span>                        ))}
+<span class='ln'>177</span>                      &lt;/div&gt;
+<span class='ln'>178</span>                    &lt;/div&gt;
+<span class='ln'>179</span>                  )}
+<span class='ln'>180</span>
+<span class='ln'>181</span>                  {uploadedFiles.length === 0 &amp;&amp; (
+<span class='ln'>182</span>                    &lt;div className="border-4 border-dashed border-black p-8 sm:p-12 text-center bg-white"&gt;
+<span class='ln'>183</span>                      &lt;div className="w-20 h-20 bg-[#C4B5FD] border-4 border-black flex items-center justify-center mx-auto mb-4"&gt;
+<span class='ln'>184</span>                        &lt;svg className="w-10 h-10 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>185</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /&gt;
+<span class='ln'>186</span>                        &lt;/svg&gt;
+<span class='ln'>187</span>                      &lt;/div&gt;
+<span class='ln'>188</span>                      &lt;p className="font-bold uppercase tracking-wide"&gt;UPLOADED PRESCRIPTIONS WILL BE SHOWN HERE&lt;/p&gt;
+<span class='ln'>189</span>                    &lt;/div&gt;
+<span class='ln'>190</span>                  )}
+<span class='ln'>191</span>                &lt;/div&gt;
+<span class='ln'>192</span>              &lt;/div&gt;
+<span class='ln'>193</span>
+<span class='ln'>194</span>              {/* Right Section - Requirements */}
+<span class='ln'>195</span>              &lt;div&gt;
+<span class='ln'>196</span>                &lt;div className="bg-[#FFD93D] border-4 border-black p-6 shadow-[6px_6px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>197</span>                  &lt;h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-6 rotate-1"&gt;
+<span class='ln'>198</span>                    MAKE SURE THE PRESCRIPTION YOU UPLOAD CONTAINS THE FOLLOWING ELEMENTS:
+<span class='ln'>199</span>                  &lt;/h3&gt;
+<span class='ln'>200</span>                  
+<span class='ln'>201</span>                  &lt;div className="space-y-6"&gt;
+<span class='ln'>202</span>                    &lt;div className="flex items-start gap-4"&gt;
+<span class='ln'>203</span>                      &lt;div className="w-14 h-14 bg-white border-4 border-black flex items-center justify-center flex-shrink-0 rotate-12"&gt;
+<span class='ln'>204</span>                        &lt;svg className="w-7 h-7 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>205</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /&gt;
+<span class='ln'>206</span>                        &lt;/svg&gt;
+<span class='ln'>207</span>                      &lt;/div&gt;
+<span class='ln'>208</span>                      &lt;div&gt;
+<span class='ln'>209</span>                        &lt;h4 className="font-black uppercase tracking-wide mb-1"&gt;DOCTOR'S DETAILS&lt;/h4&gt;
+<span class='ln'>210</span>                        &lt;p className="font-bold text-sm uppercase tracking-wide"&gt;NAME, SIGNATURE, AND REGISTRATION NUMBER&lt;/p&gt;
+<span class='ln'>211</span>                      &lt;/div&gt;
+<span class='ln'>212</span>                    &lt;/div&gt;
+<span class='ln'>213</span>
+<span class='ln'>214</span>                    &lt;div className="flex items-start gap-4"&gt;
+<span class='ln'>215</span>                      &lt;div className="w-14 h-14 bg-white border-4 border-black flex items-center justify-center flex-shrink-0 -rotate-12"&gt;
+<span class='ln'>216</span>                        &lt;svg className="w-7 h-7 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>217</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /&gt;
+<span class='ln'>218</span>                        &lt;/svg&gt;
+<span class='ln'>219</span>                      &lt;/div&gt;
+<span class='ln'>220</span>                      &lt;div&gt;
+<span class='ln'>221</span>                        &lt;h4 className="font-black uppercase tracking-wide mb-1"&gt;PATIENT DETAILS&lt;/h4&gt;
+<span class='ln'>222</span>                        &lt;p className="font-bold text-sm uppercase tracking-wide"&gt;NAME AND AGE OF THE PATIENT&lt;/p&gt;
+<span class='ln'>223</span>                      &lt;/div&gt;
+<span class='ln'>224</span>                    &lt;/div&gt;
+<span class='ln'>225</span>
+<span class='ln'>226</span>                    &lt;div className="flex items-start gap-4"&gt;
+<span class='ln'>227</span>                      &lt;div className="w-14 h-14 bg-white border-4 border-black flex items-center justify-center flex-shrink-0 rotate-6"&gt;
+<span class='ln'>228</span>                        &lt;svg className="w-7 h-7 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>229</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /&gt;
+<span class='ln'>230</span>                        &lt;/svg&gt;
+<span class='ln'>231</span>                      &lt;/div&gt;
+<span class='ln'>232</span>                      &lt;div&gt;
+<span class='ln'>233</span>                        &lt;h4 className="font-black uppercase tracking-wide mb-1"&gt;MEDICINE LIST&lt;/h4&gt;
+<span class='ln'>234</span>                        &lt;p className="font-bold text-sm uppercase tracking-wide"&gt;CLEAR NAMES AND DOSAGE INSTRUCTIONS&lt;/p&gt;
+<span class='ln'>235</span>                      &lt;/div&gt;
+<span class='ln'>236</span>                    &lt;/div&gt;
+<span class='ln'>237</span>
+<span class='ln'>238</span>                    &lt;div className="flex items-start gap-4"&gt;
+<span class='ln'>239</span>                      &lt;div className="w-14 h-14 bg-white border-4 border-black flex items-center justify-center flex-shrink-0 -rotate-6"&gt;
+<span class='ln'>240</span>                        &lt;svg className="w-7 h-7 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>241</span>                          &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /&gt;
+<span class='ln'>242</span>                        &lt;/svg&gt;
+<span class='ln'>243</span>                      &lt;/div&gt;
+<span class='ln'>244</span>                      &lt;div&gt;
+<span class='ln'>245</span>                        &lt;h4 className="font-black uppercase tracking-wide mb-1"&gt;PRESCRIPTION DATE&lt;/h4&gt;
+<span class='ln'>246</span>                        &lt;p className="font-bold text-sm uppercase tracking-wide"&gt;VALID DATE (NOT OLDER THAN 6 MONTHS)&lt;/p&gt;
+<span class='ln'>247</span>                      &lt;/div&gt;
+<span class='ln'>248</span>                    &lt;/div&gt;
+<span class='ln'>249</span>                  &lt;/div&gt;
+<span class='ln'>250</span>
+<span class='ln'>251</span>                  &lt;div className="mt-8 bg-[#FF6B6B] border-4 border-black p-4"&gt;
+<span class='ln'>252</span>                    &lt;p className="font-bold text-sm text-white uppercase tracking-wide"&gt;
+<span class='ln'>253</span>                      &lt;span className="font-black"&gt;NOTE:&lt;/span&gt; PRESCRIPTIONS MUST BE CLEAR AND LEGIBLE. BLURRY OR UNCLEAR PRESCRIPTIONS MAY BE REJECTED.
+<span class='ln'>254</span>                    &lt;/p&gt;
+<span class='ln'>255</span>                  &lt;/div&gt;
+<span class='ln'>256</span>                &lt;/div&gt;
+<span class='ln'>257</span>              &lt;/div&gt;
+<span class='ln'>258</span>            &lt;/div&gt;
+<span class='ln'>259</span>
+<span class='ln'>260</span>            {/* Submit Button */}
+<span class='ln'>261</span>            &lt;div className="mt-8 text-center"&gt;
+<span class='ln'>262</span>              &lt;button
+<span class='ln'>263</span>                onClick={handleSubmit}
+<span class='ln'>264</span>                disabled={uploadedFiles.length === 0 || uploading}
+<span class='ln'>265</span>                className={`px-8 py-4 h-16 font-black uppercase tracking-widest text-sm transition-all duration-100 ${
+<span class='ln'>266</span>                  uploadedFiles.length &gt; 0 &amp;&amp; !uploading
+<span class='ln'>267</span>                    ? 'bg-[#FF6B6B] border-4 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px] active:shadow-none active:translate-x-[6px] active:translate-y-[6px]'
+<span class='ln'>268</span>                    : 'bg-[#C4B5FD] border-4 border-black opacity-50 cursor-not-allowed'
+<span class='ln'>269</span>                } w-full sm:w-auto`}
+<span class='ln'>270</span>              &gt;
+<span class='ln'>271</span>                {uploading ? (
+<span class='ln'>272</span>                  &lt;div className="flex items-center justify-center"&gt;
+<span class='ln'>273</span>                    &lt;div className="w-4 h-4 border-2 border-black mr-2 animate-spin"&gt;&lt;/div&gt;
+<span class='ln'>274</span>                    UPLOADING...
+<span class='ln'>275</span>                  &lt;/div&gt;
+<span class='ln'>276</span>                ) : (
+<span class='ln'>277</span>                  'SUBMIT PRESCRIPTIONS'
+<span class='ln'>278</span>                )}
+<span class='ln'>279</span>              &lt;/button&gt;
+<span class='ln'>280</span>            &lt;/div&gt;
+<span class='ln'>281</span>          &lt;/div&gt;
+<span class='ln'>282</span>        &lt;/motion.div&gt;
+<span class='ln'>283</span>      &lt;/div&gt;
+<span class='ln'>284</span>    &lt;/div&gt;
+<span class='ln'>285</span>  );
+<span class='ln'>286</span>}
+</pre></div></body></html>

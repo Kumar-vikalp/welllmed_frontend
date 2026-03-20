@@ -1,0 +1,697 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/Home.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useEffect, useState, useMemo, useRef } from 'react'
+<span class='ln'>2</span>import api from '../api/axiosConfig'
+<span class='ln'>3</span>import ProductCard from '../components/ProductCard'
+<span class='ln'>4</span>import Skeleton from '../components/Skeleton'
+<span class='ln'>5</span>import { dummyProducts, dummyFeaturedProducts, dummyTrendingProducts } from '../data/dummyProducts'
+<span class='ln'>6</span>import { motion } from 'framer-motion'
+<span class='ln'>7</span>import { useNavigate, Link } from 'react-router-dom'
+<span class='ln'>8</span>import TrendingCarousel from '../components/TrendingCarousel'
+<span class='ln'>9</span>import HeroCarousel from '../components/HeroCarousel'
+<span class='ln'>10</span>import Button from '../components/Button'
+<span class='ln'>11</span>import Card from '../components/Card'
+<span class='ln'>12</span>import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+<span class='ln'>13</span>
+<span class='ln'>14</span>export default function Home() {
+<span class='ln'>15</span>  const [trendingProducts, setTrendingProducts] = useState([])
+<span class='ln'>16</span>  const [featuredProducts, setFeaturedProducts] = useState([])
+<span class='ln'>17</span>  const [trendingLoading, setTrendingLoading] = useState(true)
+<span class='ln'>18</span>  const [featuredLoading, setFeaturedLoading] = useState(true)
+<span class='ln'>19</span>  const navigate = useNavigate()
+<span class='ln'>20</span>
+<span class='ln'>21</span>  // Carousel refs
+<span class='ln'>22</span>  const categoryCarouselRef = useRef(null)
+<span class='ln'>23</span>  const healthConditionsRef = useRef(null)
+<span class='ln'>24</span>  const featuredCarouselRef = useRef(null)
+<span class='ln'>25</span>  const flashDealsRef = useRef(null)
+<span class='ln'>26</span>
+<span class='ln'>27</span>  const categories = useMemo(() =&gt; [
+<span class='ln'>28</span>    {
+<span class='ln'>29</span>      name: 'Fever &amp; Pain',
+<span class='ln'>30</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/1.png',
+<span class='ln'>31</span>      count: 25,
+<span class='ln'>32</span>      color: 'bg-neo-accent'
+<span class='ln'>33</span>    },
+<span class='ln'>34</span>    {
+<span class='ln'>35</span>      name: 'Allergy &amp; Cold',
+<span class='ln'>36</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/2.png',
+<span class='ln'>37</span>      count: 18,
+<span class='ln'>38</span>      color: 'bg-neo-secondary'
+<span class='ln'>39</span>    },
+<span class='ln'>40</span>    {
+<span class='ln'>41</span>      name: 'Digestive Health',
+<span class='ln'>42</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/3.png',
+<span class='ln'>43</span>      count: 22,
+<span class='ln'>44</span>      color: 'bg-neo-muted'
+<span class='ln'>45</span>    },
+<span class='ln'>46</span>    {
+<span class='ln'>47</span>      name: 'Heart &amp; BP',
+<span class='ln'>48</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/4.png',
+<span class='ln'>49</span>      count: 15,
+<span class='ln'>50</span>      color: 'bg-neo-accent'
+<span class='ln'>51</span>    },
+<span class='ln'>52</span>    {
+<span class='ln'>53</span>      name: 'Vitamins',
+<span class='ln'>54</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/5.png',
+<span class='ln'>55</span>      count: 30,
+<span class='ln'>56</span>      color: 'bg-neo-secondary'
+<span class='ln'>57</span>    },
+<span class='ln'>58</span>    {
+<span class='ln'>59</span>      name: 'Antibiotics',
+<span class='ln'>60</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/6.png',
+<span class='ln'>61</span>      count: 12,
+<span class='ln'>62</span>      color: 'bg-neo-muted'
+<span class='ln'>63</span>    },
+<span class='ln'>64</span>    {
+<span class='ln'>65</span>      name: 'Skin Care',
+<span class='ln'>66</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/7.png',
+<span class='ln'>67</span>      count: 20,
+<span class='ln'>68</span>      color: 'bg-neo-accent'
+<span class='ln'>69</span>    },
+<span class='ln'>70</span>    {
+<span class='ln'>71</span>      name: 'Women\'s Health',
+<span class='ln'>72</span>      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/8.png',
+<span class='ln'>73</span>      count: 16,
+<span class='ln'>74</span>      color: 'bg-neo-secondary'
+<span class='ln'>75</span>    }
+<span class='ln'>76</span>  ], [])
+<span class='ln'>77</span>
+<span class='ln'>78</span>  const healthConditions = [
+<span class='ln'>79</span>    { name: 'Diabetes Care', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=diabetes' },
+<span class='ln'>80</span>    { name: 'Cardiac Care', icon: 'https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=cardiac' },
+<span class='ln'>81</span>    { name: 'Stomach Care', icon: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=stomach' },
+<span class='ln'>82</span>    { name: 'Pain Relief', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=pain' },
+<span class='ln'>83</span>    { name: 'Liver Care', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=liver' },
+<span class='ln'>84</span>    { name: 'Oral Care', icon: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=oral' },
+<span class='ln'>85</span>    { name: 'Respiratory', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=respiratory' },
+<span class='ln'>86</span>    { name: 'Sexual Health', icon: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=sexual' },
+<span class='ln'>87</span>    { name: 'Elderly Care', icon: 'https://images.unsplash.com/photo-1581579186913-45ac3e648364?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=elderly' },
+<span class='ln'>88</span>    { name: 'Cold &amp; Immunity', icon: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=200&amp;h=200&amp;fit=crop', link: '/products?condition=immunity' }
+<span class='ln'>89</span>  ]
+<span class='ln'>90</span>
+<span class='ln'>91</span>  useEffect(() =&gt; {
+<span class='ln'>92</span>    fetchTrendingProducts()
+<span class='ln'>93</span>    fetchFeaturedProducts()
+<span class='ln'>94</span>  }, [])
+<span class='ln'>95</span>
+<span class='ln'>96</span>  const fetchTrendingProducts = async () =&gt; {
+<span class='ln'>97</span>    setTrendingLoading(true)
+<span class='ln'>98</span>    try {
+<span class='ln'>99</span>      const response = await api.get('/products/?trending=true&amp;page_size=10', {
+<span class='ln'>100</span>        timeout: 30000
+<span class='ln'>101</span>      })
+<span class='ln'>102</span>      const data = response.data
+<span class='ln'>103</span>      const productsData = data.results || (Array.isArray(data) ? data : [data])
+<span class='ln'>104</span>
+<span class='ln'>105</span>      const transformedProducts = productsData.map(transformProduct)
+<span class='ln'>106</span>      setTrendingProducts(transformedProducts)
+<span class='ln'>107</span>    } catch (error) {
+<span class='ln'>108</span>      console.error('Failed to fetch trending products', error)
+<span class='ln'>109</span>      setTrendingProducts(dummyTrendingProducts)
+<span class='ln'>110</span>    } finally {
+<span class='ln'>111</span>      setTrendingLoading(false)
+<span class='ln'>112</span>    }
+<span class='ln'>113</span>  }
+<span class='ln'>114</span>
+<span class='ln'>115</span>  const fetchFeaturedProducts = async () =&gt; {
+<span class='ln'>116</span>    setFeaturedLoading(true)
+<span class='ln'>117</span>    try {
+<span class='ln'>118</span>      const response = await api.get('/products/?featured=true&amp;page_size=8', {
+<span class='ln'>119</span>        timeout: 30000
+<span class='ln'>120</span>      })
+<span class='ln'>121</span>      const data = response.data
+<span class='ln'>122</span>      const productsData = data.results || (Array.isArray(data) ? data : [data])
+<span class='ln'>123</span>
+<span class='ln'>124</span>      const transformedProducts = productsData.map(transformProduct)
+<span class='ln'>125</span>      setFeaturedProducts(transformedProducts)
+<span class='ln'>126</span>    } catch (error) {
+<span class='ln'>127</span>      console.error('Failed to fetch featured products', error)
+<span class='ln'>128</span>      setFeaturedProducts(dummyFeaturedProducts)
+<span class='ln'>129</span>    } finally {
+<span class='ln'>130</span>      setFeaturedLoading(false)
+<span class='ln'>131</span>    }
+<span class='ln'>132</span>  }
+<span class='ln'>133</span>
+<span class='ln'>134</span>  const transformProduct = (product) =&gt; ({
+<span class='ln'>135</span>    product_id: product.product_id,
+<span class='ln'>136</span>    slug: product.slug,
+<span class='ln'>137</span>    name: product.name,
+<span class='ln'>138</span>    company: product.company,
+<span class='ln'>139</span>    disease_category: product.disease_category,
+<span class='ln'>140</span>    mrp: parseFloat(product.mrp),
+<span class='ln'>141</span>    discount: product.discount,
+<span class='ln'>142</span>    discounted_price: parseFloat(product.discounted_price),
+<span class='ln'>143</span>    images: product.images?.map(img =&gt; img.stream_url) || ['/images/placeholder.jpg'],
+<span class='ln'>144</span>    trending: product.trending,
+<span class='ln'>145</span>    available_stock: product.available_stock || 100,
+<span class='ln'>146</span>    description: product.description || `${product.name} from ${product.company}. Effective treatment for ${product.disease_category}.`
+<span class='ln'>147</span>  })
+<span class='ln'>148</span>
+<span class='ln'>149</span>  const handleCategoryClick = (categoryName) =&gt; {
+<span class='ln'>150</span>    navigate(`/products?category=${encodeURIComponent(categoryName)}`)
+<span class='ln'>151</span>  }
+<span class='ln'>152</span>
+<span class='ln'>153</span>  // Carousel scroll functions
+<span class='ln'>154</span>  const scrollCarousel = (ref, direction) =&gt; {
+<span class='ln'>155</span>    if (ref.current) {
+<span class='ln'>156</span>      const scrollAmount = 300
+<span class='ln'>157</span>      ref.current.scrollBy({
+<span class='ln'>158</span>        left: direction === 'left' ? -scrollAmount : scrollAmount,
+<span class='ln'>159</span>        behavior: 'smooth'
+<span class='ln'>160</span>      })
+<span class='ln'>161</span>    }
+<span class='ln'>162</span>  }
+<span class='ln'>163</span>
+<span class='ln'>164</span>  return (
+<span class='ln'>165</span>    &lt;motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-neo-canvas min-h-screen"&gt;
+<span class='ln'>166</span>      {/* Hero Carousel */}
+<span class='ln'>167</span>      &lt;HeroCarousel /&gt;
+<span class='ln'>168</span>
+<span class='ln'>169</span>      {/* Neo-Brutalist Flash Sale */}
+<span class='ln'>170</span>      {/* &lt;div className="bg-neo-accent border-y-4 border-neo-ink"&gt;
+<span class='ln'>171</span>        &lt;div className="neo-container py-6"&gt;
+<span class='ln'>172</span>          &lt;div className="flex items-center justify-center gap-4"&gt;
+<span class='ln'>173</span>            &lt;Zap className="w-8 h-8 animate-bounce" /&gt;
+<span class='ln'>174</span>            &lt;span className="text-2xl md:text-4xl font-black uppercase tracking-wider"&gt;
+<span class='ln'>175</span>              FLASH SALE: UP TO 30% OFF!
+<span class='ln'>176</span>            &lt;/span&gt;
+<span class='ln'>177</span>            &lt;Zap className="w-8 h-8 animate-bounce" /&gt;
+<span class='ln'>178</span>          &lt;/div&gt;
+<span class='ln'>179</span>        &lt;/div&gt;
+<span class='ln'>180</span>      &lt;/div&gt; */}
+<span class='ln'>181</span>
+<span class='ln'>182</span>      {/* Categories Section with Neo-Brutalist Carousel */}
+<span class='ln'>183</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>184</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>185</span>          &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>186</span>            &lt;h2 className="text-3xl md:text-5xl font-black uppercase -rotate-1"&gt;
+<span class='ln'>187</span>              SHOP BY CATEGORY
+<span class='ln'>188</span>            &lt;/h2&gt;
+<span class='ln'>189</span>            &lt;div className="flex gap-2"&gt;
+<span class='ln'>190</span>              &lt;Button 
+<span class='ln'>191</span>                variant="ghost" 
+<span class='ln'>192</span>                size="sm" 
+<span class='ln'>193</span>                className="rotate-1"
+<span class='ln'>194</span>                onClick={() =&gt; scrollCarousel(categoryCarouselRef, 'left')}
+<span class='ln'>195</span>              &gt;
+<span class='ln'>196</span>                &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>197</span>              &lt;/Button&gt;
+<span class='ln'>198</span>              &lt;Button 
+<span class='ln'>199</span>                variant="ghost" 
+<span class='ln'>200</span>                size="sm" 
+<span class='ln'>201</span>                className="-rotate-1"
+<span class='ln'>202</span>                onClick={() =&gt; scrollCarousel(categoryCarouselRef, 'right')}
+<span class='ln'>203</span>              &gt;
+<span class='ln'>204</span>                &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>205</span>              &lt;/Button&gt;
+<span class='ln'>206</span>            &lt;/div&gt;
+<span class='ln'>207</span>          &lt;/div&gt;
+<span class='ln'>208</span>          
+<span class='ln'>209</span>          &lt;div className="relative"&gt;
+<span class='ln'>210</span>            &lt;div 
+<span class='ln'>211</span>              ref={categoryCarouselRef}
+<span class='ln'>212</span>              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+<span class='ln'>213</span>              style={{ scrollBehavior: 'smooth' }}
+<span class='ln'>214</span>            &gt;
+<span class='ln'>215</span>              {categories.map((category, index) =&gt; (
+<span class='ln'>216</span>                &lt;motion.div
+<span class='ln'>217</span>                  key={category.name}
+<span class='ln'>218</span>                  initial={{ opacity: 0, x: 50 }}
+<span class='ln'>219</span>                  animate={{ opacity: 1, x: 0 }}
+<span class='ln'>220</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>221</span>                  className="flex-shrink-0"
+<span class='ln'>222</span>                &gt;
+<span class='ln'>223</span>                  &lt;Card
+<span class='ln'>224</span>                    className="w-48 h-64 cursor-pointer relative overflow-hidden"
+<span class='ln'>225</span>                    rotation={Math.random() &gt; 0.5 ? 1 : -1}
+<span class='ln'>226</span>                    onClick={() =&gt; handleCategoryClick(category.name)}
+<span class='ln'>227</span>                  &gt;
+<span class='ln'>228</span>                    &lt;div className="relative h-full"&gt;
+<span class='ln'>229</span>                      &lt;img 
+<span class='ln'>230</span>                        src={category.icon} 
+<span class='ln'>231</span>                        alt={category.name} 
+<span class='ln'>232</span>                        className="w-full h-full object-cover"
+<span class='ln'>233</span>                      /&gt;
+<span class='ln'>234</span>                      &lt;div className="absolute inset-0 bg-black bg-opacity-40"&gt;&lt;/div&gt;
+<span class='ln'>235</span>                      &lt;div className="absolute inset-0 flex flex-col justify-end p-4"&gt;
+<span class='ln'>236</span>                        {/* &lt;div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}&gt;
+<span class='ln'>237</span>                          &lt;h3 className="text-lg font-black uppercase text-center leading-tight"&gt;
+<span class='ln'>238</span>                            {category.name}
+<span class='ln'>239</span>                          &lt;/h3&gt;
+<span class='ln'>240</span>                          &lt;p className="text-sm font-bold text-center mt-1"&gt;
+<span class='ln'>241</span>                            {category.count} ITEMS
+<span class='ln'>242</span>                          &lt;/p&gt;
+<span class='ln'>243</span>                        &lt;/div&gt; */}
+<span class='ln'>244</span>                      &lt;/div&gt;
+<span class='ln'>245</span>                    &lt;/div&gt;
+<span class='ln'>246</span>                  &lt;/Card&gt;
+<span class='ln'>247</span>                &lt;/motion.div&gt;
+<span class='ln'>248</span>              ))}
+<span class='ln'>249</span>            &lt;/div&gt;
+<span class='ln'>250</span>          &lt;/div&gt;
+<span class='ln'>251</span>        &lt;/div&gt;
+<span class='ln'>252</span>      &lt;/div&gt;
+<span class='ln'>253</span>
+<span class='ln'>254</span>      {/* Flash Deals Section with Neo-Brutalist Carousel */}
+<span class='ln'>255</span>      &lt;div className="neo-section bg-neo-secondary border-y-4 border-neo-ink"&gt;
+<span class='ln'>256</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>257</span>          &lt;Card className="p-8 bg-white -rotate-1"&gt;
+<span class='ln'>258</span>            &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>259</span>              &lt;div&gt;
+<span class='ln'>260</span>                &lt;h2 className="text-3xl md:text-5xl font-black uppercase flex items-center"&gt;
+<span class='ln'>261</span>                  &lt;Zap className="mr-4 w-12 h-12 fill-neo-accent text-neo-accent" /&gt;
+<span class='ln'>262</span>                  FLASH DEALS
+<span class='ln'>263</span>                &lt;/h2&gt;
+<span class='ln'>264</span>                &lt;p className="text-lg font-bold uppercase tracking-wide"&gt;LIMITED TIME OFFERS&lt;/p&gt;
+<span class='ln'>265</span>              &lt;/div&gt;
+<span class='ln'>266</span>              &lt;div className="flex gap-2"&gt;
+<span class='ln'>267</span>                &lt;Button 
+<span class='ln'>268</span>                  variant="ghost" 
+<span class='ln'>269</span>                  size="sm" 
+<span class='ln'>270</span>                  className="rotate-2"
+<span class='ln'>271</span>                  onClick={() =&gt; scrollCarousel(flashDealsRef, 'left')}
+<span class='ln'>272</span>                &gt;
+<span class='ln'>273</span>                  &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>274</span>                &lt;/Button&gt;
+<span class='ln'>275</span>                &lt;Button 
+<span class='ln'>276</span>                  variant="ghost" 
+<span class='ln'>277</span>                  size="sm" 
+<span class='ln'>278</span>                  className="-rotate-2"
+<span class='ln'>279</span>                  onClick={() =&gt; scrollCarousel(flashDealsRef, 'right')}
+<span class='ln'>280</span>                &gt;
+<span class='ln'>281</span>                  &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>282</span>                &lt;/Button&gt;
+<span class='ln'>283</span>              &lt;/div&gt;
+<span class='ln'>284</span>              &lt;div className="neo-badge bg-neo-accent animate-pulse rotate-3"&gt;
+<span class='ln'>285</span>                ENDS SOON!
+<span class='ln'>286</span>              &lt;/div&gt;
+<span class='ln'>287</span>            &lt;/div&gt;
+<span class='ln'>288</span>            
+<span class='ln'>289</span>            {featuredLoading ? (
+<span class='ln'>290</span>              &lt;div className="flex gap-4 overflow-x-auto"&gt;
+<span class='ln'>291</span>                {Array(4).fill(0).map((_, i) =&gt; &lt;Skeleton key={i} type="trending" /&gt;)}
+<span class='ln'>292</span>              &lt;/div&gt;
+<span class='ln'>293</span>            ) : (
+<span class='ln'>294</span>              &lt;div className="relative"&gt;
+<span class='ln'>295</span>                &lt;div 
+<span class='ln'>296</span>                  ref={flashDealsRef}
+<span class='ln'>297</span>                  className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+<span class='ln'>298</span>                  style={{ scrollBehavior: 'smooth' }}
+<span class='ln'>299</span>                &gt;
+<span class='ln'>300</span>                  {featuredProducts.map((product, index) =&gt; (
+<span class='ln'>301</span>                    &lt;motion.div
+<span class='ln'>302</span>                      key={product.product_id}
+<span class='ln'>303</span>                      initial={{ opacity: 0, x: 50 }}
+<span class='ln'>304</span>                      animate={{ opacity: 1, x: 0 }}
+<span class='ln'>305</span>                      transition={{ delay: index * 0.1 }}
+<span class='ln'>306</span>                      className="flex-shrink-0 w-64"
+<span class='ln'>307</span>                    &gt;
+<span class='ln'>308</span>                      &lt;Card className="overflow-hidden" rotation={Math.random() &gt; 0.7 ? (Math.random() &gt; 0.5 ? 1 : -1) : 0}&gt;
+<span class='ln'>309</span>                        &lt;div className="relative"&gt;
+<span class='ln'>310</span>                          &lt;img 
+<span class='ln'>311</span>                            src={product.images[0]} 
+<span class='ln'>312</span>                            alt={product.name} 
+<span class='ln'>313</span>                            className="w-full h-40 object-cover border-b-4 border-neo-ink" 
+<span class='ln'>314</span>                          /&gt;
+<span class='ln'>315</span>                          {product.trending &amp;&amp; (
+<span class='ln'>316</span>                            &lt;span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10"&gt;
+<span class='ln'>317</span>                              🔥 HOT
+<span class='ln'>318</span>                            &lt;/span&gt;
+<span class='ln'>319</span>                          )}
+<span class='ln'>320</span>                          {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>321</span>                            &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10"&gt;
+<span class='ln'>322</span>                              {product.discount}% OFF
+<span class='ln'>323</span>                            &lt;/span&gt;
+<span class='ln'>324</span>                          )}
+<span class='ln'>325</span>                        &lt;/div&gt;
+<span class='ln'>326</span>                        &lt;div className="p-4"&gt;
+<span class='ln'>327</span>                          &lt;p className="text-sm font-bold uppercase tracking-wide"&gt;{product.company}&lt;/p&gt;
+<span class='ln'>328</span>                          &lt;h3 className="text-base font-black mt-1 mb-2 line-clamp-2 leading-tight"&gt;
+<span class='ln'>329</span>                            {product.name}
+<span class='ln'>330</span>                          &lt;/h3&gt;
+<span class='ln'>331</span>                          &lt;div className="flex justify-between items-center mb-3"&gt;
+<span class='ln'>332</span>                            &lt;div&gt;
+<span class='ln'>333</span>                              &lt;p className="text-xl font-black"&gt;₹{product.discounted_price.toFixed(2)}&lt;/p&gt;
+<span class='ln'>334</span>                              {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>335</span>                                &lt;p className="text-sm font-bold line-through opacity-60"&gt;₹{product.mrp.toFixed(2)}&lt;/p&gt;
+<span class='ln'>336</span>                              )}
+<span class='ln'>337</span>                            &lt;/div&gt;
+<span class='ln'>338</span>                          &lt;/div&gt;
+<span class='ln'>339</span>                          &lt;Button variant="primary" size="sm" className="w-full"&gt;
+<span class='ln'>340</span>                            ADD TO CART
+<span class='ln'>341</span>                          &lt;/Button&gt;
+<span class='ln'>342</span>                        &lt;/div&gt;
+<span class='ln'>343</span>                      &lt;/Card&gt;
+<span class='ln'>344</span>                    &lt;/motion.div&gt;
+<span class='ln'>345</span>                  ))}
+<span class='ln'>346</span>                &lt;/div&gt;
+<span class='ln'>347</span>              &lt;/div&gt;
+<span class='ln'>348</span>            )}
+<span class='ln'>349</span>          &lt;/Card&gt;
+<span class='ln'>350</span>        &lt;/div&gt;
+<span class='ln'>351</span>      &lt;/div&gt;
+<span class='ln'>352</span>
+<span class='ln'>353</span>      {/* Lab Tests Section - Redesigned */}
+<span class='ln'>354</span>      &lt;div className="relative min-h-[50vh] w-full text-gray-800 overflow-hidden"&gt;
+<span class='ln'>355</span>        {/* Gradient Base */}
+<span class='ln'>356</span>        &lt;div
+<span class='ln'>357</span>          className="absolute inset-0 z-0"
+<span class='ln'>358</span>          style={{
+<span class='ln'>359</span>            background: "radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)",
+<span class='ln'>360</span>          }}
+<span class='ln'>361</span>        /&gt;
+<span class='ln'>362</span>
+<span class='ln'>363</span>        {/* Light Circuit Pattern Overlay */}
+<span class='ln'>364</span>        &lt;div
+<span class='ln'>365</span>          className="absolute inset-0 z-10 pointer-events-none opacity-40"
+<span class='ln'>366</span>          style={{
+<span class='ln'>367</span>            backgroundImage: `
+<span class='ln'>368</span>      repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+<span class='ln'>369</span>      repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.08) 19px, rgba(255,255,255,0.08) 20px, transparent 20px, transparent 39px, rgba(255,255,255,0.08) 39px, rgba(255,255,255,0.08) 40px),
+<span class='ln'>370</span>      radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 2px),
+<span class='ln'>371</span>      radial-gradient(circle at 40px 40px, rgba(255,255,255,0.15) 2px, transparent 2px)
+<span class='ln'>372</span>    `,
+<span class='ln'>373</span>            backgroundSize: "40px 40px, 40px 40px, 40px 40px, 40px 40px",
+<span class='ln'>374</span>          }}
+<span class='ln'>375</span>        /&gt;
+<span class='ln'>376</span>
+<span class='ln'>377</span>        {/* Hero Content */}
+<span class='ln'>378</span>        &lt;div className="relative z-20 flex flex-col items-center justify-center min-h-[50vh] px-6 py-12 text-center"&gt;
+<span class='ln'>379</span>          &lt;h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4"&gt;
+<span class='ln'>380</span>            Dr Das PathLabs
+<span class='ln'>381</span>          &lt;/h1&gt;
+<span class='ln'>382</span>          &lt;p className="text-lg sm:text-xl text-gray-200 mb-8"&gt;
+<span class='ln'>383</span>            Tests you can trust — Advanced diagnostics at your doorstep
+<span class='ln'>384</span>          &lt;/p&gt;
+<span class='ln'>385</span>
+<span class='ln'>386</span>          &lt;div className="flex flex-col sm:flex-row gap-4 justify-center"&gt;
+<span class='ln'>387</span>            &lt;Link
+<span class='ln'>388</span>              to="/lab"
+<span class='ln'>389</span>              className="bg-white text-purple-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+<span class='ln'>390</span>            &gt;
+<span class='ln'>391</span>              Book Lab Tests
+<span class='ln'>392</span>            &lt;/Link&gt;
+<span class='ln'>393</span>            &lt;button className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-700 transition-colors"&gt;
+<span class='ln'>394</span>              Home Collection
+<span class='ln'>395</span>            &lt;/button&gt;
+<span class='ln'>396</span>          &lt;/div&gt;
+<span class='ln'>397</span>        &lt;/div&gt;
+<span class='ln'>398</span>      &lt;/div&gt;
+<span class='ln'>399</span>
+<span class='ln'>400</span>      {/* Featured Products with Neo-Brutalist Carousel */}
+<span class='ln'>401</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>402</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>403</span>          &lt;Card className="p-8 bg-neo-muted rotate-1"&gt;
+<span class='ln'>404</span>            &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>405</span>              &lt;div&gt;
+<span class='ln'>406</span>                &lt;h2 className="text-3xl md:text-5xl font-black uppercase flex items-center -rotate-1"&gt;
+<span class='ln'>407</span>                  &lt;Star className="mr-4 w-12 h-12 fill-neo-accent text-neo-accent" /&gt;
+<span class='ln'>408</span>                  FEATURED PRODUCTS
+<span class='ln'>409</span>                &lt;/h2&gt;
+<span class='ln'>410</span>                &lt;p className="text-lg font-bold uppercase tracking-wide"&gt;HANDPICKED FOR YOU&lt;/p&gt;
+<span class='ln'>411</span>              &lt;/div&gt;
+<span class='ln'>412</span>              &lt;div className="flex gap-2"&gt;
+<span class='ln'>413</span>                &lt;Button 
+<span class='ln'>414</span>                  variant="ghost" 
+<span class='ln'>415</span>                  size="sm" 
+<span class='ln'>416</span>                  className="rotate-2"
+<span class='ln'>417</span>                  onClick={() =&gt; scrollCarousel(featuredCarouselRef, 'left')}
+<span class='ln'>418</span>                &gt;
+<span class='ln'>419</span>                  &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>420</span>                &lt;/Button&gt;
+<span class='ln'>421</span>                &lt;Button 
+<span class='ln'>422</span>                  variant="ghost" 
+<span class='ln'>423</span>                  size="sm" 
+<span class='ln'>424</span>                  className="-rotate-2"
+<span class='ln'>425</span>                  onClick={() =&gt; scrollCarousel(featuredCarouselRef, 'right')}
+<span class='ln'>426</span>                &gt;
+<span class='ln'>427</span>                  &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>428</span>                &lt;/Button&gt;
+<span class='ln'>429</span>              &lt;/div&gt;
+<span class='ln'>430</span>            &lt;/div&gt;
+<span class='ln'>431</span>            
+<span class='ln'>432</span>            {featuredLoading ? (
+<span class='ln'>433</span>              &lt;div className="flex gap-4 overflow-x-auto"&gt;
+<span class='ln'>434</span>                {Array(5).fill(0).map((_, i) =&gt; &lt;Skeleton key={i} /&gt;)}
+<span class='ln'>435</span>              &lt;/div&gt;
+<span class='ln'>436</span>            ) : (
+<span class='ln'>437</span>              &lt;div className="relative"&gt;
+<span class='ln'>438</span>                &lt;div 
+<span class='ln'>439</span>                  ref={featuredCarouselRef}
+<span class='ln'>440</span>                  className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+<span class='ln'>441</span>                  style={{ scrollBehavior: 'smooth' }}
+<span class='ln'>442</span>                &gt;
+<span class='ln'>443</span>                  {featuredProducts.slice(0, 8).map((product, index) =&gt; (
+<span class='ln'>444</span>                    &lt;motion.div
+<span class='ln'>445</span>                      key={product.product_id}
+<span class='ln'>446</span>                      initial={{ opacity: 0, x: 50 }}
+<span class='ln'>447</span>                      animate={{ opacity: 1, x: 0 }}
+<span class='ln'>448</span>                      transition={{ delay: index * 0.1 }}
+<span class='ln'>449</span>                      className="flex-shrink-0 w-64"
+<span class='ln'>450</span>                    &gt;
+<span class='ln'>451</span>                      &lt;ProductCard product={product} /&gt;
+<span class='ln'>452</span>                    &lt;/motion.div&gt;
+<span class='ln'>453</span>                  ))}
+<span class='ln'>454</span>                &lt;/div&gt;
+<span class='ln'>455</span>              &lt;/div&gt;
+<span class='ln'>456</span>            )}
+<span class='ln'>457</span>          &lt;/Card&gt;
+<span class='ln'>458</span>        &lt;/div&gt;
+<span class='ln'>459</span>      &lt;/div&gt;
+<span class='ln'>460</span>
+<span class='ln'>461</span>      {/* Health Conditions Section with Neo-Brutalist Carousel */}
+<span class='ln'>462</span>      &lt;div className="neo-section bg-neo-secondary border-y-4 border-neo-ink"&gt;
+<span class='ln'>463</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>464</span>          &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>465</span>            &lt;h2 className="text-3xl md:text-5xl font-black uppercase rotate-1"&gt;
+<span class='ln'>466</span>              BROWSE BY HEALTH CONDITIONS
+<span class='ln'>467</span>            &lt;/h2&gt;
+<span class='ln'>468</span>            &lt;div className="flex gap-2"&gt;
+<span class='ln'>469</span>              &lt;Button 
+<span class='ln'>470</span>                variant="ghost" 
+<span class='ln'>471</span>                size="sm" 
+<span class='ln'>472</span>                className="rotate-1"
+<span class='ln'>473</span>                onClick={() =&gt; scrollCarousel(healthConditionsRef, 'left')}
+<span class='ln'>474</span>              &gt;
+<span class='ln'>475</span>                &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>476</span>              &lt;/Button&gt;
+<span class='ln'>477</span>              &lt;Button 
+<span class='ln'>478</span>                variant="ghost" 
+<span class='ln'>479</span>                size="sm" 
+<span class='ln'>480</span>                className="-rotate-1"
+<span class='ln'>481</span>                onClick={() =&gt; scrollCarousel(healthConditionsRef, 'right')}
+<span class='ln'>482</span>              &gt;
+<span class='ln'>483</span>                &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>484</span>              &lt;/Button&gt;
+<span class='ln'>485</span>            &lt;/div&gt;
+<span class='ln'>486</span>          &lt;/div&gt;
+<span class='ln'>487</span>          
+<span class='ln'>488</span>          &lt;div className="relative"&gt;
+<span class='ln'>489</span>            &lt;div 
+<span class='ln'>490</span>              ref={healthConditionsRef}
+<span class='ln'>491</span>              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+<span class='ln'>492</span>              style={{ scrollBehavior: 'smooth' }}
+<span class='ln'>493</span>            &gt;
+<span class='ln'>494</span>              {healthConditions.map((condition, index) =&gt; (
+<span class='ln'>495</span>                &lt;motion.div
+<span class='ln'>496</span>                  key={condition.name}
+<span class='ln'>497</span>                  initial={{ opacity: 0, x: 50 }}
+<span class='ln'>498</span>                  animate={{ opacity: 1, x: 0 }}
+<span class='ln'>499</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>500</span>                  className="flex-shrink-0"
+<span class='ln'>501</span>                &gt;
+<span class='ln'>502</span>                  &lt;Link to={condition.link}&gt;
+<span class='ln'>503</span>                    &lt;Card
+<span class='ln'>504</span>                      className="w-48 h-64 cursor-pointer relative overflow-hidden"
+<span class='ln'>505</span>                      rotation={Math.random() &gt; 0.5 ? 1 : -1}
+<span class='ln'>506</span>                    &gt;
+<span class='ln'>507</span>                      &lt;div className="relative h-full"&gt;
+<span class='ln'>508</span>                        &lt;img 
+<span class='ln'>509</span>                          src={condition.icon} 
+<span class='ln'>510</span>                          alt={condition.name} 
+<span class='ln'>511</span>                          className="w-full h-full object-cover"
+<span class='ln'>512</span>                        /&gt;
+<span class='ln'>513</span>                        &lt;div className="absolute inset-0 bg-black bg-opacity-40"&gt;&lt;/div&gt;
+<span class='ln'>514</span>                        &lt;div className="absolute inset-0 flex flex-col justify-end p-4"&gt;
+<span class='ln'>515</span>                          &lt;div className="bg-white border-4 border-neo-ink p-3 rotate-2"&gt;
+<span class='ln'>516</span>                            &lt;h3 className="text-lg font-black uppercase text-center leading-tight"&gt;
+<span class='ln'>517</span>                              {condition.name}
+<span class='ln'>518</span>                            &lt;/h3&gt;
+<span class='ln'>519</span>                          &lt;/div&gt;
+<span class='ln'>520</span>                        &lt;/div&gt;
+<span class='ln'>521</span>                      &lt;/div&gt;
+<span class='ln'>522</span>                    &lt;/Card&gt;
+<span class='ln'>523</span>                  &lt;/Link&gt;
+<span class='ln'>524</span>                &lt;/motion.div&gt;
+<span class='ln'>525</span>              ))}
+<span class='ln'>526</span>            &lt;/div&gt;
+<span class='ln'>527</span>          &lt;/div&gt;
+<span class='ln'>528</span>        &lt;/div&gt;
+<span class='ln'>529</span>      &lt;/div&gt;
+<span class='ln'>530</span>
+<span class='ln'>531</span>      {/* Trending Products with Neo-Brutalist Design */}
+<span class='ln'>532</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>533</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>534</span>          &lt;Card className="p-8 bg-neo-accent -rotate-1"&gt;
+<span class='ln'>535</span>            &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>536</span>              &lt;h2 className="text-3xl md:text-5xl font-black uppercase rotate-1"&gt;
+<span class='ln'>537</span>                🔥 TRENDING NOW
+<span class='ln'>538</span>              &lt;/h2&gt;
+<span class='ln'>539</span>              &lt;div className="neo-badge bg-white animate-bounce -rotate-3"&gt;
+<span class='ln'>540</span>                HOT PICKS!
+<span class='ln'>541</span>              &lt;/div&gt;
+<span class='ln'>542</span>            &lt;/div&gt;
+<span class='ln'>543</span>            
+<span class='ln'>544</span>            {trendingLoading ? (
+<span class='ln'>545</span>              &lt;div className="flex gap-4 overflow-x-auto"&gt;
+<span class='ln'>546</span>                {Array(5).fill(0).map((_, i) =&gt; &lt;Skeleton key={i} type="trending" /&gt;)}
+<span class='ln'>547</span>              &lt;/div&gt;
+<span class='ln'>548</span>            ) : (
+<span class='ln'>549</span>              &lt;TrendingCarousel products={trendingProducts} title="" showTitle={false} /&gt;
+<span class='ln'>550</span>            )}
+<span class='ln'>551</span>          &lt;/Card&gt;
+<span class='ln'>552</span>        &lt;/div&gt;
+<span class='ln'>553</span>      &lt;/div&gt;
+<span class='ln'>554</span>
+<span class='ln'>555</span>      {/* How It Works Section */}
+<span class='ln'>556</span>      &lt;div className="neo-section bg-neo-muted border-y-4 border-neo-ink"&gt;
+<span class='ln'>557</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>558</span>          &lt;Card className="p-8 bg-white rotate-1"&gt;
+<span class='ln'>559</span>            &lt;h2 className="text-3xl md:text-4xl font-black text-center mb-12 uppercase -rotate-1"&gt;
+<span class='ln'>560</span>              HOW genx WORKS
+<span class='ln'>561</span>            &lt;/h2&gt;
+<span class='ln'>562</span>            &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-8"&gt;
+<span class='ln'>563</span>              &lt;motion.div
+<span class='ln'>564</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>565</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>566</span>                transition={{ delay: 0.1 }}
+<span class='ln'>567</span>                className="text-center"
+<span class='ln'>568</span>              &gt;
+<span class='ln'>569</span>                &lt;Card className="p-6 bg-neo-secondary rotate-2" hover={false}&gt;
+<span class='ln'>570</span>                  &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink rounded-full flex items-center justify-center mx-auto mb-4"&gt;
+<span class='ln'>571</span>                    &lt;svg className="w-8 h-8 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>572</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>573</span>                    &lt;/svg&gt;
+<span class='ln'>574</span>                  &lt;/div&gt;
+<span class='ln'>575</span>                  &lt;h3 className="text-lg font-black mb-2 uppercase"&gt;SEARCH &amp; ORDER&lt;/h3&gt;
+<span class='ln'>576</span>                  &lt;p className="font-bold"&gt;Find your medicines and place your order in seconds&lt;/p&gt;
+<span class='ln'>577</span>                &lt;/Card&gt;
+<span class='ln'>578</span>              &lt;/motion.div&gt;
+<span class='ln'>579</span>
+<span class='ln'>580</span>              &lt;motion.div
+<span class='ln'>581</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>582</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>583</span>                transition={{ delay: 0.2 }}
+<span class='ln'>584</span>                className="text-center"
+<span class='ln'>585</span>              &gt;
+<span class='ln'>586</span>                &lt;Card className="p-6 bg-neo-accent -rotate-1" hover={false}&gt;
+<span class='ln'>587</span>                  &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink rounded-full flex items-center justify-center mx-auto mb-4"&gt;
+<span class='ln'>588</span>                    &lt;svg className="w-8 h-8 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>589</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" /&gt;
+<span class='ln'>590</span>                    &lt;/svg&gt;
+<span class='ln'>591</span>                  &lt;/div&gt;
+<span class='ln'>592</span>                  &lt;h3 className="text-lg font-black mb-2 uppercase"&gt;WE PREPARE&lt;/h3&gt;
+<span class='ln'>593</span>                  &lt;p className="font-bold"&gt;Our pharmacists carefully prepare your order&lt;/p&gt;
+<span class='ln'>594</span>                &lt;/Card&gt;
+<span class='ln'>595</span>              &lt;/motion.div&gt;
+<span class='ln'>596</span>
+<span class='ln'>597</span>              &lt;motion.div
+<span class='ln'>598</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>599</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>600</span>                transition={{ delay: 0.3 }}
+<span class='ln'>601</span>                className="text-center"
+<span class='ln'>602</span>              &gt;
+<span class='ln'>603</span>                &lt;Card className="p-6 bg-neo-secondary rotate-1" hover={false}&gt;
+<span class='ln'>604</span>                  &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink rounded-full flex items-center justify-center mx-auto mb-4"&gt;
+<span class='ln'>605</span>                    &lt;svg className="w-8 h-8 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>606</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /&gt;
+<span class='ln'>607</span>                    &lt;/svg&gt;
+<span class='ln'>608</span>                  &lt;/div&gt;
+<span class='ln'>609</span>                  &lt;h3 className="text-lg font-black mb-2 uppercase"&gt;FAST DELIVERY&lt;/h3&gt;
+<span class='ln'>610</span>                  &lt;p className="font-bold"&gt;Get your medicines delivered in 10 minutes&lt;/p&gt;
+<span class='ln'>611</span>                &lt;/Card&gt;
+<span class='ln'>612</span>              &lt;/motion.div&gt;
+<span class='ln'>613</span>            &lt;/div&gt;
+<span class='ln'>614</span>          &lt;/Card&gt;
+<span class='ln'>615</span>        &lt;/div&gt;
+<span class='ln'>616</span>      &lt;/div&gt;
+<span class='ln'>617</span>
+<span class='ln'>618</span>      {/* Generic Medicine Info */}
+<span class='ln'>619</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>620</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>621</span>          &lt;Card className="p-8 bg-neo-muted -rotate-1"&gt;
+<span class='ln'>622</span>            &lt;div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center"&gt;
+<span class='ln'>623</span>              &lt;div&gt;
+<span class='ln'>624</span>                &lt;h2 className="text-3xl md:text-4xl font-black mb-4 uppercase rotate-1"&gt;
+<span class='ln'>625</span>                  WHY CHOOSE GENERIC MEDICINES?
+<span class='ln'>626</span>                &lt;/h2&gt;
+<span class='ln'>627</span>                &lt;p className="font-bold mb-6 leading-relaxed"&gt;
+<span class='ln'>628</span>                  Generic medicines contain the same active ingredients as branded medicines and are equally effective.
+<span class='ln'>629</span>                  They undergo rigorous testing to ensure safety and efficacy while being significantly more affordable.
+<span class='ln'>630</span>                &lt;/p&gt;
+<span class='ln'>631</span>                &lt;div className="space-y-3 mb-6"&gt;
+<span class='ln'>632</span>                  &lt;div className="flex items-center"&gt;
+<span class='ln'>633</span>                    &lt;span className="text-green-500 mr-3 text-2xl"&gt;✓&lt;/span&gt;
+<span class='ln'>634</span>                    &lt;span className="font-bold"&gt;Same active ingredients as branded medicines&lt;/span&gt;
+<span class='ln'>635</span>                  &lt;/div&gt;
+<span class='ln'>636</span>                  &lt;div className="flex items-center"&gt;
+<span class='ln'>637</span>                    &lt;span className="text-green-500 mr-3 text-2xl"&gt;✓&lt;/span&gt;
+<span class='ln'>638</span>                    &lt;span className="font-bold"&gt;20-80% cheaper than branded alternatives&lt;/span&gt;
+<span class='ln'>639</span>                  &lt;/div&gt;
+<span class='ln'>640</span>                  &lt;div className="flex items-center"&gt;
+<span class='ln'>641</span>                    &lt;span className="text-green-500 mr-3 text-2xl"&gt;✓&lt;/span&gt;
+<span class='ln'>642</span>                    &lt;span className="font-bold"&gt;FDA approved and rigorously tested&lt;/span&gt;
+<span class='ln'>643</span>                  &lt;/div&gt;
+<span class='ln'>644</span>                &lt;/div&gt;
+<span class='ln'>645</span>                &lt;Link to="/generic-info"&gt;
+<span class='ln'>646</span>                  &lt;Button variant="primary" className="rotate-2"&gt;
+<span class='ln'>647</span>                    LEARN MORE ABOUT GENERICS
+<span class='ln'>648</span>                  &lt;/Button&gt;
+<span class='ln'>649</span>                &lt;/Link&gt;
+<span class='ln'>650</span>              &lt;/div&gt;
+<span class='ln'>651</span>              &lt;div className="relative"&gt;
+<span class='ln'>652</span>                &lt;Card className="p-8 bg-white rotate-2"&gt;
+<span class='ln'>653</span>                  &lt;div className="text-center"&gt;
+<span class='ln'>654</span>                    &lt;div className="w-20 h-20 bg-neo-accent border-4 border-neo-ink rounded-full flex items-center justify-center mx-auto mb-4"&gt;
+<span class='ln'>655</span>                      &lt;svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>656</span>                        &lt;path d="M8 5v14l11-7z" /&gt;
+<span class='ln'>657</span>                      &lt;/svg&gt;
+<span class='ln'>658</span>                    &lt;/div&gt;
+<span class='ln'>659</span>                    &lt;h3 className="text-lg font-black mb-2 uppercase"&gt;GENERIC VS BRANDED&lt;/h3&gt;
+<span class='ln'>660</span>                    &lt;p className="font-bold"&gt;Watch our educational video&lt;/p&gt;
+<span class='ln'>661</span>                  &lt;/div&gt;
+<span class='ln'>662</span>                &lt;/Card&gt;
+<span class='ln'>663</span>              &lt;/div&gt;
+<span class='ln'>664</span>            &lt;/div&gt;
+<span class='ln'>665</span>          &lt;/Card&gt;
+<span class='ln'>666</span>        &lt;/div&gt;
+<span class='ln'>667</span>      &lt;/div&gt;
+<span class='ln'>668</span>
+<span class='ln'>669</span>      {/* Final CTA */}
+<span class='ln'>670</span>      &lt;div className="neo-section bg-neo-ink border-y-4 border-neo-ink"&gt;
+<span class='ln'>671</span>        &lt;div className="neo-container text-center text-white"&gt;
+<span class='ln'>672</span>          &lt;Card className="p-8 bg-neo-ink border-white rotate-1" hover={false}&gt;
+<span class='ln'>673</span>            &lt;h2 className="text-3xl md:text-4xl font-black mb-4 uppercase -rotate-1"&gt;
+<span class='ln'>674</span>              YOUR HEALTH, OUR PRIORITY
+<span class='ln'>675</span>            &lt;/h2&gt;
+<span class='ln'>676</span>            &lt;p className="text-xl md:text-2xl mb-8 font-bold opacity-90"&gt;
+<span class='ln'>677</span>              Quality medicines, expert advice, doorstep delivery
+<span class='ln'>678</span>            &lt;/p&gt;
+<span class='ln'>679</span>            &lt;div className="flex flex-col sm:flex-row gap-4 justify-center"&gt;
+<span class='ln'>680</span>              &lt;Link to="/products"&gt;
+<span class='ln'>681</span>                &lt;Button variant="secondary" size="lg" className="rotate-2"&gt;
+<span class='ln'>682</span>                  START SHOPPING
+<span class='ln'>683</span>                &lt;/Button&gt;
+<span class='ln'>684</span>              &lt;/Link&gt;
+<span class='ln'>685</span>              &lt;Link to="/how-to-order"&gt;
+<span class='ln'>686</span>                &lt;Button variant="outline" size="lg" className="-rotate-2"&gt;
+<span class='ln'>687</span>                  HOW TO ORDER
+<span class='ln'>688</span>                &lt;/Button&gt;
+<span class='ln'>689</span>              &lt;/Link&gt;
+<span class='ln'>690</span>            &lt;/div&gt;
+<span class='ln'>691</span>          &lt;/Card&gt;
+<span class='ln'>692</span>        &lt;/div&gt;
+<span class='ln'>693</span>      &lt;/div&gt;
+<span class='ln'>694</span>    &lt;/motion.div&gt;
+<span class='ln'>695</span>  )
+<span class='ln'>696</span>}
+</pre></div></body></html>

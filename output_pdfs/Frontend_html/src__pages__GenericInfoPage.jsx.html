@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/GenericInfoPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { motion } from 'framer-motion'
+<span class='ln'>2</span>import { Link } from 'react-router-dom'
+<span class='ln'>3</span>
+<span class='ln'>4</span>export default function GenericInfoPage() {
+<span class='ln'>5</span>  const benefits = [
+<span class='ln'>6</span>    {
+<span class='ln'>7</span>      title: "COST-EFFECTIVE",
+<span class='ln'>8</span>      description: "GENERIC MEDICINES ARE TYPICALLY 20-80% CHEAPER THAN BRANDED EQUIVALENTS",
+<span class='ln'>9</span>      icon: "💰"
+<span class='ln'>10</span>    },
+<span class='ln'>11</span>    {
+<span class='ln'>12</span>      title: "SAME QUALITY",
+<span class='ln'>13</span>      description: "CONTAINS THE SAME ACTIVE INGREDIENTS AS BRANDED MEDICINES",
+<span class='ln'>14</span>      icon: "🔬"
+<span class='ln'>15</span>    },
+<span class='ln'>16</span>    {
+<span class='ln'>17</span>      title: "FDA APPROVED",
+<span class='ln'>18</span>      description: "ALL GENERIC MEDICINES UNDERGO RIGOROUS TESTING AND APPROVAL",
+<span class='ln'>19</span>      icon: "✅"
+<span class='ln'>20</span>    },
+<span class='ln'>21</span>    {
+<span class='ln'>22</span>      title: "WIDELY AVAILABLE",
+<span class='ln'>23</span>      description: "EASILY ACCESSIBLE AT PHARMACIES AND ONLINE PLATFORMS",
+<span class='ln'>24</span>      icon: "🏥"
+<span class='ln'>25</span>    }
+<span class='ln'>26</span>  ]
+<span class='ln'>27</span>
+<span class='ln'>28</span>  const faqs = [
+<span class='ln'>29</span>    {
+<span class='ln'>30</span>      question: "ARE GENERIC MEDICINES AS EFFECTIVE AS BRANDED ONES?",
+<span class='ln'>31</span>      answer: "YES, GENERIC MEDICINES CONTAIN THE SAME ACTIVE INGREDIENTS IN THE SAME AMOUNTS AS BRANDED MEDICINES AND ARE EQUALLY EFFECTIVE."
+<span class='ln'>32</span>    },
+<span class='ln'>33</span>    {
+<span class='ln'>34</span>      question: "WHY ARE GENERIC MEDICINES CHEAPER?",
+<span class='ln'>35</span>      answer: "GENERIC MANUFACTURERS DON'T HAVE TO REPEAT EXPENSIVE CLINICAL TRIALS AND MARKETING COSTS, ALLOWING THEM TO OFFER LOWER PRICES."
+<span class='ln'>36</span>    },
+<span class='ln'>37</span>    {
+<span class='ln'>38</span>      question: "ARE THERE ANY DIFFERENCES IN SIDE EFFECTS?",
+<span class='ln'>39</span>      answer: "GENERIC MEDICINES HAVE THE SAME SIDE EFFECTS AS THEIR BRANDED COUNTERPARTS SINCE THEY CONTAIN IDENTICAL ACTIVE INGREDIENTS."
+<span class='ln'>40</span>    },
+<span class='ln'>41</span>    {
+<span class='ln'>42</span>      question: "HOW CAN I IDENTIFY GENERIC MEDICINES?",
+<span class='ln'>43</span>      answer: "GENERIC MEDICINES ARE USUALLY LABELED WITH THEIR CHEMICAL NAME RATHER THAN A BRAND NAME AND ARE OFTEN PRICED LOWER."
+<span class='ln'>44</span>    }
+<span class='ln'>45</span>  ]
+<span class='ln'>46</span>
+<span class='ln'>47</span>  return (
+<span class='ln'>48</span>    &lt;motion.div 
+<span class='ln'>49</span>      initial={{ opacity: 0 }} 
+<span class='ln'>50</span>      animate={{ opacity: 1 }}
+<span class='ln'>51</span>      className="min-h-screen bg-[#FFFDF5]"
+<span class='ln'>52</span>    &gt;
+<span class='ln'>53</span>      {/* Hero Section */}
+<span class='ln'>54</span>      &lt;div className="bg-[#C4B5FD] border-b-8 border-black p-8 sm:p-12 md:p-16 text-center relative overflow-hidden"&gt;
+<span class='ln'>55</span>        {/* Background Pattern */}
+<span class='ln'>56</span>        &lt;div 
+<span class='ln'>57</span>          className="absolute inset-0 opacity-10"
+<span class='ln'>58</span>          style={{
+<span class='ln'>59</span>            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>60</span>            backgroundSize: '20px 20px'
+<span class='ln'>61</span>          }}
+<span class='ln'>62</span>        &gt;&lt;/div&gt;
+<span class='ln'>63</span>        
+<span class='ln'>64</span>        &lt;div className="relative z-10 max-w-6xl mx-auto"&gt;
+<span class='ln'>65</span>          &lt;h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight mb-6 -rotate-1"&gt;
+<span class='ln'>66</span>            GENERIC MEDICINES
+<span class='ln'>67</span>          &lt;/h1&gt;
+<span class='ln'>68</span>          &lt;div className="bg-[#FFD93D] border-4 border-black p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] rotate-1 inline-block mb-8"&gt;
+<span class='ln'>69</span>            &lt;p className="text-lg sm:text-xl font-black uppercase tracking-wide"&gt;
+<span class='ln'>70</span>              SAFE, EFFECTIVE, AND AFFORDABLE HEALTHCARE SOLUTIONS
+<span class='ln'>71</span>            &lt;/p&gt;
+<span class='ln'>72</span>          &lt;/div&gt;
+<span class='ln'>73</span>          &lt;div className="max-w-4xl mx-auto"&gt;
+<span class='ln'>74</span>            &lt;div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000]"&gt;
+<span class='ln'>75</span>              &lt;p className="text-base sm:text-lg font-bold uppercase tracking-wide leading-relaxed"&gt;
+<span class='ln'>76</span>                GENERIC MEDICINES ARE PHARMACEUTICAL PRODUCTS THAT CONTAIN THE SAME ACTIVE INGREDIENTS AS BRANDED MEDICINES 
+<span class='ln'>77</span>                BUT ARE SOLD UNDER THEIR CHEMICAL NAMES. THEY OFFER THE SAME THERAPEUTIC BENEFITS AT A FRACTION OF THE COST.
+<span class='ln'>78</span>              &lt;/p&gt;
+<span class='ln'>79</span>            &lt;/div&gt;
+<span class='ln'>80</span>          &lt;/div&gt;
+<span class='ln'>81</span>        &lt;/div&gt;
+<span class='ln'>82</span>      &lt;/div&gt;
+<span class='ln'>83</span>
+<span class='ln'>84</span>      {/* What are Generic Medicines */}
+<span class='ln'>85</span>      &lt;div className="py-12 sm:py-16 md:py-24 px-4 sm:px-8"&gt;
+<span class='ln'>86</span>        &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>87</span>          &lt;h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 rotate-1"&gt;
+<span class='ln'>88</span>            WHAT ARE GENERIC MEDICINES?
+<span class='ln'>89</span>          &lt;/h2&gt;
+<span class='ln'>90</span>          &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center"&gt;
+<span class='ln'>91</span>            &lt;div className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000] -rotate-1"&gt;
+<span class='ln'>92</span>              &lt;p className="text-base sm:text-lg font-bold leading-relaxed mb-6 uppercase tracking-wide"&gt;
+<span class='ln'>93</span>                GENERIC MEDICINES ARE COPIES OF BRAND-NAME DRUGS THAT HAVE EXACTLY THE SAME DOSAGE, INTENDED USE, 
+<span class='ln'>94</span>                EFFECTS, SIDE EFFECTS, ROUTE OF ADMINISTRATION, RISKS, SAFETY, AND STRENGTH AS THE ORIGINAL DRUG.
+<span class='ln'>95</span>              &lt;/p&gt;
+<span class='ln'>96</span>              &lt;p className="text-base sm:text-lg font-bold leading-relaxed mb-6 uppercase tracking-wide"&gt;
+<span class='ln'>97</span>                THEY ARE DEVELOPED AFTER THE PATENT PROTECTION OF THE ORIGINAL DRUG EXPIRES, TYPICALLY 20 YEARS 
+<span class='ln'>98</span>                AFTER THE ORIGINAL DRUG WAS FIRST PATENTED.
+<span class='ln'>99</span>              &lt;/p&gt;
+<span class='ln'>100</span>              &lt;Link 
+<span class='ln'>101</span>                to="/products?generic=true"
+<span class='ln'>102</span>                className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>103</span>                  text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center
+<span class='ln'>104</span>                  shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>105</span>                  hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>106</span>                  active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>107</span>                  transition-all duration-100"
+<span class='ln'>108</span>              &gt;
+<span class='ln'>109</span>                SHOP GENERIC MEDICINES
+<span class='ln'>110</span>              &lt;/Link&gt;
+<span class='ln'>111</span>            &lt;/div&gt;
+<span class='ln'>112</span>            &lt;div className="bg-black border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000] text-white rotate-1"&gt;
+<span class='ln'>113</span>              &lt;h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-6 text-[#FFD93D]"&gt;KEY FACTS&lt;/h3&gt;
+<span class='ln'>114</span>              &lt;div className="space-y-4"&gt;
+<span class='ln'>115</span>                &lt;div className="flex items-start border-b-2 border-white pb-3"&gt;
+<span class='ln'>116</span>                  &lt;span className="text-[#C4B5FD] mr-3 font-black text-xl"&gt;✓&lt;/span&gt;
+<span class='ln'>117</span>                  &lt;span className="font-bold uppercase tracking-wide"&gt;SAME ACTIVE INGREDIENTS AS BRANDED DRUGS&lt;/span&gt;
+<span class='ln'>118</span>                &lt;/div&gt;
+<span class='ln'>119</span>                &lt;div className="flex items-start border-b-2 border-white pb-3"&gt;
+<span class='ln'>120</span>                  &lt;span className="text-[#C4B5FD] mr-3 font-black text-xl"&gt;✓&lt;/span&gt;
+<span class='ln'>121</span>                  &lt;span className="font-bold uppercase tracking-wide"&gt;MEET THE SAME QUALITY STANDARDS&lt;/span&gt;
+<span class='ln'>122</span>                &lt;/div&gt;
+<span class='ln'>123</span>                &lt;div className="flex items-start border-b-2 border-white pb-3"&gt;
+<span class='ln'>124</span>                  &lt;span className="text-[#C4B5FD] mr-3 font-black text-xl"&gt;✓&lt;/span&gt;
+<span class='ln'>125</span>                  &lt;span className="font-bold uppercase tracking-wide"&gt;UNDERGO RIGOROUS TESTING&lt;/span&gt;
+<span class='ln'>126</span>                &lt;/div&gt;
+<span class='ln'>127</span>                &lt;div className="flex items-start"&gt;
+<span class='ln'>128</span>                  &lt;span className="text-[#C4B5FD] mr-3 font-black text-xl"&gt;✓&lt;/span&gt;
+<span class='ln'>129</span>                  &lt;span className="font-bold uppercase tracking-wide"&gt;APPROVED BY REGULATORY AUTHORITIES&lt;/span&gt;
+<span class='ln'>130</span>                &lt;/div&gt;
+<span class='ln'>131</span>              &lt;/div&gt;
+<span class='ln'>132</span>            &lt;/div&gt;
+<span class='ln'>133</span>          &lt;/div&gt;
+<span class='ln'>134</span>        &lt;/div&gt;
+<span class='ln'>135</span>      &lt;/div&gt;
+<span class='ln'>136</span>
+<span class='ln'>137</span>      {/* Benefits Section */}
+<span class='ln'>138</span>      &lt;div className="bg-[#FFD93D] border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8"&gt;
+<span class='ln'>139</span>        &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>140</span>          &lt;h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 -rotate-1"&gt;
+<span class='ln'>141</span>            BENEFITS OF GENERIC MEDICINES
+<span class='ln'>142</span>          &lt;/h2&gt;
+<span class='ln'>143</span>          &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"&gt;
+<span class='ln'>144</span>            {benefits.map((benefit, index) =&gt; (
+<span class='ln'>145</span>              &lt;motion.div
+<span class='ln'>146</span>                key={index}
+<span class='ln'>147</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>148</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>149</span>                transition={{ delay: index * 0.1 }}
+<span class='ln'>150</span>                className="bg-white border-4 border-black p-6 text-center shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>151</span>                  hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#000] transition-all duration-200"
+<span class='ln'>152</span>                style={{ transform: `rotate(${Math.random() &gt; 0.5 ? 1 : -1}deg)` }}
+<span class='ln'>153</span>              &gt;
+<span class='ln'>154</span>                &lt;div className="text-4xl mb-4 bg-[#C4B5FD] border-4 border-black w-16 h-16 mx-auto flex items-center justify-center"&gt;
+<span class='ln'>155</span>                  {benefit.icon}
+<span class='ln'>156</span>                &lt;/div&gt;
+<span class='ln'>157</span>                &lt;h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-3"&gt;{benefit.title}&lt;/h3&gt;
+<span class='ln'>158</span>                &lt;p className="font-bold text-sm uppercase tracking-wide leading-relaxed"&gt;{benefit.description}&lt;/p&gt;
+<span class='ln'>159</span>              &lt;/motion.div&gt;
+<span class='ln'>160</span>            ))}
+<span class='ln'>161</span>          &lt;/div&gt;
+<span class='ln'>162</span>        &lt;/div&gt;
+<span class='ln'>163</span>      &lt;/div&gt;
+<span class='ln'>164</span>
+<span class='ln'>165</span>      {/* Comparison Table */}
+<span class='ln'>166</span>      &lt;div className="py-12 sm:py-16 md:py-24 px-4 sm:px-8"&gt;
+<span class='ln'>167</span>        &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>168</span>          &lt;h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 rotate-1"&gt;
+<span class='ln'>169</span>            GENERIC VS BRANDED MEDICINES
+<span class='ln'>170</span>          &lt;/h2&gt;
+<span class='ln'>171</span>          &lt;div className="overflow-x-auto"&gt;
+<span class='ln'>172</span>            &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden min-w-[600px]"&gt;
+<span class='ln'>173</span>              &lt;div className="bg-[#FF6B6B] border-b-4 border-black"&gt;
+<span class='ln'>174</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>175</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>176</span>                    &lt;h3 className="font-black uppercase tracking-widest text-sm text-white"&gt;ASPECT&lt;/h3&gt;
+<span class='ln'>177</span>                  &lt;/div&gt;
+<span class='ln'>178</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>179</span>                    &lt;h3 className="font-black uppercase tracking-widest text-sm text-white"&gt;GENERIC MEDICINES&lt;/h3&gt;
+<span class='ln'>180</span>                  &lt;/div&gt;
+<span class='ln'>181</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>182</span>                    &lt;h3 className="font-black uppercase tracking-widest text-sm text-white"&gt;BRANDED MEDICINES&lt;/h3&gt;
+<span class='ln'>183</span>                  &lt;/div&gt;
+<span class='ln'>184</span>                &lt;/div&gt;
+<span class='ln'>185</span>              &lt;/div&gt;
+<span class='ln'>186</span>              &lt;div className="divide-y-4 divide-black"&gt;
+<span class='ln'>187</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>188</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]"&gt;
+<span class='ln'>189</span>                    &lt;p className="font-black uppercase tracking-wide text-sm"&gt;ACTIVE INGREDIENTS&lt;/p&gt;
+<span class='ln'>190</span>                  &lt;/div&gt;
+<span class='ln'>191</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>192</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;SAME AS BRANDED&lt;/p&gt;
+<span class='ln'>193</span>                  &lt;/div&gt;
+<span class='ln'>194</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>195</span>                    &lt;p className="font-bold text-sm"&gt;ORIGINAL FORMULATION&lt;/p&gt;
+<span class='ln'>196</span>                  &lt;/div&gt;
+<span class='ln'>197</span>                &lt;/div&gt;
+<span class='ln'>198</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>199</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]"&gt;
+<span class='ln'>200</span>                    &lt;p className="font-black uppercase tracking-wide text-sm"&gt;EFFECTIVENESS&lt;/p&gt;
+<span class='ln'>201</span>                  &lt;/div&gt;
+<span class='ln'>202</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>203</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;EQUALLY EFFECTIVE&lt;/p&gt;
+<span class='ln'>204</span>                  &lt;/div&gt;
+<span class='ln'>205</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>206</span>                    &lt;p className="font-bold text-sm"&gt;PROVEN EFFECTIVENESS&lt;/p&gt;
+<span class='ln'>207</span>                  &lt;/div&gt;
+<span class='ln'>208</span>                &lt;/div&gt;
+<span class='ln'>209</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>210</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]"&gt;
+<span class='ln'>211</span>                    &lt;p className="font-black uppercase tracking-wide text-sm"&gt;PRICE&lt;/p&gt;
+<span class='ln'>212</span>                  &lt;/div&gt;
+<span class='ln'>213</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>214</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;20-80% CHEAPER&lt;/p&gt;
+<span class='ln'>215</span>                  &lt;/div&gt;
+<span class='ln'>216</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>217</span>                    &lt;p className="font-bold text-sm bg-[#FF6B6B] text-white border-2 border-black px-2 py-1 inline-block"&gt;HIGHER COST&lt;/p&gt;
+<span class='ln'>218</span>                  &lt;/div&gt;
+<span class='ln'>219</span>                &lt;/div&gt;
+<span class='ln'>220</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>221</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]"&gt;
+<span class='ln'>222</span>                    &lt;p className="font-black uppercase tracking-wide text-sm"&gt;AVAILABILITY&lt;/p&gt;
+<span class='ln'>223</span>                  &lt;/div&gt;
+<span class='ln'>224</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>225</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;WIDELY AVAILABLE&lt;/p&gt;
+<span class='ln'>226</span>                  &lt;/div&gt;
+<span class='ln'>227</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>228</span>                    &lt;p className="font-bold text-sm"&gt;BRAND DEPENDENT&lt;/p&gt;
+<span class='ln'>229</span>                  &lt;/div&gt;
+<span class='ln'>230</span>                &lt;/div&gt;
+<span class='ln'>231</span>                &lt;div className="grid grid-cols-3 gap-0"&gt;
+<span class='ln'>232</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black bg-[#C4B5FD]"&gt;
+<span class='ln'>233</span>                    &lt;p className="font-black uppercase tracking-wide text-sm"&gt;REGULATORY APPROVAL&lt;/p&gt;
+<span class='ln'>234</span>                  &lt;/div&gt;
+<span class='ln'>235</span>                  &lt;div className="p-4 sm:p-6 border-r-4 border-black"&gt;
+<span class='ln'>236</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;FDA/WHO APPROVED&lt;/p&gt;
+<span class='ln'>237</span>                  &lt;/div&gt;
+<span class='ln'>238</span>                  &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>239</span>                    &lt;p className="font-bold text-sm bg-[#C4B5FD] border-2 border-black px-2 py-1 inline-block"&gt;FDA/WHO APPROVED&lt;/p&gt;
+<span class='ln'>240</span>                  &lt;/div&gt;
+<span class='ln'>241</span>                &lt;/div&gt;
+<span class='ln'>242</span>              &lt;/div&gt;
+<span class='ln'>243</span>            &lt;/div&gt;
+<span class='ln'>244</span>          &lt;/div&gt;
+<span class='ln'>245</span>        &lt;/div&gt;
+<span class='ln'>246</span>      &lt;/div&gt;
+<span class='ln'>247</span>
+<span class='ln'>248</span>      {/* FAQ Section */}
+<span class='ln'>249</span>      &lt;div className="bg-[#C4B5FD] border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8"&gt;
+<span class='ln'>250</span>        &lt;div className="max-w-7xl mx-auto"&gt;
+<span class='ln'>251</span>          &lt;h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-center mb-12 -rotate-1"&gt;
+<span class='ln'>252</span>            FREQUENTLY ASKED QUESTIONS
+<span class='ln'>253</span>          &lt;/h2&gt;
+<span class='ln'>254</span>          &lt;div className="space-y-6"&gt;
+<span class='ln'>255</span>            {faqs.map((faq, index) =&gt; (
+<span class='ln'>256</span>              &lt;motion.div
+<span class='ln'>257</span>                key={index}
+<span class='ln'>258</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>259</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>260</span>                transition={{ delay: index * 0.1 }}
+<span class='ln'>261</span>                className="bg-white border-4 border-black p-6 sm:p-8 shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>262</span>                  hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#000] transition-all duration-200"
+<span class='ln'>263</span>                style={{ transform: `rotate(${Math.random() &gt; 0.5 ? 0.5 : -0.5}deg)` }}
+<span class='ln'>264</span>              &gt;
+<span class='ln'>265</span>                &lt;h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4"&gt;{faq.question}&lt;/h3&gt;
+<span class='ln'>266</span>                &lt;p className="font-bold leading-relaxed uppercase tracking-wide text-sm sm:text-base"&gt;{faq.answer}&lt;/p&gt;
+<span class='ln'>267</span>              &lt;/motion.div&gt;
+<span class='ln'>268</span>            ))}
+<span class='ln'>269</span>          &lt;/div&gt;
+<span class='ln'>270</span>        &lt;/div&gt;
+<span class='ln'>271</span>      &lt;/div&gt;
+<span class='ln'>272</span>
+<span class='ln'>273</span>      {/* CTA Section */}
+<span class='ln'>274</span>      &lt;div className="bg-black border-y-8 border-black py-12 sm:py-16 md:py-24 px-4 sm:px-8 text-white"&gt;
+<span class='ln'>275</span>        &lt;div className="max-w-7xl mx-auto text-center"&gt;
+<span class='ln'>276</span>          &lt;h2 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight mb-6 rotate-1"&gt;
+<span class='ln'>277</span>            READY TO SAVE ON YOUR MEDICINES?
+<span class='ln'>278</span>          &lt;/h2&gt;
+<span class='ln'>279</span>          &lt;div className="bg-[#FFD93D] border-4 border-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_#fff] -rotate-1 inline-block mb-8"&gt;
+<span class='ln'>280</span>            &lt;p className="text-lg sm:text-xl font-black uppercase tracking-wide text-black"&gt;
+<span class='ln'>281</span>              EXPLORE OUR WIDE RANGE OF GENERIC MEDICINES AND START SAVING TODAY!
+<span class='ln'>282</span>            &lt;/p&gt;
+<span class='ln'>283</span>          &lt;/div&gt;
+<span class='ln'>284</span>          &lt;div className="flex flex-col sm:flex-row gap-4 justify-center"&gt;
+<span class='ln'>285</span>            &lt;Link 
+<span class='ln'>286</span>              to="/products"
+<span class='ln'>287</span>              className="bg-[#FFD93D] border-4 border-white font-black uppercase tracking-widest 
+<span class='ln'>288</span>                text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center text-black
+<span class='ln'>289</span>                shadow-[6px_6px_0px_0px_#fff]
+<span class='ln'>290</span>                hover:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>291</span>                active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>292</span>                transition-all duration-100"
+<span class='ln'>293</span>            &gt;
+<span class='ln'>294</span>              BROWSE ALL PRODUCTS
+<span class='ln'>295</span>            &lt;/Link&gt;
+<span class='ln'>296</span>            &lt;Link 
+<span class='ln'>297</span>              to="/products?trending=true"
+<span class='ln'>298</span>              className="bg-white border-4 border-white font-black uppercase tracking-widest 
+<span class='ln'>299</span>                text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center text-black
+<span class='ln'>300</span>                shadow-[6px_6px_0px_0px_#fff]
+<span class='ln'>301</span>                hover:bg-[#C4B5FD] hover:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>302</span>                active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>303</span>                transition-all duration-100"
+<span class='ln'>304</span>            &gt;
+<span class='ln'>305</span>              VIEW TRENDING
+<span class='ln'>306</span>            &lt;/Link&gt;
+<span class='ln'>307</span>          &lt;/div&gt;
+<span class='ln'>308</span>        &lt;/div&gt;
+<span class='ln'>309</span>      &lt;/div&gt;
+<span class='ln'>310</span>    &lt;/motion.div&gt;
+<span class='ln'>311</span>  )
+<span class='ln'>312</span>}
+</pre></div></body></html>

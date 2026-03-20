@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/HelpPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { motion } from 'framer-motion';
+<span class='ln'>3</span>import { Link } from 'react-router-dom';
+<span class='ln'>4</span>import Card from '../components/Card';
+<span class='ln'>5</span>import Button from '../components/Button';
+<span class='ln'>6</span>import { Star, Zap, Shield, Clock } from 'lucide-react';
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function HelpPage() {
+<span class='ln'>9</span>  const [activeCategory, setActiveCategory] = useState('orders');
+<span class='ln'>10</span>
+<span class='ln'>11</span>  const categories = [
+<span class='ln'>12</span>    { id: 'orders', name: 'Orders &amp; Delivery', icon: '📦' },
+<span class='ln'>13</span>    { id: 'account', name: 'Account &amp; Profile', icon: '👤' },
+<span class='ln'>14</span>    { id: 'payments', name: 'Payments &amp; Billing', icon: '💳' },
+<span class='ln'>15</span>    { id: 'medicines', name: 'Medicines &amp; Health', icon: '💊' },
+<span class='ln'>16</span>    { id: 'technical', name: 'Technical Support', icon: '🔧' }
+<span class='ln'>17</span>  ];
+<span class='ln'>18</span>
+<span class='ln'>19</span>  const helpContent = {
+<span class='ln'>20</span>    orders: [
+<span class='ln'>21</span>      {
+<span class='ln'>22</span>        question: 'How can I track my order?',
+<span class='ln'>23</span>        answer: 'You can track your order by going to "My Orders" section in your profile. You\'ll see real-time updates on your order status and estimated delivery time.'
+<span class='ln'>24</span>      },
+<span class='ln'>25</span>      {
+<span class='ln'>26</span>        question: 'What if my order is delayed?',
+<span class='ln'>27</span>        answer: 'If your order is delayed beyond the estimated time, please contact our support team. We\'ll investigate and provide you with an updated delivery timeline.'
+<span class='ln'>28</span>      },
+<span class='ln'>29</span>      {
+<span class='ln'>30</span>        question: 'Can I cancel my order?',
+<span class='ln'>31</span>        answer: 'You can cancel your order within 5 minutes of placing it. After that, cancellation depends on the order status. Contact support for assistance.'
+<span class='ln'>32</span>      },
+<span class='ln'>33</span>      {
+<span class='ln'>34</span>        question: 'What are your delivery areas?',
+<span class='ln'>35</span>        answer: 'We deliver to 500+ cities across India. Enter your pincode during checkout to check if we deliver to your area.'
+<span class='ln'>36</span>      }
+<span class='ln'>37</span>    ],
+<span class='ln'>38</span>    account: [
+<span class='ln'>39</span>      {
+<span class='ln'>40</span>        question: 'How do I create an account?',
+<span class='ln'>41</span>        answer: 'Click on "Sign Up" and provide your email and password. You can also sign up using your Google account for faster registration.'
+<span class='ln'>42</span>      },
+<span class='ln'>43</span>      {
+<span class='ln'>44</span>        question: 'I forgot my password. What should I do?',
+<span class='ln'>45</span>        answer: 'Click on "Forgot Password" on the login page. Enter your email address and we\'ll send you an OTP to reset your password.'
+<span class='ln'>46</span>      },
+<span class='ln'>47</span>      {
+<span class='ln'>48</span>        question: 'How can I update my profile information?',
+<span class='ln'>49</span>        answer: 'Go to "My Profile" section where you can update your name, address, phone number, and other personal information.'
+<span class='ln'>50</span>      },
+<span class='ln'>51</span>      {
+<span class='ln'>52</span>        question: 'Can I delete my account?',
+<span class='ln'>53</span>        answer: 'Yes, you can request account deletion by contacting our support team. Please note that this action is irreversible.'
+<span class='ln'>54</span>      }
+<span class='ln'>55</span>    ],
+<span class='ln'>56</span>    payments: [
+<span class='ln'>57</span>      {
+<span class='ln'>58</span>        question: 'What payment methods do you accept?',
+<span class='ln'>59</span>        answer: 'We accept UPI, credit/debit cards, net banking, and cash on delivery (COD) for eligible orders.'
+<span class='ln'>60</span>      },
+<span class='ln'>61</span>      {
+<span class='ln'>62</span>        question: 'Is it safe to pay online?',
+<span class='ln'>63</span>        answer: 'Yes, all online payments are processed through secure, encrypted gateways. We don\'t store your payment information.'
+<span class='ln'>64</span>      },
+<span class='ln'>65</span>      {
+<span class='ln'>66</span>        question: 'Can I get a refund?',
+<span class='ln'>67</span>        answer: 'Refunds are processed for cancelled orders or in case of damaged/incorrect items. The refund will be credited to your original payment method within 5-7 business days.'
+<span class='ln'>68</span>      },
+<span class='ln'>69</span>      {
+<span class='ln'>70</span>        question: 'Why was my payment declined?',
+<span class='ln'>71</span>        answer: 'Payment can be declined due to insufficient funds, incorrect card details, or bank restrictions. Please check with your bank or try a different payment method.'
+<span class='ln'>72</span>      }
+<span class='ln'>73</span>    ],
+<span class='ln'>74</span>    medicines: [
+<span class='ln'>75</span>      {
+<span class='ln'>76</span>        question: 'Are your medicines authentic?',
+<span class='ln'>77</span>        answer: 'Yes, all our medicines are sourced directly from licensed manufacturers and distributors. We guarantee 100% authenticity.'
+<span class='ln'>78</span>      },
+<span class='ln'>79</span>      {
+<span class='ln'>80</span>        question: 'Do I need a prescription for all medicines?',
+<span class='ln'>81</span>        answer: 'Prescription medicines require a valid prescription from a registered doctor. Over-the-counter medicines can be purchased without a prescription.'
+<span class='ln'>82</span>      },
+<span class='ln'>83</span>      {
+<span class='ln'>84</span>        question: 'How do you ensure medicine quality?',
+<span class='ln'>85</span>        answer: 'We follow strict quality control measures, proper storage conditions, and work only with certified suppliers to ensure medicine quality.'
+<span class='ln'>86</span>      },
+<span class='ln'>87</span>      {
+<span class='ln'>88</span>        question: 'What if I receive expired medicines?',
+<span class='ln'>89</span>        answer: 'We have strict expiry date checks. If you receive expired medicines, contact us immediately for a replacement and full refund.'
+<span class='ln'>90</span>      }
+<span class='ln'>91</span>    ],
+<span class='ln'>92</span>    technical: [
+<span class='ln'>93</span>      {
+<span class='ln'>94</span>        question: 'The website is not loading properly',
+<span class='ln'>95</span>        answer: 'Try clearing your browser cache, disable ad blockers, or try using a different browser. If the issue persists, contact our technical support.'
+<span class='ln'>96</span>      },
+<span class='ln'>97</span>      {
+<span class='ln'>98</span>        question: 'I can\'t upload my prescription',
+<span class='ln'>99</span>        answer: 'Ensure your prescription image is clear, in JPG/PNG format, and under 5MB. Try using a different device or browser if the issue continues.'
+<span class='ln'>100</span>      },
+<span class='ln'>101</span>      {
+<span class='ln'>102</span>        question: 'The mobile app is crashing',
+<span class='ln'>103</span>        answer: 'Update the app to the latest version, restart your device, or reinstall the app. Contact support if the problem continues.'
+<span class='ln'>104</span>      },
+<span class='ln'>105</span>      {
+<span class='ln'>106</span>        question: 'I\'m not receiving notifications',
+<span class='ln'>107</span>        answer: 'Check your notification settings in the app and ensure notifications are enabled for genx in your device settings.'
+<span class='ln'>108</span>      }
+<span class='ln'>109</span>    ]
+<span class='ln'>110</span>  };
+<span class='ln'>111</span>
+<span class='ln'>112</span>  return (
+<span class='ln'>113</span>    &lt;motion.div 
+<span class='ln'>114</span>      initial={{ opacity: 0 }} 
+<span class='ln'>115</span>      animate={{ opacity: 1 }}
+<span class='ln'>116</span>      className="bg-neo-canvas min-h-screen relative overflow-hidden"
+<span class='ln'>117</span>    &gt;
+<span class='ln'>118</span>      {/* Background Pattern */}
+<span class='ln'>119</span>      &lt;div className="absolute inset-0 bg-neo-grid opacity-20"&gt;&lt;/div&gt;
+<span class='ln'>120</span>      
+<span class='ln'>121</span>      {/* Floating Decorative Elements */}
+<span class='ln'>122</span>      &lt;div className="absolute top-20 left-10 rotate-12"&gt;
+<span class='ln'>123</span>        &lt;Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" /&gt;
+<span class='ln'>124</span>      &lt;/div&gt;
+<span class='ln'>125</span>      &lt;div className="absolute top-40 right-20 -rotate-12"&gt;
+<span class='ln'>126</span>        &lt;Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" /&gt;
+<span class='ln'>127</span>      &lt;/div&gt;
+<span class='ln'>128</span>      &lt;div className="absolute bottom-32 left-32 rotate-45"&gt;
+<span class='ln'>129</span>        &lt;Shield className="w-10 h-10 fill-neo-muted text-neo-muted" /&gt;
+<span class='ln'>130</span>      &lt;/div&gt;
+<span class='ln'>131</span>
+<span class='ln'>132</span>      {/* Hero Section */}
+<span class='ln'>133</span>      &lt;div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative"&gt;
+<span class='ln'>134</span>        &lt;div className="neo-container text-center relative z-10"&gt;
+<span class='ln'>135</span>          &lt;motion.h1 
+<span class='ln'>136</span>            initial={{ opacity: 0, y: 20 }}
+<span class='ln'>137</span>            animate={{ opacity: 1, y: 0 }}
+<span class='ln'>138</span>            className="text-4xl md:text-8xl font-black mb-6 uppercase"
+<span class='ln'>139</span>          &gt;
+<span class='ln'>140</span>            &lt;span className="block -rotate-1"&gt;HELP&lt;/span&gt;
+<span class='ln'>141</span>            &lt;span className="block rotate-1 text-stroke"&gt;CENTER&lt;/span&gt;
+<span class='ln'>142</span>          &lt;/motion.h1&gt;
+<span class='ln'>143</span>          &lt;motion.p 
+<span class='ln'>144</span>            initial={{ opacity: 0, y: 20 }}
+<span class='ln'>145</span>            animate={{ opacity: 1, y: 0 }}
+<span class='ln'>146</span>            transition={{ delay: 0.2 }}
+<span class='ln'>147</span>            className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
+<span class='ln'>148</span>          &gt;
+<span class='ln'>149</span>            FIND ANSWERS TO YOUR QUESTIONS AND GET THE HELP YOU NEED
+<span class='ln'>150</span>          &lt;/motion.p&gt;
+<span class='ln'>151</span>        &lt;/div&gt;
+<span class='ln'>152</span>      &lt;/div&gt;
+<span class='ln'>153</span>
+<span class='ln'>154</span>      {/* Quick Actions */}
+<span class='ln'>155</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>156</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>157</span>          &lt;h2 className="text-2xl md:text-4xl font-black text-center text-neo-ink mb-12 uppercase rotate-1"&gt;QUICK ACTIONS&lt;/h2&gt;
+<span class='ln'>158</span>          &lt;div className="grid grid-cols-1 md:grid-cols-4 gap-6"&gt;
+<span class='ln'>159</span>            &lt;Link to="/orders"&gt;
+<span class='ln'>160</span>              &lt;Card className="p-6 text-center bg-neo-secondary rotate-1"&gt;
+<span class='ln'>161</span>                &lt;div className="text-4xl mb-4"&gt;📦&lt;/div&gt;
+<span class='ln'>162</span>                &lt;h3 className="font-black text-neo-ink mb-2 uppercase"&gt;TRACK ORDER&lt;/h3&gt;
+<span class='ln'>163</span>                &lt;p className="text-neo-ink font-bold text-sm uppercase"&gt;CHECK YOUR ORDER STATUS&lt;/p&gt;
+<span class='ln'>164</span>              &lt;/Card&gt;
+<span class='ln'>165</span>            &lt;/Link&gt;
+<span class='ln'>166</span>            &lt;Link to="/contact"&gt;
+<span class='ln'>167</span>              &lt;Card className="p-6 text-center bg-neo-accent -rotate-1"&gt;
+<span class='ln'>168</span>                &lt;div className="text-4xl mb-4"&gt;💬&lt;/div&gt;
+<span class='ln'>169</span>                &lt;h3 className="font-black text-white mb-2 uppercase"&gt;LIVE CHAT&lt;/h3&gt;
+<span class='ln'>170</span>                &lt;p className="text-white font-bold text-sm uppercase"&gt;CHAT WITH OUR SUPPORT TEAM&lt;/p&gt;
+<span class='ln'>171</span>              &lt;/Card&gt;
+<span class='ln'>172</span>            &lt;/Link&gt;
+<span class='ln'>173</span>            &lt;Link to="/profile"&gt;
+<span class='ln'>174</span>              &lt;Card className="p-6 text-center bg-neo-muted rotate-2"&gt;
+<span class='ln'>175</span>                &lt;div className="text-4xl mb-4"&gt;👤&lt;/div&gt;
+<span class='ln'>176</span>                &lt;h3 className="font-black text-neo-ink mb-2 uppercase"&gt;MY ACCOUNT&lt;/h3&gt;
+<span class='ln'>177</span>                &lt;p className="text-neo-ink font-bold text-sm uppercase"&gt;MANAGE YOUR PROFILE&lt;/p&gt;
+<span class='ln'>178</span>              &lt;/Card&gt;
+<span class='ln'>179</span>            &lt;/Link&gt;
+<span class='ln'>180</span>            &lt;a href="tel:+911234567890"&gt;
+<span class='ln'>181</span>              &lt;Card className="p-6 text-center bg-white -rotate-2"&gt;
+<span class='ln'>182</span>                &lt;div className="text-4xl mb-4"&gt;📞&lt;/div&gt;
+<span class='ln'>183</span>                &lt;h3 className="font-black text-neo-ink mb-2 uppercase"&gt;CALL SUPPORT&lt;/h3&gt;
+<span class='ln'>184</span>                &lt;p className="text-neo-ink font-bold text-sm uppercase"&gt;+91 123 456 7890&lt;/p&gt;
+<span class='ln'>185</span>              &lt;/Card&gt;
+<span class='ln'>186</span>            &lt;/a&gt;
+<span class='ln'>187</span>          &lt;/div&gt;
+<span class='ln'>188</span>        &lt;/div&gt;
+<span class='ln'>189</span>      &lt;/div&gt;
+<span class='ln'>190</span>
+<span class='ln'>191</span>      {/* FAQ Section */}
+<span class='ln'>192</span>      &lt;div className="neo-section bg-neo-secondary border-y-4 border-neo-ink"&gt;
+<span class='ln'>193</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>194</span>          &lt;Card className="p-8 md:p-12 bg-white -rotate-1"&gt;
+<span class='ln'>195</span>            &lt;h2 className="text-2xl md:text-4xl font-black text-center text-neo-ink mb-12 uppercase rotate-1"&gt;FREQUENTLY ASKED QUESTIONS&lt;/h2&gt;
+<span class='ln'>196</span>            
+<span class='ln'>197</span>            {/* Category Tabs */}
+<span class='ln'>198</span>            &lt;div className="flex flex-wrap justify-center gap-4 mb-12"&gt;
+<span class='ln'>199</span>              {categories.map((category) =&gt; (
+<span class='ln'>200</span>                &lt;button
+<span class='ln'>201</span>                  key={category.id}
+<span class='ln'>202</span>                  onClick={() =&gt; setActiveCategory(category.id)}
+<span class='ln'>203</span>                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all ${
+<span class='ln'>204</span>                    activeCategory === category.id
+<span class='ln'>205</span>                      ? 'neo-btn-primary'
+<span class='ln'>206</span>                      : 'neo-btn-outline'
+<span class='ln'>207</span>                  }`}
+<span class='ln'>208</span>                &gt;
+<span class='ln'>209</span>                  &lt;span className="text-2xl"&gt;{category.icon}&lt;/span&gt;
+<span class='ln'>210</span>                  &lt;span className="font-black uppercase text-sm"&gt;{category.name}&lt;/span&gt;
+<span class='ln'>211</span>                &lt;/button&gt;
+<span class='ln'>212</span>              ))}
+<span class='ln'>213</span>            &lt;/div&gt;
+<span class='ln'>214</span>
+<span class='ln'>215</span>            {/* FAQ Content */}
+<span class='ln'>216</span>            &lt;div className="space-y-6"&gt;
+<span class='ln'>217</span>              {helpContent[activeCategory].map((item, index) =&gt; (
+<span class='ln'>218</span>                &lt;motion.div
+<span class='ln'>219</span>                  key={index}
+<span class='ln'>220</span>                  initial={{ opacity: 0, y: 20 }}
+<span class='ln'>221</span>                  animate={{ opacity: 1, y: 0 }}
+<span class='ln'>222</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>223</span>                &gt;
+<span class='ln'>224</span>                  &lt;Card className="p-6 bg-neo-muted" rotation={Math.random() &gt; 0.5 ? 1 : -1}&gt;
+<span class='ln'>225</span>                    &lt;h3 className="text-lg font-black text-neo-ink mb-3 uppercase"&gt;{item.question}&lt;/h3&gt;
+<span class='ln'>226</span>                    &lt;p className="text-neo-ink font-bold leading-relaxed text-sm"&gt;{item.answer}&lt;/p&gt;
+<span class='ln'>227</span>                  &lt;/Card&gt;
+<span class='ln'>228</span>                &lt;/motion.div&gt;
+<span class='ln'>229</span>              ))}
+<span class='ln'>230</span>            &lt;/div&gt;
+<span class='ln'>231</span>          &lt;/Card&gt;
+<span class='ln'>232</span>        &lt;/div&gt;
+<span class='ln'>233</span>      &lt;/div&gt;
+<span class='ln'>234</span>
+<span class='ln'>235</span>      {/* Contact Section */}
+<span class='ln'>236</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>237</span>        &lt;div className="max-w-4xl mx-auto px-4 text-center"&gt;
+<span class='ln'>238</span>          &lt;h2 className="text-2xl md:text-4xl font-black text-neo-ink mb-6 uppercase rotate-1"&gt;STILL NEED HELP?&lt;/h2&gt;
+<span class='ln'>239</span>          &lt;p className="text-lg font-bold text-neo-ink mb-8 uppercase"&gt;CAN'T FIND WHAT YOU'RE LOOKING FOR? OUR SUPPORT TEAM IS HERE TO HELP!&lt;/p&gt;
+<span class='ln'>240</span>          &lt;div className="space-x-4"&gt;
+<span class='ln'>241</span>            &lt;Link 
+<span class='ln'>242</span>              to="/contact"
+<span class='ln'>243</span>            &gt;
+<span class='ln'>244</span>              &lt;Button size="lg" className="rotate-2"&gt;
+<span class='ln'>245</span>                CONTACT SUPPORT
+<span class='ln'>246</span>              &lt;/Button&gt;
+<span class='ln'>247</span>            &lt;/Link&gt;
+<span class='ln'>248</span>            &lt;a 
+<span class='ln'>249</span>              href="mailto:support@genx.com"
+<span class='ln'>250</span>            &gt;
+<span class='ln'>251</span>              &lt;Button variant="outline" size="lg" className="-rotate-2"&gt;
+<span class='ln'>252</span>                EMAIL US
+<span class='ln'>253</span>              &lt;/Button&gt;
+<span class='ln'>254</span>            &lt;/a&gt;
+<span class='ln'>255</span>          &lt;/div&gt;
+<span class='ln'>256</span>        &lt;/div&gt;
+<span class='ln'>257</span>      &lt;/div&gt;
+<span class='ln'>258</span>    &lt;/motion.div&gt;
+<span class='ln'>259</span>  );
+<span class='ln'>260</span>}
+</pre></div></body></html>

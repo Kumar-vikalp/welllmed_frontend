@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/ProtectedRoute.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { Navigate, useLocation } from 'react-router-dom';
+<span class='ln'>2</span>import { useSelector } from 'react-redux';
+<span class='ln'>3</span>import { selectUser } from '../store/slices/userSlice';
+<span class='ln'>4</span>
+<span class='ln'>5</span>export default function ProtectedRoute({ children }) {
+<span class='ln'>6</span>  const user = useSelector(selectUser);
+<span class='ln'>7</span>  const location = useLocation();
+<span class='ln'>8</span>
+<span class='ln'>9</span>  if (!user) {
+<span class='ln'>10</span>    // Redirect them to the /login page, but save the current location they were
+<span class='ln'>11</span>    // trying to go to. This allows us to send them along to that page after they login.
+<span class='ln'>12</span>    return &lt;Navigate to="/login" state={{ from: location }} replace /&gt;;
+<span class='ln'>13</span>  }
+<span class='ln'>14</span>
+<span class='ln'>15</span>  return children;
+<span class='ln'>16</span>}
+<span class='ln'>17</span>
+</pre></div></body></html>

@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/store/slices/productsSlice.js</span><span class='lang'>JS</span></div><div class='wrap'><pre><span class='ln'>1</span>import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+<span class='ln'>2</span>import api from '../../api/axiosConfig'
+<span class='ln'>3</span>
+<span class='ln'>4</span>// Cache duration: 5 minutes
+<span class='ln'>5</span>const CACHE_DURATION = 5 * 60 * 1000
+<span class='ln'>6</span>
+<span class='ln'>7</span>// Async thunks
+<span class='ln'>8</span>export const fetchProducts = createAsyncThunk(
+<span class='ln'>9</span>  'products/fetchProducts',
+<span class='ln'>10</span>  async (params = {}, { getState, rejectWithValue }) =&gt; {
+<span class='ln'>11</span>    try {
+<span class='ln'>12</span>      const cacheKey = JSON.stringify(params)
+<span class='ln'>13</span>      const { products } = getState()
+<span class='ln'>14</span>      const cachedData = products.cache[cacheKey]
+<span class='ln'>15</span>      
+<span class='ln'>16</span>      // Return cached data if it's still valid
+<span class='ln'>17</span>      if (cachedData &amp;&amp; Date.now() - cachedData.timestamp &lt; CACHE_DURATION) {
+<span class='ln'>18</span>        return { products: cachedData.data, fromCache: true, cacheKey }
+<span class='ln'>19</span>      }
+<span class='ln'>20</span>      
+<span class='ln'>21</span>      const queryParams = new URLSearchParams()
+<span class='ln'>22</span>      Object.entries(params).forEach(([key, value]) =&gt; {
+<span class='ln'>23</span>        if (value) queryParams.append(key, value)
+<span class='ln'>24</span>      })
+<span class='ln'>25</span>      
+<span class='ln'>26</span>      const response = await api.get(`/products/?${queryParams.toString()}`)
+<span class='ln'>27</span>      const data = response.data
+<span class='ln'>28</span>      const productsData = data.results || (Array.isArray(data) ? data : [data])
+<span class='ln'>29</span>      
+<span class='ln'>30</span>      const transformedProducts = productsData.map(transformProduct)
+<span class='ln'>31</span>      
+<span class='ln'>32</span>      return {
+<span class='ln'>33</span>        products: transformedProducts,
+<span class='ln'>34</span>        totalPages: data.count ? Math.ceil(data.count / (params.page_size || 12)) : 1,
+<span class='ln'>35</span>        fromCache: false,
+<span class='ln'>36</span>        cacheKey
+<span class='ln'>37</span>      }
+<span class='ln'>38</span>    } catch (error) {
+<span class='ln'>39</span>      return rejectWithValue(error.response?.data || 'Failed to fetch products')
+<span class='ln'>40</span>    }
+<span class='ln'>41</span>  }
+<span class='ln'>42</span>)
+<span class='ln'>43</span>
+<span class='ln'>44</span>export const fetchProductBySlug = createAsyncThunk(
+<span class='ln'>45</span>  'products/fetchProductBySlug',
+<span class='ln'>46</span>  async (slug, { getState, rejectWithValue }) =&gt; {
+<span class='ln'>47</span>    try {
+<span class='ln'>48</span>      const { products } = getState()
+<span class='ln'>49</span>      const cachedProduct = products.productCache[slug]
+<span class='ln'>50</span>      
+<span class='ln'>51</span>      // Return cached product if it's still valid
+<span class='ln'>52</span>      if (cachedProduct &amp;&amp; Date.now() - cachedProduct.timestamp &lt; CACHE_DURATION) {
+<span class='ln'>53</span>        return { product: cachedProduct.data, fromCache: true }
+<span class='ln'>54</span>      }
+<span class='ln'>55</span>      
+<span class='ln'>56</span>      const response = await api.get(`/products/${slug}/`)
+<span class='ln'>57</span>      const transformedProduct = transformProduct(response.data)
+<span class='ln'>58</span>      
+<span class='ln'>59</span>      return { product: transformedProduct, fromCache: false, slug }
+<span class='ln'>60</span>    } catch (error) {
+<span class='ln'>61</span>      console.error('Product fetch error:', error)
+<span class='ln'>62</span>      return rejectWithValue(error.response?.data || 'Failed to fetch product')
+<span class='ln'>63</span>    }
+<span class='ln'>64</span>  }
+<span class='ln'>65</span>)
+<span class='ln'>66</span>
+<span class='ln'>67</span>export const fetchRelatedProducts = createAsyncThunk(
+<span class='ln'>68</span>  'products/fetchRelatedProducts',
+<span class='ln'>69</span>  async (slug, { rejectWithValue }) =&gt; {
+<span class='ln'>70</span>    try {
+<span class='ln'>71</span>      const response = await api.get(`/products/${slug}/related/`)
+<span class='ln'>72</span>      const relatedData = Array.isArray(response.data) ? response.data : [response.data]
+<span class='ln'>73</span>      return relatedData.map(transformProduct)
+<span class='ln'>74</span>    } catch (error) {
+<span class='ln'>75</span>      return rejectWithValue([]) // Return empty array on error
+<span class='ln'>76</span>    }
+<span class='ln'>77</span>  }
+<span class='ln'>78</span>)
+<span class='ln'>79</span>
+<span class='ln'>80</span>const transformProduct = (product) =&gt; ({
+<span class='ln'>81</span>  product_id: product.product_id,
+<span class='ln'>82</span>  slug: product.slug,
+<span class='ln'>83</span>  name: product.name,
+<span class='ln'>84</span>  company: product.company,
+<span class='ln'>85</span>  disease_category: product.disease_category,
+<span class='ln'>86</span>  mrp: parseFloat(product.mrp),
+<span class='ln'>87</span>  discount: product.discount,
+<span class='ln'>88</span>  discounted_price: parseFloat(product.discounted_price),
+<span class='ln'>89</span>  images: product.images?.map(img =&gt; img.stream_url) || ['/images/placeholder.jpg'],
+<span class='ln'>90</span>  trending: product.trending,
+<span class='ln'>91</span>  available_stock: product.available_stock || 100,
+<span class='ln'>92</span>  description: product.description || `${product.name} from ${product.company}. Effective treatment for ${product.disease_category}.`,
+<span class='ln'>93</span>  returnable: product.returnable,
+<span class='ln'>94</span>  expiry_date: product.expiry_date,
+<span class='ln'>95</span>  directions_for_use: product.directions_for_use,
+<span class='ln'>96</span>  seller_information: product.seller_information,
+<span class='ln'>97</span>  manufactured_by: product.manufactured_by,
+<span class='ln'>98</span>  packed_by: product.packed_by,
+<span class='ln'>99</span>  benefits: product.benefits || [],
+<span class='ln'>100</span>  suitable_for: product.suitable_for || [],
+<span class='ln'>101</span>  dosage: product.dosage || [],
+<span class='ln'>102</span>  cautions: product.cautions || [],
+<span class='ln'>103</span>  side_effects: product.side_effects || [],
+<span class='ln'>104</span>  key_ingredients: product.key_ingredients || []
+<span class='ln'>105</span>})
+<span class='ln'>106</span>
+<span class='ln'>107</span>const productsSlice = createSlice({
+<span class='ln'>108</span>  name: 'products',
+<span class='ln'>109</span>  initialState: {
+<span class='ln'>110</span>    items: [],
+<span class='ln'>111</span>    currentProduct: null,
+<span class='ln'>112</span>    relatedProducts: [],
+<span class='ln'>113</span>    loading: false,
+<span class='ln'>114</span>    productLoading: false,
+<span class='ln'>115</span>    error: null,
+<span class='ln'>116</span>    totalPages: 1,
+<span class='ln'>117</span>    cache: {}, // Cache for product lists
+<span class='ln'>118</span>    productCache: {}, // Cache for individual products
+<span class='ln'>119</span>    filters: {
+<span class='ln'>120</span>      category: '',
+<span class='ln'>121</span>      company: '',
+<span class='ln'>122</span>      search: '',
+<span class='ln'>123</span>      ordering: '',
+<span class='ln'>124</span>      trending: ''
+<span class='ln'>125</span>    }
+<span class='ln'>126</span>  },
+<span class='ln'>127</span>  reducers: {
+<span class='ln'>128</span>    setFilters: (state, action) =&gt; {
+<span class='ln'>129</span>      state.filters = { ...state.filters, ...action.payload }
+<span class='ln'>130</span>    },
+<span class='ln'>131</span>    clearFilters: (state) =&gt; {
+<span class='ln'>132</span>      state.filters = {
+<span class='ln'>133</span>        category: '',
+<span class='ln'>134</span>        company: '',
+<span class='ln'>135</span>        search: '',
+<span class='ln'>136</span>        ordering: '',
+<span class='ln'>137</span>        trending: ''
+<span class='ln'>138</span>      }
+<span class='ln'>139</span>    },
+<span class='ln'>140</span>    clearCurrentProduct: (state) =&gt; {
+<span class='ln'>141</span>      state.currentProduct = null
+<span class='ln'>142</span>      state.relatedProducts = []
+<span class='ln'>143</span>    },
+<span class='ln'>144</span>    clearCache: (state) =&gt; {
+<span class='ln'>145</span>      state.cache = {}
+<span class='ln'>146</span>      state.productCache = {}
+<span class='ln'>147</span>    }
+<span class='ln'>148</span>  },
+<span class='ln'>149</span>  extraReducers: (builder) =&gt; {
+<span class='ln'>150</span>    builder
+<span class='ln'>151</span>      // Fetch products
+<span class='ln'>152</span>      .addCase(fetchProducts.pending, (state) =&gt; {
+<span class='ln'>153</span>        state.loading = true
+<span class='ln'>154</span>        state.error = null
+<span class='ln'>155</span>      })
+<span class='ln'>156</span>      .addCase(fetchProducts.fulfilled, (state, action) =&gt; {
+<span class='ln'>157</span>        state.loading = false
+<span class='ln'>158</span>        state.items = action.payload.products
+<span class='ln'>159</span>        state.totalPages = action.payload.totalPages || 1
+<span class='ln'>160</span>        
+<span class='ln'>161</span>        // Cache the results if not from cache
+<span class='ln'>162</span>        if (!action.payload.fromCache) {
+<span class='ln'>163</span>          state.cache[action.payload.cacheKey] = {
+<span class='ln'>164</span>            data: action.payload.products,
+<span class='ln'>165</span>            timestamp: Date.now()
+<span class='ln'>166</span>          }
+<span class='ln'>167</span>        }
+<span class='ln'>168</span>      })
+<span class='ln'>169</span>      .addCase(fetchProducts.rejected, (state, action) =&gt; {
+<span class='ln'>170</span>        state.loading = false
+<span class='ln'>171</span>        state.error = action.payload
+<span class='ln'>172</span>      })
+<span class='ln'>173</span>      
+<span class='ln'>174</span>      // Fetch product by slug
+<span class='ln'>175</span>      .addCase(fetchProductBySlug.pending, (state) =&gt; {
+<span class='ln'>176</span>        state.productLoading = true
+<span class='ln'>177</span>        state.error = null
+<span class='ln'>178</span>      })
+<span class='ln'>179</span>      .addCase(fetchProductBySlug.fulfilled, (state, action) =&gt; {
+<span class='ln'>180</span>        state.productLoading = false
+<span class='ln'>181</span>        state.currentProduct = action.payload.product
+<span class='ln'>182</span>        
+<span class='ln'>183</span>        // Cache the product if not from cache
+<span class='ln'>184</span>        if (!action.payload.fromCache) {
+<span class='ln'>185</span>          state.productCache[action.payload.slug] = {
+<span class='ln'>186</span>            data: action.payload.product,
+<span class='ln'>187</span>            timestamp: Date.now()
+<span class='ln'>188</span>          }
+<span class='ln'>189</span>        }
+<span class='ln'>190</span>      })
+<span class='ln'>191</span>      .addCase(fetchProductBySlug.rejected, (state, action) =&gt; {
+<span class='ln'>192</span>        state.productLoading = false
+<span class='ln'>193</span>        state.error = action.payload
+<span class='ln'>194</span>      })
+<span class='ln'>195</span>      
+<span class='ln'>196</span>      // Fetch related products
+<span class='ln'>197</span>      .addCase(fetchRelatedProducts.fulfilled, (state, action) =&gt; {
+<span class='ln'>198</span>        state.relatedProducts = action.payload
+<span class='ln'>199</span>      })
+<span class='ln'>200</span>  }
+<span class='ln'>201</span>})
+<span class='ln'>202</span>
+<span class='ln'>203</span>export const { setFilters, clearFilters, clearCurrentProduct, clearCache } = productsSlice.actions
+<span class='ln'>204</span>
+<span class='ln'>205</span>// Selectors
+<span class='ln'>206</span>export const selectProducts = (state) =&gt; state.products.items
+<span class='ln'>207</span>export const selectCurrentProduct = (state) =&gt; state.products.currentProduct
+<span class='ln'>208</span>export const selectRelatedProducts = (state) =&gt; state.products.relatedProducts
+<span class='ln'>209</span>export const selectProductsLoading = (state) =&gt; state.products.loading
+<span class='ln'>210</span>export const selectProductLoading = (state) =&gt; state.products.productLoading
+<span class='ln'>211</span>export const selectProductsError = (state) =&gt; state.products.error
+<span class='ln'>212</span>export const selectTotalPages = (state) =&gt; state.products.totalPages
+<span class='ln'>213</span>export const selectFilters = (state) =&gt; state.products.filters
+<span class='ln'>214</span>
+<span class='ln'>215</span>export default productsSlice.reducer
+</pre></div></body></html>

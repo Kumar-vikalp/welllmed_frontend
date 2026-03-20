@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/TrendingCarousel.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState, useRef, useEffect } from 'react'
+<span class='ln'>2</span>import { motion } from 'framer-motion'
+<span class='ln'>3</span>import { useNavigate } from 'react-router-dom'
+<span class='ln'>4</span>import { ChevronLeft, ChevronRight } from 'lucide-react'
+<span class='ln'>5</span>import Button from './Button'
+<span class='ln'>6</span>import Card from './Card'
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function TrendingCarousel({ products, title = "Trending Products", showTitle = true }) {
+<span class='ln'>9</span>  const [isDragging, setIsDragging] = useState(false)
+<span class='ln'>10</span>  const [startX, setStartX] = useState(0)
+<span class='ln'>11</span>  const [scrollLeft, setScrollLeft] = useState(0)
+<span class='ln'>12</span>  const carouselRef = useRef(null)
+<span class='ln'>13</span>  const navigate = useNavigate()
+<span class='ln'>14</span>
+<span class='ln'>15</span>  const handleMouseDown = (e) =&gt; {
+<span class='ln'>16</span>    setIsDragging(true)
+<span class='ln'>17</span>    setStartX(e.pageX - carouselRef.current.offsetLeft)
+<span class='ln'>18</span>    setScrollLeft(carouselRef.current.scrollLeft)
+<span class='ln'>19</span>  }
+<span class='ln'>20</span>
+<span class='ln'>21</span>  const handleMouseMove = (e) =&gt; {
+<span class='ln'>22</span>    if (!isDragging) return
+<span class='ln'>23</span>    e.preventDefault()
+<span class='ln'>24</span>    const x = e.pageX - carouselRef.current.offsetLeft
+<span class='ln'>25</span>    const walk = (x - startX) * 2
+<span class='ln'>26</span>    carouselRef.current.scrollLeft = scrollLeft - walk
+<span class='ln'>27</span>  }
+<span class='ln'>28</span>
+<span class='ln'>29</span>  const handleMouseUp = () =&gt; {
+<span class='ln'>30</span>    setIsDragging(false)
+<span class='ln'>31</span>  }
+<span class='ln'>32</span>
+<span class='ln'>33</span>  const handleTouchStart = (e) =&gt; {
+<span class='ln'>34</span>    setIsDragging(true)
+<span class='ln'>35</span>    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft)
+<span class='ln'>36</span>    setScrollLeft(carouselRef.current.scrollLeft)
+<span class='ln'>37</span>  }
+<span class='ln'>38</span>
+<span class='ln'>39</span>  const handleTouchMove = (e) =&gt; {
+<span class='ln'>40</span>    if (!isDragging) return
+<span class='ln'>41</span>    const x = e.touches[0].pageX - carouselRef.current.offsetLeft
+<span class='ln'>42</span>    const walk = (x - startX) * 2
+<span class='ln'>43</span>    carouselRef.current.scrollLeft = scrollLeft - walk
+<span class='ln'>44</span>  }
+<span class='ln'>45</span>
+<span class='ln'>46</span>  const handleTouchEnd = () =&gt; {
+<span class='ln'>47</span>    setIsDragging(false)
+<span class='ln'>48</span>  }
+<span class='ln'>49</span>
+<span class='ln'>50</span>  const scrollCarousel = (direction) =&gt; {
+<span class='ln'>51</span>    if (carouselRef.current) {
+<span class='ln'>52</span>      const scrollAmount = 300
+<span class='ln'>53</span>      carouselRef.current.scrollBy({
+<span class='ln'>54</span>        left: direction === 'left' ? -scrollAmount : scrollAmount,
+<span class='ln'>55</span>        behavior: 'smooth'
+<span class='ln'>56</span>      })
+<span class='ln'>57</span>    }
+<span class='ln'>58</span>  }
+<span class='ln'>59</span>
+<span class='ln'>60</span>  useEffect(() =&gt; {
+<span class='ln'>61</span>    const carousel = carouselRef.current
+<span class='ln'>62</span>    if (carousel) {
+<span class='ln'>63</span>      carousel.addEventListener('mousedown', handleMouseDown)
+<span class='ln'>64</span>      carousel.addEventListener('mousemove', handleMouseMove)
+<span class='ln'>65</span>      carousel.addEventListener('mouseup', handleMouseUp)
+<span class='ln'>66</span>      carousel.addEventListener('mouseleave', handleMouseUp)
+<span class='ln'>67</span>      carousel.addEventListener('touchstart', handleTouchStart)
+<span class='ln'>68</span>      carousel.addEventListener('touchmove', handleTouchMove)
+<span class='ln'>69</span>      carousel.addEventListener('touchend', handleTouchEnd)
+<span class='ln'>70</span>
+<span class='ln'>71</span>      return () =&gt; {
+<span class='ln'>72</span>        carousel.removeEventListener('mousedown', handleMouseDown)
+<span class='ln'>73</span>        carousel.removeEventListener('mousemove', handleMouseMove)
+<span class='ln'>74</span>        carousel.removeEventListener('mouseup', handleMouseUp)
+<span class='ln'>75</span>        carousel.removeEventListener('mouseleave', handleMouseUp)
+<span class='ln'>76</span>        carousel.removeEventListener('touchstart', handleTouchStart)
+<span class='ln'>77</span>        carousel.removeEventListener('touchmove', handleTouchMove)
+<span class='ln'>78</span>        carousel.removeEventListener('touchend', handleTouchEnd)
+<span class='ln'>79</span>      }
+<span class='ln'>80</span>    }
+<span class='ln'>81</span>  }, [isDragging, startX, scrollLeft])
+<span class='ln'>82</span>
+<span class='ln'>83</span>  if (!products || products.length === 0) return null
+<span class='ln'>84</span>
+<span class='ln'>85</span>  return (
+<span class='ln'>86</span>    &lt;div className="relative"&gt;
+<span class='ln'>87</span>      {showTitle &amp;&amp; (
+<span class='ln'>88</span>        &lt;div className="flex justify-between items-center mb-6"&gt;
+<span class='ln'>89</span>          &lt;h2 className="text-2xl md:text-3xl font-black uppercase -rotate-1"&gt;{title}&lt;/h2&gt;
+<span class='ln'>90</span>          &lt;div className="flex gap-2"&gt;
+<span class='ln'>91</span>            &lt;Button 
+<span class='ln'>92</span>              variant="ghost" 
+<span class='ln'>93</span>              size="sm" 
+<span class='ln'>94</span>              className="rotate-1"
+<span class='ln'>95</span>              onClick={() =&gt; scrollCarousel('left')}
+<span class='ln'>96</span>            &gt;
+<span class='ln'>97</span>              &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>98</span>            &lt;/Button&gt;
+<span class='ln'>99</span>            &lt;Button 
+<span class='ln'>100</span>              variant="ghost" 
+<span class='ln'>101</span>              size="sm" 
+<span class='ln'>102</span>              className="-rotate-1"
+<span class='ln'>103</span>              onClick={() =&gt; scrollCarousel('right')}
+<span class='ln'>104</span>            &gt;
+<span class='ln'>105</span>              &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>106</span>            &lt;/Button&gt;
+<span class='ln'>107</span>          &lt;/div&gt;
+<span class='ln'>108</span>        &lt;/div&gt;
+<span class='ln'>109</span>      )}
+<span class='ln'>110</span>
+<span class='ln'>111</span>      &lt;div 
+<span class='ln'>112</span>        ref={carouselRef}
+<span class='ln'>113</span>        className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-4"
+<span class='ln'>114</span>        style={{ 
+<span class='ln'>115</span>          scrollBehavior: 'smooth',
+<span class='ln'>116</span>          userSelect: 'none'
+<span class='ln'>117</span>        }}
+<span class='ln'>118</span>      &gt;
+<span class='ln'>119</span>        {products.map((product, index) =&gt; (
+<span class='ln'>120</span>          &lt;motion.div
+<span class='ln'>121</span>            key={product.product_id}
+<span class='ln'>122</span>            className="flex-shrink-0 w-64"
+<span class='ln'>123</span>            initial={{ opacity: 0, x: 50 }}
+<span class='ln'>124</span>            animate={{ opacity: 1, x: 0 }}
+<span class='ln'>125</span>            transition={{ delay: index * 0.1 }}
+<span class='ln'>126</span>            onClick={() =&gt; !isDragging &amp;&amp; navigate(`/product/${product.slug}`)}
+<span class='ln'>127</span>          &gt;
+<span class='ln'>128</span>            &lt;Card
+<span class='ln'>129</span>              className="overflow-hidden cursor-pointer"
+<span class='ln'>130</span>              rotation={Math.random() &gt; 0.7 ? (Math.random() &gt; 0.5 ? 1 : -1) : 0}
+<span class='ln'>131</span>              onMouseDown={(e) =&gt; e.preventDefault()}
+<span class='ln'>132</span>            &gt;
+<span class='ln'>133</span>              &lt;div className="relative"&gt;
+<span class='ln'>134</span>                &lt;img 
+<span class='ln'>135</span>                  src={product.images[0]} 
+<span class='ln'>136</span>                  alt={product.name} 
+<span class='ln'>137</span>                  className="w-full h-40 object-cover border-b-4 border-neo-ink"
+<span class='ln'>138</span>                  loading="lazy"
+<span class='ln'>139</span>                /&gt;
+<span class='ln'>140</span>                {product.trending &amp;&amp; (
+<span class='ln'>141</span>                  &lt;span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10"&gt;
+<span class='ln'>142</span>                    🔥 HOT
+<span class='ln'>143</span>                  &lt;/span&gt;
+<span class='ln'>144</span>                )}
+<span class='ln'>145</span>                {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>146</span>                  &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10"&gt;
+<span class='ln'>147</span>                    {product.discount}% OFF
+<span class='ln'>148</span>                  &lt;/span&gt;
+<span class='ln'>149</span>                )}
+<span class='ln'>150</span>              &lt;/div&gt;
+<span class='ln'>151</span>              &lt;div className="p-4"&gt;
+<span class='ln'>152</span>                &lt;p className="text-sm font-bold uppercase tracking-wide"&gt;{product.company}&lt;/p&gt;
+<span class='ln'>153</span>                &lt;h3 className="text-base font-black mt-1 mb-3 line-clamp-2 leading-tight"&gt;
+<span class='ln'>154</span>                  {product.name}
+<span class='ln'>155</span>                &lt;/h3&gt;
+<span class='ln'>156</span>                &lt;div className="flex justify-between items-center mb-4"&gt;
+<span class='ln'>157</span>                  &lt;div&gt;
+<span class='ln'>158</span>                    &lt;p className="text-xl font-black"&gt;₹{product.discounted_price.toFixed(2)}&lt;/p&gt;
+<span class='ln'>159</span>                    {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>160</span>                      &lt;p className="text-sm font-bold line-through opacity-60"&gt;₹{product.mrp.toFixed(2)}&lt;/p&gt;
+<span class='ln'>161</span>                    )}
+<span class='ln'>162</span>                  &lt;/div&gt;
+<span class='ln'>163</span>                  &lt;span className="neo-badge bg-neo-secondary rotate-3"&gt;
+<span class='ln'>164</span>                    {product.discount}% OFF
+<span class='ln'>165</span>                  &lt;/span&gt;
+<span class='ln'>166</span>                &lt;/div&gt;
+<span class='ln'>167</span>                &lt;Button variant="primary" size="sm" className="w-full"&gt;
+<span class='ln'>168</span>                  ADD TO CART
+<span class='ln'>169</span>                &lt;/Button&gt;
+<span class='ln'>170</span>              &lt;/div&gt;
+<span class='ln'>171</span>            &lt;/Card&gt;
+<span class='ln'>172</span>          &lt;/motion.div&gt;
+<span class='ln'>173</span>        ))}
+<span class='ln'>174</span>      &lt;/div&gt;
+<span class='ln'>175</span>    &lt;/div&gt;
+<span class='ln'>176</span>  )
+<span class='ln'>177</span>}
+</pre></div></body></html>

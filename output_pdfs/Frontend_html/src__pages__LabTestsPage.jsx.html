@@ -1,0 +1,784 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/LabTestsPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState, useRef, useEffect } from 'react';
+<span class='ln'>2</span>import { motion } from 'framer-motion';
+<span class='ln'>3</span>import { Link, useNavigate } from 'react-router-dom';
+<span class='ln'>4</span>import { useUser } from '../contexts/UserContext';
+<span class='ln'>5</span>import api from '../api/axiosConfig';
+<span class='ln'>6</span>import Card from '../components/Card';
+<span class='ln'>7</span>import Button from '../components/Button';
+<span class='ln'>8</span>import Toast from '../components/Toast';
+<span class='ln'>9</span>import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight, Calendar, MapPin, Phone, Mail } from 'lucide-react';
+<span class='ln'>10</span>
+<span class='ln'>11</span>export default function LabTestsPage() {
+<span class='ln'>12</span>  const navigate = useNavigate();
+<span class='ln'>13</span>  const { user } = useUser();
+<span class='ln'>14</span>  const [currentSlide, setCurrentSlide] = useState(0);
+<span class='ln'>15</span>  const [categories, setCategories] = useState([]);
+<span class='ln'>16</span>  const [dailyOffers, setDailyOffers] = useState([]);
+<span class='ln'>17</span>  const [packages, setPackages] = useState([]);
+<span class='ln'>18</span>  const [selectedPackage, setSelectedPackage] = useState(null);
+<span class='ln'>19</span>  const [showBookingForm, setShowBookingForm] = useState(false);
+<span class='ln'>20</span>  const [loading, setLoading] = useState(true);
+<span class='ln'>21</span>  const [toast, setToast] = useState({ message: '', type: 'info' });
+<span class='ln'>22</span>  
+<span class='ln'>23</span>  const [formData, setFormData] = useState({
+<span class='ln'>24</span>    patient_name: '',
+<span class='ln'>25</span>    patient_age: '',
+<span class='ln'>26</span>    patient_gender: 'male',
+<span class='ln'>27</span>    phone: '',
+<span class='ln'>28</span>    email: '',
+<span class='ln'>29</span>    address_line: '',
+<span class='ln'>30</span>    city: '',
+<span class='ln'>31</span>    pincode: '',
+<span class='ln'>32</span>    preferred_date: '',
+<span class='ln'>33</span>    preferred_slot: '08:00-10:00',
+<span class='ln'>34</span>    amount: ''
+<span class='ln'>35</span>  });
+<span class='ln'>36</span>
+<span class='ln'>37</span>  const bannerSlides = [
+<span class='ln'>38</span>    {
+<span class='ln'>39</span>      url: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1200&amp;h=200&amp;fit=crop',
+<span class='ln'>40</span>      link: '/lab-tests/full-body-checkup',
+<span class='ln'>41</span>      alt: 'Full Body Checkup'
+<span class='ln'>42</span>    },
+<span class='ln'>43</span>    {
+<span class='ln'>44</span>      url: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?w=1200&amp;h=200&amp;fit=crop',
+<span class='ln'>45</span>      link: '/lab-tests/packages',
+<span class='ln'>46</span>      alt: 'Test Packages'
+<span class='ln'>47</span>    },
+<span class='ln'>48</span>    {
+<span class='ln'>49</span>      url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&amp;h=200&amp;fit=crop',
+<span class='ln'>50</span>      link: '/lab-tests/circle-offer',
+<span class='ln'>51</span>      alt: 'Circle Offers'
+<span class='ln'>52</span>    }
+<span class='ln'>53</span>  ];
+<span class='ln'>54</span>
+<span class='ln'>55</span>  const timeSlots = [
+<span class='ln'>56</span>    { value: '06:00-08:00', label: '6:00 AM – 8:00 AM' },
+<span class='ln'>57</span>    { value: '08:00-10:00', label: '8:00 AM – 10:00 AM' },
+<span class='ln'>58</span>    { value: '10:00-12:00', label: '10:00 AM – 12:00 PM' },
+<span class='ln'>59</span>    { value: '12:00-14:00', label: '12:00 PM – 2:00 PM' },
+<span class='ln'>60</span>    { value: '14:00-16:00', label: '2:00 PM – 4:00 PM' },
+<span class='ln'>61</span>    { value: '16:00-18:00', label: '4:00 PM – 6:00 PM' }
+<span class='ln'>62</span>  ];
+<span class='ln'>63</span>
+<span class='ln'>64</span>  useEffect(() =&gt; {
+<span class='ln'>65</span>    fetchData();
+<span class='ln'>66</span>    const timer = setInterval(() =&gt; {
+<span class='ln'>67</span>      setCurrentSlide((prev) =&gt; (prev + 1) % bannerSlides.length);
+<span class='ln'>68</span>    }, 5000);
+<span class='ln'>69</span>    return () =&gt; clearInterval(timer);
+<span class='ln'>70</span>  }, [bannerSlides.length]);
+<span class='ln'>71</span>
+<span class='ln'>72</span>const fetchData = async () =&gt; {
+<span class='ln'>73</span>    try {
+<span class='ln'>74</span>      setLoading(true);
+<span class='ln'>75</span>      
+<span class='ln'>76</span>      // 1. Update Categories
+<span class='ln'>77</span>      const categoriesResponse = await api.get('/lab/categories/');
+<span class='ln'>78</span>      // Extract the array from the results key
+<span class='ln'>79</span>      setCategories(categoriesResponse.data.results || []);
+<span class='ln'>80</span>      
+<span class='ln'>81</span>      // 2. Update Daily Offers
+<span class='ln'>82</span>      const offersResponse = await api.get('/lab/tests/?daily_offer=true');
+<span class='ln'>83</span>      setDailyOffers(offersResponse.data.results || []);
+<span class='ln'>84</span>      
+<span class='ln'>85</span>      // 3. Update Packages
+<span class='ln'>86</span>      const packagesResponse = await api.get('/lab/packages/');
+<span class='ln'>87</span>      setPackages(packagesResponse.data.results || []);
+<span class='ln'>88</span>      
+<span class='ln'>89</span>    } catch (error) {
+<span class='ln'>90</span>      console.error('Failed to fetch lab data:', error);
+<span class='ln'>91</span>      setToast({ message: 'Failed to load lab tests data', type: 'error' });
+<span class='ln'>92</span>    } finally {
+<span class='ln'>93</span>      setLoading(false);
+<span class='ln'>94</span>    }
+<span class='ln'>95</span>  };
+<span class='ln'>96</span>  
+<span class='ln'>97</span>  const handleInputChange = (e) =&gt; {
+<span class='ln'>98</span>    const { name, value } = e.target;
+<span class='ln'>99</span>    setFormData(prev =&gt; ({
+<span class='ln'>100</span>      ...prev,
+<span class='ln'>101</span>      [name]: value
+<span class='ln'>102</span>    }));
+<span class='ln'>103</span>  };
+<span class='ln'>104</span>
+<span class='ln'>105</span>  const handleBookingSubmit = async (e) =&gt; {
+<span class='ln'>106</span>    e.preventDefault();
+<span class='ln'>107</span>    
+<span class='ln'>108</span>    if (!user) {
+<span class='ln'>109</span>      setToast({ message: 'Please login to book lab tests', type: 'error' });
+<span class='ln'>110</span>      navigate('/login');
+<span class='ln'>111</span>      return;
+<span class='ln'>112</span>    }
+<span class='ln'>113</span>
+<span class='ln'>114</span>    try {
+<span class='ln'>115</span>      const bookingData = {
+<span class='ln'>116</span>        ...formData,
+<span class='ln'>117</span>        patient_age: parseInt(formData.patient_age),
+<span class='ln'>118</span>        amount: selectedPackage ? selectedPackage.final_price : formData.amount
+<span class='ln'>119</span>      };
+<span class='ln'>120</span>
+<span class='ln'>121</span>      if (selectedPackage) {
+<span class='ln'>122</span>        bookingData.package = selectedPackage.id;
+<span class='ln'>123</span>      }
+<span class='ln'>124</span>
+<span class='ln'>125</span>      const response = await api.post('/lab/bookings/', bookingData);
+<span class='ln'>126</span>      
+<span class='ln'>127</span>      setToast({ 
+<span class='ln'>128</span>        message: `Booking confirmed! Booking ID: ${response.data.booking_id}`, 
+<span class='ln'>129</span>        type: 'success' 
+<span class='ln'>130</span>      });
+<span class='ln'>131</span>      
+<span class='ln'>132</span>      setShowBookingForm(false);
+<span class='ln'>133</span>      setSelectedPackage(null);
+<span class='ln'>134</span>      setFormData({
+<span class='ln'>135</span>        patient_name: '',
+<span class='ln'>136</span>        patient_age: '',
+<span class='ln'>137</span>        patient_gender: 'male',
+<span class='ln'>138</span>        phone: '',
+<span class='ln'>139</span>        email: '',
+<span class='ln'>140</span>        address_line: '',
+<span class='ln'>141</span>        city: '',
+<span class='ln'>142</span>        pincode: '',
+<span class='ln'>143</span>        preferred_date: '',
+<span class='ln'>144</span>        preferred_slot: '08:00-10:00',
+<span class='ln'>145</span>        amount: ''
+<span class='ln'>146</span>      });
+<span class='ln'>147</span>      
+<span class='ln'>148</span>    } catch (error) {
+<span class='ln'>149</span>      console.error('Booking failed:', error);
+<span class='ln'>150</span>      setToast({ 
+<span class='ln'>151</span>        message: error.response?.data?.detail || 'Booking failed. Please try again.', 
+<span class='ln'>152</span>        type: 'error' 
+<span class='ln'>153</span>      });
+<span class='ln'>154</span>    }
+<span class='ln'>155</span>  };
+<span class='ln'>156</span>
+<span class='ln'>157</span>  const handlePackageBooking = (pkg) =&gt; {
+<span class='ln'>158</span>    setSelectedPackage(pkg);
+<span class='ln'>159</span>    setFormData(prev =&gt; ({
+<span class='ln'>160</span>      ...prev,
+<span class='ln'>161</span>      amount: pkg.final_price
+<span class='ln'>162</span>    }));
+<span class='ln'>163</span>    setShowBookingForm(true);
+<span class='ln'>164</span>  };
+<span class='ln'>165</span>
+<span class='ln'>166</span>  if (loading) {
+<span class='ln'>167</span>    return (
+<span class='ln'>168</span>      &lt;div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center"&gt;
+<span class='ln'>169</span>        &lt;div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_#000]"&gt;
+<span class='ln'>170</span>          &lt;div className="w-16 h-16 border-4 border-black bg-[#FF6B6B] animate-spin mx-auto mb-4"&gt;&lt;/div&gt;
+<span class='ln'>171</span>          &lt;p className="font-black uppercase tracking-widest text-sm"&gt;LOADING LAB TESTS...&lt;/p&gt;
+<span class='ln'>172</span>        &lt;/div&gt;
+<span class='ln'>173</span>      &lt;/div&gt;
+<span class='ln'>174</span>    );
+<span class='ln'>175</span>  }
+<span class='ln'>176</span>
+<span class='ln'>177</span>  return (
+<span class='ln'>178</span>    &lt;&gt;
+<span class='ln'>179</span>      &lt;Toast message={toast.message} type={toast.type} /&gt;
+<span class='ln'>180</span>      
+<span class='ln'>181</span>      &lt;motion.div
+<span class='ln'>182</span>        initial={{ opacity: 0 }}
+<span class='ln'>183</span>        animate={{ opacity: 1 }}
+<span class='ln'>184</span>        className="bg-[#FFFDF5] min-h-screen relative overflow-hidden"
+<span class='ln'>185</span>      &gt;
+<span class='ln'>186</span>        {/* Background Pattern */}
+<span class='ln'>187</span>        &lt;div 
+<span class='ln'>188</span>          className="absolute inset-0 opacity-10"
+<span class='ln'>189</span>          style={{
+<span class='ln'>190</span>            backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>191</span>            backgroundSize: '20px 20px'
+<span class='ln'>192</span>          }}
+<span class='ln'>193</span>        &gt;&lt;/div&gt;
+<span class='ln'>194</span>
+<span class='ln'>195</span>        {/* Floating Decorative Elements */}
+<span class='ln'>196</span>        &lt;div className="absolute top-10 left-4 sm:top-20 sm:left-10 rotate-12"&gt;
+<span class='ln'>197</span>          &lt;Star className="w-6 h-6 sm:w-8 sm:h-8 fill-[#FF6B6B] text-[#FF6B6B] animate-spin-slow" /&gt;
+<span class='ln'>198</span>        &lt;/div&gt;
+<span class='ln'>199</span>        &lt;div className="absolute top-32 right-4 sm:top-40 sm:right-20 -rotate-12"&gt;
+<span class='ln'>200</span>          &lt;Zap className="w-8 h-8 sm:w-12 sm:h-12 fill-[#FFD93D] text-[#FFD93D] animate-bounce" /&gt;
+<span class='ln'>201</span>        &lt;/div&gt;
+<span class='ln'>202</span>        &lt;div className="absolute bottom-32 left-8 sm:bottom-32 sm:left-32 rotate-45"&gt;
+<span class='ln'>203</span>          &lt;Shield className="w-6 h-6 sm:w-10 sm:h-10 fill-[#C4B5FD] text-[#C4B5FD]" /&gt;
+<span class='ln'>204</span>        &lt;/div&gt;
+<span class='ln'>205</span>
+<span class='ln'>206</span>        &lt;div className="relative z-10 max-w-7xl mx-auto px-4 py-8"&gt;
+<span class='ln'>207</span>          {/* Hero Section */}
+<span class='ln'>208</span>          &lt;div className="text-center mb-8 sm:mb-12"&gt;
+<span class='ln'>209</span>            &lt;motion.h1 
+<span class='ln'>210</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>211</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>212</span>              className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight mb-4 sm:mb-6"
+<span class='ln'>213</span>            &gt;
+<span class='ln'>214</span>              &lt;span className="block -rotate-1"&gt;DR DAS&lt;/span&gt;
+<span class='ln'>215</span>              &lt;span className="block rotate-1" style={{ WebkitTextStroke: '2px black', color: 'transparent' }}&gt;
+<span class='ln'>216</span>                PATHLABS
+<span class='ln'>217</span>              &lt;/span&gt;
+<span class='ln'>218</span>            &lt;/motion.h1&gt;
+<span class='ln'>219</span>            &lt;motion.p 
+<span class='ln'>220</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>221</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>222</span>              transition={{ delay: 0.2 }}
+<span class='ln'>223</span>              className="text-sm sm:text-base md:text-lg font-bold max-w-3xl mx-auto uppercase tracking-wide"
+<span class='ln'>224</span>            &gt;
+<span class='ln'>225</span>              TESTS YOU CAN TRUST — ADVANCED DIAGNOSTICS AT YOUR DOORSTEP
+<span class='ln'>226</span>            &lt;/motion.p&gt;
+<span class='ln'>227</span>          &lt;/div&gt;
+<span class='ln'>228</span>
+<span class='ln'>229</span>          {/* Banner Carousel */}
+<span class='ln'>230</span>          &lt;div className="relative w-full h-32 sm:h-48 md:h-64 mb-8 sm:mb-12 border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>231</span>            {bannerSlides.map((slide, index) =&gt; (
+<span class='ln'>232</span>              &lt;motion.div
+<span class='ln'>233</span>                key={index}
+<span class='ln'>234</span>                initial={{ opacity: 0 }}
+<span class='ln'>235</span>                animate={{ opacity: currentSlide === index ? 1 : 0 }}
+<span class='ln'>236</span>                transition={{ duration: 0.2 }}
+<span class='ln'>237</span>                className="absolute inset-0"
+<span class='ln'>238</span>                style={{ display: currentSlide === index ? 'block' : 'none' }}
+<span class='ln'>239</span>              &gt;
+<span class='ln'>240</span>                &lt;Link to={slide.link}&gt;
+<span class='ln'>241</span>                  &lt;img src={slide.url} alt={slide.alt} className="w-full h-full object-cover" /&gt;
+<span class='ln'>242</span>                &lt;/Link&gt;
+<span class='ln'>243</span>              &lt;/motion.div&gt;
+<span class='ln'>244</span>            ))}
+<span class='ln'>245</span>
+<span class='ln'>246</span>            &lt;div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2"&gt;
+<span class='ln'>247</span>              {bannerSlides.map((_, index) =&gt; (
+<span class='ln'>248</span>                &lt;button
+<span class='ln'>249</span>                  key={index}
+<span class='ln'>250</span>                  onClick={() =&gt; setCurrentSlide(index)}
+<span class='ln'>251</span>                  className={`w-3 h-3 border-2 border-black transition-all ${
+<span class='ln'>252</span>                    currentSlide === index 
+<span class='ln'>253</span>                      ? 'bg-[#FFD93D] w-6' 
+<span class='ln'>254</span>                      : 'bg-white'
+<span class='ln'>255</span>                  }`}
+<span class='ln'>256</span>                /&gt;
+<span class='ln'>257</span>              ))}
+<span class='ln'>258</span>            &lt;/div&gt;
+<span class='ln'>259</span>          &lt;/div&gt;
+<span class='ln'>260</span>
+<span class='ln'>261</span>          {/* Doctor Created Health Checks */}
+<span class='ln'>262</span>          &lt;div className="mb-8 sm:mb-12"&gt;
+<span class='ln'>263</span>            &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>264</span>              &lt;div className="bg-[#C4B5FD] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>265</span>                &lt;div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"&gt;
+<span class='ln'>266</span>                  &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight -rotate-1"&gt;
+<span class='ln'>267</span>                    DOCTOR CREATED HEALTH CHECKS ({categories.filter(c =&gt; c.category_type === 'doctor_created').length})
+<span class='ln'>268</span>                  &lt;/h2&gt;
+<span class='ln'>269</span>                  &lt;Link to="/lab-tests/all"&gt;
+<span class='ln'>270</span>                    &lt;Button variant="ghost" size="sm" className="rotate-1"&gt;
+<span class='ln'>271</span>                      VIEW ALL →
+<span class='ln'>272</span>                    &lt;/Button&gt;
+<span class='ln'>273</span>                  &lt;/Link&gt;
+<span class='ln'>274</span>                &lt;/div&gt;
+<span class='ln'>275</span>              &lt;/div&gt;
+<span class='ln'>276</span>              &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>277</span>                &lt;div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"&gt;
+<span class='ln'>278</span>                  {categories
+<span class='ln'>279</span>                    .filter(category =&gt; category.category_type === 'doctor_created')
+<span class='ln'>280</span>                    .map((category, index) =&gt; (
+<span class='ln'>281</span>                    &lt;motion.div
+<span class='ln'>282</span>                      key={category.id}
+<span class='ln'>283</span>                      initial={{ opacity: 0, y: 20 }}
+<span class='ln'>284</span>                      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>285</span>                      transition={{ delay: index * 0.1 }}
+<span class='ln'>286</span>                    &gt;
+<span class='ln'>287</span>                      &lt;Link
+<span class='ln'>288</span>                        to={`/lab-tests/category/${category.slug}`}
+<span class='ln'>289</span>                        className="block group"
+<span class='ln'>290</span>                      &gt;
+<span class='ln'>291</span>                        &lt;div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center"&gt;
+<span class='ln'>292</span>                          &lt;div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#FFD93D] flex items-center justify-center"&gt;
+<span class='ln'>293</span>                            {category.icon_url ? (
+<span class='ln'>294</span>                              &lt;img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" /&gt;
+<span class='ln'>295</span>                            ) : (
+<span class='ln'>296</span>                              &lt;span className="text-lg sm:text-xl font-black"&gt;🔬&lt;/span&gt;
+<span class='ln'>297</span>                            )}
+<span class='ln'>298</span>                          &lt;/div&gt;
+<span class='ln'>299</span>                          &lt;p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight"&gt;
+<span class='ln'>300</span>                            {category.name}
+<span class='ln'>301</span>                          &lt;/p&gt;
+<span class='ln'>302</span>                        &lt;/div&gt;
+<span class='ln'>303</span>                      &lt;/Link&gt;
+<span class='ln'>304</span>                    &lt;/motion.div&gt;
+<span class='ln'>305</span>                  ))}
+<span class='ln'>306</span>                &lt;/div&gt;
+<span class='ln'>307</span>              &lt;/div&gt;
+<span class='ln'>308</span>            &lt;/div&gt;
+<span class='ln'>309</span>          &lt;/div&gt;
+<span class='ln'>310</span>
+<span class='ln'>311</span>          {/* Daily Offers */}
+<span class='ln'>312</span>          &lt;div className="mb-8 sm:mb-12"&gt;
+<span class='ln'>313</span>            &lt;div className="bg-[#FFD93D] border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>314</span>              &lt;div className="bg-black border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>315</span>                &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white rotate-1"&gt;
+<span class='ln'>316</span>                  🔥 DAILY OFFERS - LIMITED TIME!
+<span class='ln'>317</span>                &lt;/h2&gt;
+<span class='ln'>318</span>              &lt;/div&gt;
+<span class='ln'>319</span>              &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>320</span>                &lt;div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"&gt;
+<span class='ln'>321</span>                  {dailyOffers.map((offer, index) =&gt; (
+<span class='ln'>322</span>                    &lt;motion.div
+<span class='ln'>323</span>                      key={offer.id}
+<span class='ln'>324</span>                      initial={{ opacity: 0, y: 20 }}
+<span class='ln'>325</span>                      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>326</span>                      transition={{ delay: index * 0.1 }}
+<span class='ln'>327</span>                    &gt;
+<span class='ln'>328</span>                      &lt;div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center relative"&gt;
+<span class='ln'>329</span>                        {offer.discount_percent &gt; 0 &amp;&amp; (
+<span class='ln'>330</span>                          &lt;span className="absolute -top-2 -right-2 bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 shadow-[2px_2px_0px_0px_#000] rotate-12 z-10"&gt;
+<span class='ln'>331</span>                            {offer.discount_percent}% OFF
+<span class='ln'>332</span>                          &lt;/span&gt;
+<span class='ln'>333</span>                        )}
+<span class='ln'>334</span>                        &lt;h3 className="font-black text-sm sm:text-base mb-2 uppercase tracking-wide leading-tight"&gt;
+<span class='ln'>335</span>                          {offer.short_name || offer.name}
+<span class='ln'>336</span>                        &lt;/h3&gt;
+<span class='ln'>337</span>                        &lt;div className="mb-3"&gt;
+<span class='ln'>338</span>                          &lt;p className="text-lg sm:text-xl font-black text-[#FF6B6B]"&gt;
+<span class='ln'>339</span>                            ₹{parseFloat(offer.final_price).toFixed(0)}
+<span class='ln'>340</span>                          &lt;/p&gt;
+<span class='ln'>341</span>                          {offer.discount_percent &gt; 0 &amp;&amp; (
+<span class='ln'>342</span>                            &lt;p className="text-xs font-bold line-through opacity-60"&gt;
+<span class='ln'>343</span>                              ₹{parseFloat(offer.price).toFixed(0)}
+<span class='ln'>344</span>                            &lt;/p&gt;
+<span class='ln'>345</span>                          )}
+<span class='ln'>346</span>                        &lt;/div&gt;
+<span class='ln'>347</span>                        &lt;Button variant="primary" size="sm" className="w-full text-xs"&gt;
+<span class='ln'>348</span>                          BOOK NOW
+<span class='ln'>349</span>                        &lt;/Button&gt;
+<span class='ln'>350</span>                      &lt;/div&gt;
+<span class='ln'>351</span>                    &lt;/motion.div&gt;
+<span class='ln'>352</span>                  ))}
+<span class='ln'>353</span>                &lt;/div&gt;
+<span class='ln'>354</span>              &lt;/div&gt;
+<span class='ln'>355</span>            &lt;/div&gt;
+<span class='ln'>356</span>          &lt;/div&gt;
+<span class='ln'>357</span>
+<span class='ln'>358</span>          {/* Vital Organs */}
+<span class='ln'>359</span>          &lt;div className="mb-8 sm:mb-12"&gt;
+<span class='ln'>360</span>            &lt;div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden"&gt;
+<span class='ln'>361</span>              &lt;div className="bg-[#FF6B6B] border-b-4 border-black p-4 sm:p-6"&gt;
+<span class='ln'>362</span>                &lt;div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"&gt;
+<span class='ln'>363</span>                  &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white -rotate-1"&gt;
+<span class='ln'>364</span>                    VITAL ORGANS ({categories.filter(c =&gt; c.category_type === 'vital_organ').length})
+<span class='ln'>365</span>                  &lt;/h2&gt;
+<span class='ln'>366</span>                  &lt;Link to="/lab-tests/vital-organs"&gt;
+<span class='ln'>367</span>                    &lt;Button variant="ghost" size="sm" className="rotate-1 border-white text-white hover:bg-white hover:text-black"&gt;
+<span class='ln'>368</span>                      VIEW ALL →
+<span class='ln'>369</span>                    &lt;/Button&gt;
+<span class='ln'>370</span>                  &lt;/Link&gt;
+<span class='ln'>371</span>                &lt;/div&gt;
+<span class='ln'>372</span>              &lt;/div&gt;
+<span class='ln'>373</span>              &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>374</span>                &lt;div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"&gt;
+<span class='ln'>375</span>                  {categories
+<span class='ln'>376</span>                    .filter(category =&gt; category.category_type === 'vital_organ')
+<span class='ln'>377</span>                    .map((category, index) =&gt; (
+<span class='ln'>378</span>                    &lt;motion.div
+<span class='ln'>379</span>                      key={category.id}
+<span class='ln'>380</span>                      initial={{ opacity: 0, y: 20 }}
+<span class='ln'>381</span>                      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>382</span>                      transition={{ delay: index * 0.1 }}
+<span class='ln'>383</span>                    &gt;
+<span class='ln'>384</span>                      &lt;Link
+<span class='ln'>385</span>                        to={`/lab-tests/category/${category.slug}`}
+<span class='ln'>386</span>                        className="block group"
+<span class='ln'>387</span>                      &gt;
+<span class='ln'>388</span>                        &lt;div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center"&gt;
+<span class='ln'>389</span>                          &lt;div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#C4B5FD] flex items-center justify-center"&gt;
+<span class='ln'>390</span>                            {category.icon_url ? (
+<span class='ln'>391</span>                              &lt;img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" /&gt;
+<span class='ln'>392</span>                            ) : (
+<span class='ln'>393</span>                              &lt;span className="text-lg sm:text-xl font-black"&gt;❤️&lt;/span&gt;
+<span class='ln'>394</span>                            )}
+<span class='ln'>395</span>                          &lt;/div&gt;
+<span class='ln'>396</span>                          &lt;p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight"&gt;
+<span class='ln'>397</span>                            {category.name}
+<span class='ln'>398</span>                          &lt;/p&gt;
+<span class='ln'>399</span>                        &lt;/div&gt;
+<span class='ln'>400</span>                      &lt;/Link&gt;
+<span class='ln'>401</span>                    &lt;/motion.div&gt;
+<span class='ln'>402</span>                  ))}
+<span class='ln'>403</span>                &lt;/div&gt;
+<span class='ln'>404</span>              &lt;/div&gt;
+<span class='ln'>405</span>            &lt;/div&gt;
+<span class='ln'>406</span>          &lt;/div&gt;
+<span class='ln'>407</span>
+<span class='ln'>408</span>          {/* Health Packages */}
+<span class='ln'>409</span>          &lt;div className="mb-8 sm:mb-12"&gt;
+<span class='ln'>410</span>            &lt;div className="text-center mb-6 sm:mb-8"&gt;
+<span class='ln'>411</span>              &lt;h2 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-tight mb-4 rotate-1"&gt;
+<span class='ln'>412</span>                HEALTH CHECKUP PACKAGES
+<span class='ln'>413</span>              &lt;/h2&gt;
+<span class='ln'>414</span>              &lt;p className="text-sm sm:text-base font-bold uppercase tracking-wide"&gt;
+<span class='ln'>415</span>                COMPREHENSIVE HEALTH SCREENING AT UNBEATABLE PRICES
+<span class='ln'>416</span>              &lt;/p&gt;
+<span class='ln'>417</span>            &lt;/div&gt;
+<span class='ln'>418</span>            
+<span class='ln'>419</span>            &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"&gt;
+<span class='ln'>420</span>              {packages.map((pkg, index) =&gt; (
+<span class='ln'>421</span>                &lt;motion.div
+<span class='ln'>422</span>                  key={pkg.id}
+<span class='ln'>423</span>                  initial={{ opacity: 0, y: 20 }}
+<span class='ln'>424</span>                  animate={{ opacity: 1, y: 0 }}
+<span class='ln'>425</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>426</span>                &gt;
+<span class='ln'>427</span>                  &lt;div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 overflow-hidden relative"&gt;
+<span class='ln'>428</span>                    {pkg.badge &amp;&amp; (
+<span class='ln'>429</span>                      &lt;span className="absolute -top-2 -right-2 bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 shadow-[2px_2px_0px_0px_#000] rotate-12 z-10"&gt;
+<span class='ln'>430</span>                        {pkg.badge}
+<span class='ln'>431</span>                      &lt;/span&gt;
+<span class='ln'>432</span>                    )}
+<span class='ln'>433</span>                    
+<span class='ln'>434</span>                    &lt;div className="bg-[#FFD93D] border-b-4 border-black p-4"&gt;
+<span class='ln'>435</span>                      &lt;h3 className="text-lg sm:text-xl font-black uppercase tracking-tight leading-tight"&gt;
+<span class='ln'>436</span>                        {pkg.name}
+<span class='ln'>437</span>                      &lt;/h3&gt;
+<span class='ln'>438</span>                      &lt;p className="text-xs sm:text-sm font-bold mt-1"&gt;
+<span class='ln'>439</span>                        {pkg.tagline}
+<span class='ln'>440</span>                      &lt;/p&gt;
+<span class='ln'>441</span>                    &lt;/div&gt;
+<span class='ln'>442</span>                    
+<span class='ln'>443</span>                    &lt;div className="p-4 sm:p-6"&gt;
+<span class='ln'>444</span>                      &lt;div className="text-center mb-4"&gt;
+<span class='ln'>445</span>                        &lt;div className="text-2xl sm:text-3xl font-black text-[#FF6B6B] mb-1"&gt;
+<span class='ln'>446</span>                          ₹{parseFloat(pkg.final_price).toFixed(0)}
+<span class='ln'>447</span>                        &lt;/div&gt;
+<span class='ln'>448</span>                        {pkg.discount_percent &gt; 0 &amp;&amp; (
+<span class='ln'>449</span>                          &lt;div className="flex items-center justify-center gap-2"&gt;
+<span class='ln'>450</span>                            &lt;p className="text-sm font-bold line-through opacity-60"&gt;
+<span class='ln'>451</span>                              ₹{parseFloat(pkg.price).toFixed(0)}
+<span class='ln'>452</span>                            &lt;/p&gt;
+<span class='ln'>453</span>                            &lt;span className="bg-[#FF6B6B] border-2 border-black font-black uppercase tracking-widest text-xs px-2 py-1 text-white"&gt;
+<span class='ln'>454</span>                              {pkg.discount_percent}% OFF
+<span class='ln'>455</span>                            &lt;/span&gt;
+<span class='ln'>456</span>                          &lt;/div&gt;
+<span class='ln'>457</span>                        )}
+<span class='ln'>458</span>                        &lt;p className="text-xs font-bold mt-2 uppercase tracking-wide"&gt;
+<span class='ln'>459</span>                          {pkg.total_tests} TESTS INCLUDED
+<span class='ln'>460</span>                        &lt;/p&gt;
+<span class='ln'>461</span>                      &lt;/div&gt;
+<span class='ln'>462</span>                      
+<span class='ln'>463</span>                      &lt;div className="space-y-2 mb-4"&gt;
+<span class='ln'>464</span>                        &lt;div className="flex items-center justify-between text-xs font-bold"&gt;
+<span class='ln'>465</span>                          &lt;span&gt;🏠 HOME COLLECTION:&lt;/span&gt;
+<span class='ln'>466</span>                          &lt;span className={pkg.home_collection ? 'text-green-600' : 'text-red-600'}&gt;
+<span class='ln'>467</span>                            {pkg.home_collection ? 'YES' : 'NO'}
+<span class='ln'>468</span>                          &lt;/span&gt;
+<span class='ln'>469</span>                        &lt;/div&gt;
+<span class='ln'>470</span>                        &lt;div className="flex items-center justify-between text-xs font-bold"&gt;
+<span class='ln'>471</span>                          &lt;span&gt;⏰ REPORT DELIVERY:&lt;/span&gt;
+<span class='ln'>472</span>                          &lt;span&gt;{pkg.report_delivery_hours}H&lt;/span&gt;
+<span class='ln'>473</span>                        &lt;/div&gt;
+<span class='ln'>474</span>                        {pkg.fasting_required &amp;&amp; (
+<span class='ln'>475</span>                          &lt;div className="flex items-center justify-between text-xs font-bold"&gt;
+<span class='ln'>476</span>                            &lt;span&gt;🍽️ FASTING:&lt;/span&gt;
+<span class='ln'>477</span>                            &lt;span className="text-orange-600"&gt;REQUIRED&lt;/span&gt;
+<span class='ln'>478</span>                          &lt;/div&gt;
+<span class='ln'>479</span>                        )}
+<span class='ln'>480</span>                      &lt;/div&gt;
+<span class='ln'>481</span>                      
+<span class='ln'>482</span>                      &lt;div className="flex gap-2"&gt;
+<span class='ln'>483</span>                        &lt;Button
+<span class='ln'>484</span>                          variant="primary"
+<span class='ln'>485</span>                          size="sm"
+<span class='ln'>486</span>                          className="flex-1 text-xs"
+<span class='ln'>487</span>                          onClick={() =&gt; handlePackageBooking(pkg)}
+<span class='ln'>488</span>                        &gt;
+<span class='ln'>489</span>                          BOOK NOW
+<span class='ln'>490</span>                        &lt;/Button&gt;
+<span class='ln'>491</span>                        &lt;Button
+<span class='ln'>492</span>                          variant="ghost"
+<span class='ln'>493</span>                          size="sm"
+<span class='ln'>494</span>                          className="flex-1 text-xs"
+<span class='ln'>495</span>                          onClick={() =&gt; navigate(`/lab/package/${pkg.slug}`)}
+<span class='ln'>496</span>                        &gt;
+<span class='ln'>497</span>                          DETAILS
+<span class='ln'>498</span>                        &lt;/Button&gt;
+<span class='ln'>499</span>                      &lt;/div&gt;
+<span class='ln'>500</span>                    &lt;/div&gt;
+<span class='ln'>501</span>                  &lt;/div&gt;
+<span class='ln'>502</span>                &lt;/motion.div&gt;
+<span class='ln'>503</span>              ))}
+<span class='ln'>504</span>            &lt;/div&gt;
+<span class='ln'>505</span>          &lt;/div&gt;
+<span class='ln'>506</span>
+<span class='ln'>507</span>          {/* How to Book Section */}
+<span class='ln'>508</span>          &lt;div className="mb-8 sm:mb-12"&gt;
+<span class='ln'>509</span>            &lt;div className="bg-black border-4 border-black shadow-[8px_8px_0px_0px_#000] text-white p-6 sm:p-8"&gt;
+<span class='ln'>510</span>              &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-black text-center mb-6 sm:mb-8 uppercase rotate-1"&gt;
+<span class='ln'>511</span>                HOW TO BOOK A LAB TEST IN 3 SIMPLE STEPS
+<span class='ln'>512</span>              &lt;/h2&gt;
+<span class='ln'>513</span>              &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-6"&gt;
+<span class='ln'>514</span>                &lt;div className="text-center"&gt;
+<span class='ln'>515</span>                  &lt;div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FFD93D] border-4 border-white mx-auto mb-4 flex items-center justify-center"&gt;
+<span class='ln'>516</span>                    &lt;span className="text-xl sm:text-2xl font-black text-black"&gt;1&lt;/span&gt;
+<span class='ln'>517</span>                  &lt;/div&gt;
+<span class='ln'>518</span>                  &lt;h3 className="font-black mb-2 uppercase text-sm sm:text-base"&gt;CHOOSE TEST&lt;/h3&gt;
+<span class='ln'>519</span>                  &lt;p className="text-xs sm:text-sm font-bold opacity-90 uppercase"&gt;
+<span class='ln'>520</span>                    SELECT FROM OUR WIDE RANGE OF TESTS
+<span class='ln'>521</span>                  &lt;/p&gt;
+<span class='ln'>522</span>                &lt;/div&gt;
+<span class='ln'>523</span>                &lt;div className="text-center"&gt;
+<span class='ln'>524</span>                  &lt;div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FF6B6B] border-4 border-white mx-auto mb-4 flex items-center justify-center"&gt;
+<span class='ln'>525</span>                    &lt;span className="text-xl sm:text-2xl font-black text-white"&gt;2&lt;/span&gt;
+<span class='ln'>526</span>                  &lt;/div&gt;
+<span class='ln'>527</span>                  &lt;h3 className="font-black mb-2 uppercase text-sm sm:text-base"&gt;BOOK SLOT&lt;/h3&gt;
+<span class='ln'>528</span>                  &lt;p className="text-xs sm:text-sm font-bold opacity-90 uppercase"&gt;
+<span class='ln'>529</span>                    PICK YOUR CONVENIENT TIME
+<span class='ln'>530</span>                  &lt;/p&gt;
+<span class='ln'>531</span>                &lt;/div&gt;
+<span class='ln'>532</span>                &lt;div className="text-center"&gt;
+<span class='ln'>533</span>                  &lt;div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#C4B5FD] border-4 border-white mx-auto mb-4 flex items-center justify-center"&gt;
+<span class='ln'>534</span>                    &lt;span className="text-xl sm:text-2xl font-black text-black"&gt;3&lt;/span&gt;
+<span class='ln'>535</span>                  &lt;/div&gt;
+<span class='ln'>536</span>                  &lt;h3 className="font-black mb-2 uppercase text-sm sm:text-base"&gt;GET RESULTS&lt;/h3&gt;
+<span class='ln'>537</span>                  &lt;p className="text-xs sm:text-sm font-bold opacity-90 uppercase"&gt;
+<span class='ln'>538</span>                    RECEIVE REPORTS ONLINE
+<span class='ln'>539</span>                  &lt;/p&gt;
+<span class='ln'>540</span>                &lt;/div&gt;
+<span class='ln'>541</span>              &lt;/div&gt;
+<span class='ln'>542</span>            &lt;/div&gt;
+<span class='ln'>543</span>          &lt;/div&gt;
+<span class='ln'>544</span>        &lt;/div&gt;
+<span class='ln'>545</span>
+<span class='ln'>546</span>        {/* Booking Form Modal */}
+<span class='ln'>547</span>        {showBookingForm &amp;&amp; (
+<span class='ln'>548</span>          &lt;div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50"&gt;
+<span class='ln'>549</span>            &lt;motion.div
+<span class='ln'>550</span>              initial={{ opacity: 0, scale: 0.9 }}
+<span class='ln'>551</span>              animate={{ opacity: 1, scale: 1 }}
+<span class='ln'>552</span>              className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000] w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+<span class='ln'>553</span>            &gt;
+<span class='ln'>554</span>              &lt;div className="bg-[#FFD93D] border-b-4 border-black p-4 sm:p-6 flex justify-between items-center"&gt;
+<span class='ln'>555</span>                &lt;h3 className="text-lg sm:text-xl font-black uppercase tracking-tight"&gt;
+<span class='ln'>556</span>                  BOOK {selectedPackage ? selectedPackage.name : 'LAB TEST'}
+<span class='ln'>557</span>                &lt;/h3&gt;
+<span class='ln'>558</span>                &lt;button
+<span class='ln'>559</span>                  onClick={() =&gt; setShowBookingForm(false)}
+<span class='ln'>560</span>                  className="w-8 h-8 bg-[#FF6B6B] border-2 border-black font-black text-white hover:bg-red-600 transition-colors"
+<span class='ln'>561</span>                &gt;
+<span class='ln'>562</span>                  ✕
+<span class='ln'>563</span>                &lt;/button&gt;
+<span class='ln'>564</span>              &lt;/div&gt;
+<span class='ln'>565</span>              
+<span class='ln'>566</span>              &lt;form onSubmit={handleBookingSubmit} className="p-4 sm:p-6 space-y-4"&gt;
+<span class='ln'>567</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>568</span>                  &lt;div&gt;
+<span class='ln'>569</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>570</span>                      PATIENT NAME *
+<span class='ln'>571</span>                    &lt;/label&gt;
+<span class='ln'>572</span>                    &lt;input
+<span class='ln'>573</span>                      type="text"
+<span class='ln'>574</span>                      name="patient_name"
+<span class='ln'>575</span>                      required
+<span class='ln'>576</span>                      value={formData.patient_name}
+<span class='ln'>577</span>                      onChange={handleInputChange}
+<span class='ln'>578</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>579</span>                      placeholder="ENTER PATIENT NAME"
+<span class='ln'>580</span>                    /&gt;
+<span class='ln'>581</span>                  &lt;/div&gt;
+<span class='ln'>582</span>                  
+<span class='ln'>583</span>                  &lt;div&gt;
+<span class='ln'>584</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>585</span>                      AGE *
+<span class='ln'>586</span>                    &lt;/label&gt;
+<span class='ln'>587</span>                    &lt;input
+<span class='ln'>588</span>                      type="number"
+<span class='ln'>589</span>                      name="patient_age"
+<span class='ln'>590</span>                      required
+<span class='ln'>591</span>                      min="1"
+<span class='ln'>592</span>                      max="120"
+<span class='ln'>593</span>                      value={formData.patient_age}
+<span class='ln'>594</span>                      onChange={handleInputChange}
+<span class='ln'>595</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>596</span>                      placeholder="AGE"
+<span class='ln'>597</span>                    /&gt;
+<span class='ln'>598</span>                  &lt;/div&gt;
+<span class='ln'>599</span>                &lt;/div&gt;
+<span class='ln'>600</span>
+<span class='ln'>601</span>                &lt;div&gt;
+<span class='ln'>602</span>                  &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>603</span>                    GENDER *
+<span class='ln'>604</span>                  &lt;/label&gt;
+<span class='ln'>605</span>                  &lt;div className="grid grid-cols-2 gap-2"&gt;
+<span class='ln'>606</span>                    &lt;label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+<span class='ln'>607</span>                      formData.patient_gender === 'male' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+<span class='ln'>608</span>                    }`}&gt;
+<span class='ln'>609</span>                      &lt;input
+<span class='ln'>610</span>                        type="radio"
+<span class='ln'>611</span>                        name="patient_gender"
+<span class='ln'>612</span>                        value="male"
+<span class='ln'>613</span>                        checked={formData.patient_gender === 'male'}
+<span class='ln'>614</span>                        onChange={handleInputChange}
+<span class='ln'>615</span>                        className="sr-only"
+<span class='ln'>616</span>                      /&gt;
+<span class='ln'>617</span>                      MALE
+<span class='ln'>618</span>                    &lt;/label&gt;
+<span class='ln'>619</span>                    &lt;label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+<span class='ln'>620</span>                      formData.patient_gender === 'female' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+<span class='ln'>621</span>                    }`}&gt;
+<span class='ln'>622</span>                      &lt;input
+<span class='ln'>623</span>                        type="radio"
+<span class='ln'>624</span>                        name="patient_gender"
+<span class='ln'>625</span>                        value="female"
+<span class='ln'>626</span>                        checked={formData.patient_gender === 'female'}
+<span class='ln'>627</span>                        onChange={handleInputChange}
+<span class='ln'>628</span>                        className="sr-only"
+<span class='ln'>629</span>                      /&gt;
+<span class='ln'>630</span>                      FEMALE
+<span class='ln'>631</span>                    &lt;/label&gt;
+<span class='ln'>632</span>                  &lt;/div&gt;
+<span class='ln'>633</span>                &lt;/div&gt;
+<span class='ln'>634</span>
+<span class='ln'>635</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>636</span>                  &lt;div&gt;
+<span class='ln'>637</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>638</span>                      PHONE *
+<span class='ln'>639</span>                    &lt;/label&gt;
+<span class='ln'>640</span>                    &lt;input
+<span class='ln'>641</span>                      type="tel"
+<span class='ln'>642</span>                      name="phone"
+<span class='ln'>643</span>                      required
+<span class='ln'>644</span>                      value={formData.phone}
+<span class='ln'>645</span>                      onChange={handleInputChange}
+<span class='ln'>646</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>647</span>                      placeholder="PHONE NUMBER"
+<span class='ln'>648</span>                    /&gt;
+<span class='ln'>649</span>                  &lt;/div&gt;
+<span class='ln'>650</span>                  
+<span class='ln'>651</span>                  &lt;div&gt;
+<span class='ln'>652</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>653</span>                      EMAIL *
+<span class='ln'>654</span>                    &lt;/label&gt;
+<span class='ln'>655</span>                    &lt;input
+<span class='ln'>656</span>                      type="email"
+<span class='ln'>657</span>                      name="email"
+<span class='ln'>658</span>                      required
+<span class='ln'>659</span>                      value={formData.email}
+<span class='ln'>660</span>                      onChange={handleInputChange}
+<span class='ln'>661</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>662</span>                      placeholder="EMAIL ADDRESS"
+<span class='ln'>663</span>                    /&gt;
+<span class='ln'>664</span>                  &lt;/div&gt;
+<span class='ln'>665</span>                &lt;/div&gt;
+<span class='ln'>666</span>
+<span class='ln'>667</span>                &lt;div&gt;
+<span class='ln'>668</span>                  &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>669</span>                    ADDRESS *
+<span class='ln'>670</span>                  &lt;/label&gt;
+<span class='ln'>671</span>                  &lt;input
+<span class='ln'>672</span>                    type="text"
+<span class='ln'>673</span>                    name="address_line"
+<span class='ln'>674</span>                    required
+<span class='ln'>675</span>                    value={formData.address_line}
+<span class='ln'>676</span>                    onChange={handleInputChange}
+<span class='ln'>677</span>                    className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>678</span>                    placeholder="FULL ADDRESS"
+<span class='ln'>679</span>                  /&gt;
+<span class='ln'>680</span>                &lt;/div&gt;
+<span class='ln'>681</span>
+<span class='ln'>682</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>683</span>                  &lt;div&gt;
+<span class='ln'>684</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>685</span>                      CITY *
+<span class='ln'>686</span>                    &lt;/label&gt;
+<span class='ln'>687</span>                    &lt;input
+<span class='ln'>688</span>                      type="text"
+<span class='ln'>689</span>                      name="city"
+<span class='ln'>690</span>                      required
+<span class='ln'>691</span>                      value={formData.city}
+<span class='ln'>692</span>                      onChange={handleInputChange}
+<span class='ln'>693</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>694</span>                      placeholder="CITY"
+<span class='ln'>695</span>                    /&gt;
+<span class='ln'>696</span>                  &lt;/div&gt;
+<span class='ln'>697</span>                  
+<span class='ln'>698</span>                  &lt;div&gt;
+<span class='ln'>699</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>700</span>                      PINCODE *
+<span class='ln'>701</span>                    &lt;/label&gt;
+<span class='ln'>702</span>                    &lt;input
+<span class='ln'>703</span>                      type="text"
+<span class='ln'>704</span>                      name="pincode"
+<span class='ln'>705</span>                      required
+<span class='ln'>706</span>                      pattern="[0-9]{6}"
+<span class='ln'>707</span>                      value={formData.pincode}
+<span class='ln'>708</span>                      onChange={handleInputChange}
+<span class='ln'>709</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 placeholder:text-black/40 placeholder:font-bold focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>710</span>                      placeholder="PINCODE"
+<span class='ln'>711</span>                    /&gt;
+<span class='ln'>712</span>                  &lt;/div&gt;
+<span class='ln'>713</span>                &lt;/div&gt;
+<span class='ln'>714</span>
+<span class='ln'>715</span>                &lt;div className="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+<span class='ln'>716</span>                  &lt;div&gt;
+<span class='ln'>717</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>718</span>                      PREFERRED DATE *
+<span class='ln'>719</span>                    &lt;/label&gt;
+<span class='ln'>720</span>                    &lt;input
+<span class='ln'>721</span>                      type="date"
+<span class='ln'>722</span>                      name="preferred_date"
+<span class='ln'>723</span>                      required
+<span class='ln'>724</span>                      min={new Date().toISOString().split('T')[0]}
+<span class='ln'>725</span>                      value={formData.preferred_date}
+<span class='ln'>726</span>                      onChange={handleInputChange}
+<span class='ln'>727</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>728</span>                    /&gt;
+<span class='ln'>729</span>                  &lt;/div&gt;
+<span class='ln'>730</span>                  
+<span class='ln'>731</span>                  &lt;div&gt;
+<span class='ln'>732</span>                    &lt;label className="block text-xs font-black uppercase tracking-widest mb-2"&gt;
+<span class='ln'>733</span>                      TIME SLOT *
+<span class='ln'>734</span>                    &lt;/label&gt;
+<span class='ln'>735</span>                    &lt;select
+<span class='ln'>736</span>                      name="preferred_slot"
+<span class='ln'>737</span>                      required
+<span class='ln'>738</span>                      value={formData.preferred_slot}
+<span class='ln'>739</span>                      onChange={handleInputChange}
+<span class='ln'>740</span>                      className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
+<span class='ln'>741</span>                    &gt;
+<span class='ln'>742</span>                      {timeSlots.map(slot =&gt; (
+<span class='ln'>743</span>                        &lt;option key={slot.value} value={slot.value}&gt;
+<span class='ln'>744</span>                          {slot.label}
+<span class='ln'>745</span>                        &lt;/option&gt;
+<span class='ln'>746</span>                      ))}
+<span class='ln'>747</span>                    &lt;/select&gt;
+<span class='ln'>748</span>                  &lt;/div&gt;
+<span class='ln'>749</span>                &lt;/div&gt;
+<span class='ln'>750</span>
+<span class='ln'>751</span>                {selectedPackage &amp;&amp; (
+<span class='ln'>752</span>                  &lt;div className="bg-[#C4B5FD] border-4 border-black p-4"&gt;
+<span class='ln'>753</span>                    &lt;h4 className="font-black uppercase text-sm mb-2"&gt;PACKAGE DETAILS:&lt;/h4&gt;
+<span class='ln'>754</span>                    &lt;p className="font-bold text-sm"&gt;{selectedPackage.name}&lt;/p&gt;
+<span class='ln'>755</span>                    &lt;p className="font-bold text-lg text-[#FF6B6B]"&gt;₹{selectedPackage.final_price}&lt;/p&gt;
+<span class='ln'>756</span>                  &lt;/div&gt;
+<span class='ln'>757</span>                )}
+<span class='ln'>758</span>
+<span class='ln'>759</span>                &lt;div className="flex gap-4 pt-4"&gt;
+<span class='ln'>760</span>                  &lt;Button
+<span class='ln'>761</span>                    type="button"
+<span class='ln'>762</span>                    variant="ghost"
+<span class='ln'>763</span>                    className="flex-1"
+<span class='ln'>764</span>                    onClick={() =&gt; setShowBookingForm(false)}
+<span class='ln'>765</span>                  &gt;
+<span class='ln'>766</span>                    CANCEL
+<span class='ln'>767</span>                  &lt;/Button&gt;
+<span class='ln'>768</span>                  &lt;Button
+<span class='ln'>769</span>                    type="submit"
+<span class='ln'>770</span>                    variant="primary"
+<span class='ln'>771</span>                    className="flex-1"
+<span class='ln'>772</span>                  &gt;
+<span class='ln'>773</span>                    CONFIRM BOOKING
+<span class='ln'>774</span>                  &lt;/Button&gt;
+<span class='ln'>775</span>                &lt;/div&gt;
+<span class='ln'>776</span>              &lt;/form&gt;
+<span class='ln'>777</span>            &lt;/motion.div&gt;
+<span class='ln'>778</span>          &lt;/div&gt;
+<span class='ln'>779</span>        )}
+<span class='ln'>780</span>      &lt;/motion.div&gt;
+<span class='ln'>781</span>    &lt;/&gt;
+<span class='ln'>782</span>  );
+<span class='ln'>783</span>}
+</pre></div></body></html>

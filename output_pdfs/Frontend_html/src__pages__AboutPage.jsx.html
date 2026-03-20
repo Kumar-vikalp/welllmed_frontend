@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/AboutPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { motion } from 'framer-motion';
+<span class='ln'>2</span>import { Link } from 'react-router-dom';
+<span class='ln'>3</span>import Card from '../components/Card';
+<span class='ln'>4</span>import Button from '../components/Button';
+<span class='ln'>5</span>import { Star, Zap, Shield, Clock } from 'lucide-react';
+<span class='ln'>6</span>
+<span class='ln'>7</span>export default function AboutPage() {
+<span class='ln'>8</span>  const stats = [
+<span class='ln'>9</span>    { number: '50,000+', label: 'Happy Customers' },
+<span class='ln'>10</span>    { number: '10,000+', label: 'Medicines Available' },
+<span class='ln'>11</span>    { number: '500+', label: 'Cities Served' },
+<span class='ln'>12</span>    { number: '24/7', label: 'Customer Support' }
+<span class='ln'>13</span>  ];
+<span class='ln'>14</span>
+<span class='ln'>15</span>  const team = [
+<span class='ln'>16</span>    {
+<span class='ln'>17</span>      name: 'Dr. Sarah Johnson',
+<span class='ln'>18</span>      role: 'Chief Medical Officer',
+<span class='ln'>19</span>      image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=300&amp;h=300&amp;fit=crop',
+<span class='ln'>20</span>      description: '15+ years in pharmaceutical industry'
+<span class='ln'>21</span>    },
+<span class='ln'>22</span>    {
+<span class='ln'>23</span>      name: 'Michael Chen',
+<span class='ln'>24</span>      role: 'Head of Operations',
+<span class='ln'>25</span>      image: 'https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=300&amp;h=300&amp;fit=crop',
+<span class='ln'>26</span>      description: 'Expert in supply chain management'
+<span class='ln'>27</span>    },
+<span class='ln'>28</span>    {
+<span class='ln'>29</span>      name: 'Dr. Priya Sharma',
+<span class='ln'>30</span>      role: 'Quality Assurance Lead',
+<span class='ln'>31</span>      image: 'https://images.pexels.com/photos/5327921/pexels-photo-5327921.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=300&amp;h=300&amp;fit=crop',
+<span class='ln'>32</span>      description: 'Ensuring medicine quality and safety'
+<span class='ln'>33</span>    }
+<span class='ln'>34</span>  ];
+<span class='ln'>35</span>
+<span class='ln'>36</span>  return (
+<span class='ln'>37</span>    &lt;motion.div 
+<span class='ln'>38</span>      initial={{ opacity: 0 }} 
+<span class='ln'>39</span>      animate={{ opacity: 1 }}
+<span class='ln'>40</span>      className="bg-neo-canvas min-h-screen relative overflow-hidden"
+<span class='ln'>41</span>    &gt;
+<span class='ln'>42</span>      {/* Background Pattern */}
+<span class='ln'>43</span>      &lt;div className="absolute inset-0 bg-neo-grid opacity-20"&gt;&lt;/div&gt;
+<span class='ln'>44</span>      
+<span class='ln'>45</span>      {/* Floating Decorative Elements */}
+<span class='ln'>46</span>      &lt;div className="absolute top-20 left-10 rotate-12"&gt;
+<span class='ln'>47</span>        &lt;Star className="w-8 h-8 fill-neo-accent text-neo-accent animate-spin-slow" /&gt;
+<span class='ln'>48</span>      &lt;/div&gt;
+<span class='ln'>49</span>      &lt;div className="absolute top-40 right-20 -rotate-12"&gt;
+<span class='ln'>50</span>        &lt;Zap className="w-12 h-12 fill-neo-secondary text-neo-secondary animate-bounce-slow" /&gt;
+<span class='ln'>51</span>      &lt;/div&gt;
+<span class='ln'>52</span>      &lt;div className="absolute bottom-32 left-32 rotate-45"&gt;
+<span class='ln'>53</span>        &lt;Shield className="w-10 h-10 fill-neo-muted text-neo-muted" /&gt;
+<span class='ln'>54</span>      &lt;/div&gt;
+<span class='ln'>55</span>
+<span class='ln'>56</span>      {/* Hero Section */}
+<span class='ln'>57</span>      &lt;div className="neo-section bg-neo-accent border-y-4 border-neo-ink relative"&gt;
+<span class='ln'>58</span>        &lt;div className="neo-container text-center relative z-10"&gt;
+<span class='ln'>59</span>          &lt;motion.h1 
+<span class='ln'>60</span>            initial={{ opacity: 0, y: 20 }}
+<span class='ln'>61</span>            animate={{ opacity: 1, y: 0 }}
+<span class='ln'>62</span>            className="text-4xl md:text-8xl font-black mb-6 uppercase"
+<span class='ln'>63</span>          &gt;
+<span class='ln'>64</span>            &lt;span className="block -rotate-1"&gt;ABOUT&lt;/span&gt;
+<span class='ln'>65</span>            &lt;span className="block rotate-1 text-stroke"&gt;genx&lt;/span&gt;
+<span class='ln'>66</span>          &lt;/motion.h1&gt;
+<span class='ln'>67</span>          &lt;motion.p 
+<span class='ln'>68</span>            initial={{ opacity: 0, y: 20 }}
+<span class='ln'>69</span>            animate={{ opacity: 1, y: 0 }}
+<span class='ln'>70</span>            transition={{ delay: 0.2 }}
+<span class='ln'>71</span>            className="text-xl md:text-2xl font-bold max-w-3xl mx-auto uppercase"
+<span class='ln'>72</span>          &gt;
+<span class='ln'>73</span>            YOUR TRUSTED PARTNER IN HEALTHCARE, DELIVERING QUALITY MEDICINES TO YOUR DOORSTEP SINCE 2020
+<span class='ln'>74</span>          &lt;/motion.p&gt;
+<span class='ln'>75</span>        &lt;/div&gt;
+<span class='ln'>76</span>      &lt;/div&gt;
+<span class='ln'>77</span>
+<span class='ln'>78</span>      {/* Stats Section */}
+<span class='ln'>79</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>80</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>81</span>          &lt;div className="grid grid-cols-2 md:grid-cols-4 gap-8"&gt;
+<span class='ln'>82</span>            {stats.map((stat, index) =&gt; (
+<span class='ln'>83</span>              &lt;motion.div
+<span class='ln'>84</span>                key={index}
+<span class='ln'>85</span>                initial={{ opacity: 0, y: 20 }}
+<span class='ln'>86</span>                animate={{ opacity: 1, y: 0 }}
+<span class='ln'>87</span>                transition={{ delay: index * 0.1 }}
+<span class='ln'>88</span>              &gt;
+<span class='ln'>89</span>                &lt;Card 
+<span class='ln'>90</span>                  className="p-6 text-center bg-neo-secondary"
+<span class='ln'>91</span>                  rotation={Math.random() &gt; 0.5 ? 1 : -1}
+<span class='ln'>92</span>                &gt;
+<span class='ln'>93</span>                  &lt;div className="text-3xl md:text-5xl font-black text-neo-ink mb-2 -rotate-1"&gt;{stat.number}&lt;/div&gt;
+<span class='ln'>94</span>                  &lt;div className="text-neo-ink font-bold uppercase text-sm tracking-wide"&gt;{stat.label}&lt;/div&gt;
+<span class='ln'>95</span>                &lt;/Card&gt;
+<span class='ln'>96</span>              &lt;/motion.div&gt;
+<span class='ln'>97</span>            ))}
+<span class='ln'>98</span>          &lt;/div&gt;
+<span class='ln'>99</span>        &lt;/div&gt;
+<span class='ln'>100</span>      &lt;/div&gt;
+<span class='ln'>101</span>
+<span class='ln'>102</span>      {/* Mission Section */}
+<span class='ln'>103</span>      &lt;div className="neo-section bg-neo-muted border-y-4 border-neo-ink"&gt;
+<span class='ln'>104</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>105</span>          &lt;Card className="p-8 md:p-12 bg-white rotate-1"&gt;
+<span class='ln'>106</span>            &lt;div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"&gt;
+<span class='ln'>107</span>              &lt;div&gt;
+<span class='ln'>108</span>                &lt;h2 className="text-3xl md:text-5xl font-black text-neo-ink mb-6 uppercase -rotate-1"&gt;OUR MISSION&lt;/h2&gt;
+<span class='ln'>109</span>                &lt;p className="text-lg font-bold text-neo-ink mb-6 leading-relaxed uppercase"&gt;
+<span class='ln'>110</span>                  AT genx, WE BELIEVE HEALTHCARE SHOULD BE ACCESSIBLE, AFFORDABLE, AND CONVENIENT FOR EVERYONE. 
+<span class='ln'>111</span>                  OUR MISSION IS TO REVOLUTIONIZE THE WAY PEOPLE ACCESS MEDICINES BY PROVIDING A SEAMLESS ONLINE 
+<span class='ln'>112</span>                  PLATFORM THAT CONNECTS PATIENTS WITH QUALITY HEALTHCARE PRODUCTS.
+<span class='ln'>113</span>                &lt;/p&gt;
+<span class='ln'>114</span>                &lt;p className="text-lg font-bold text-neo-ink leading-relaxed uppercase"&gt;
+<span class='ln'>115</span>                  WE ARE COMMITTED TO ENSURING THAT EVERY MEDICINE WE DELIVER MEETS THE HIGHEST QUALITY STANDARDS 
+<span class='ln'>116</span>                  AND REACHES OUR CUSTOMERS SAFELY AND ON TIME.
+<span class='ln'>117</span>                &lt;/p&gt;
+<span class='ln'>118</span>              &lt;/div&gt;
+<span class='ln'>119</span>              &lt;div className="relative"&gt;
+<span class='ln'>120</span>                &lt;Card className="overflow-hidden rotate-3" hover={false}&gt;
+<span class='ln'>121</span>                  &lt;img 
+<span class='ln'>122</span>                  src="https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=600&amp;h=400&amp;fit=crop"
+<span class='ln'>123</span>                  alt="Our Mission"
+<span class='ln'>124</span>                    className="w-full h-80 object-cover"
+<span class='ln'>125</span>                /&gt;
+<span class='ln'>126</span>                &lt;/Card&gt;
+<span class='ln'>127</span>              &lt;/div&gt;
+<span class='ln'>128</span>            &lt;/div&gt;
+<span class='ln'>129</span>          &lt;/Card&gt;
+<span class='ln'>130</span>        &lt;/div&gt;
+<span class='ln'>131</span>      &lt;/div&gt;
+<span class='ln'>132</span>
+<span class='ln'>133</span>      {/* Values Section */}
+<span class='ln'>134</span>      &lt;div className="neo-section bg-white border-y-4 border-neo-ink"&gt;
+<span class='ln'>135</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>136</span>          &lt;h2 className="text-3xl md:text-5xl font-black text-center text-neo-ink mb-12 uppercase rotate-1"&gt;OUR VALUES&lt;/h2&gt;
+<span class='ln'>137</span>          &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-8"&gt;
+<span class='ln'>138</span>            &lt;motion.div
+<span class='ln'>139</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>140</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>141</span>              transition={{ delay: 0.1 }}
+<span class='ln'>142</span>            &gt;
+<span class='ln'>143</span>              &lt;Card className="p-8 text-center bg-neo-accent rotate-2"&gt;
+<span class='ln'>144</span>                &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 -rotate-12"&gt;
+<span class='ln'>145</span>                  &lt;svg className="w-8 h-8 text-neo-ink stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>146</span>                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /&gt;
+<span class='ln'>147</span>                  &lt;/svg&gt;
+<span class='ln'>148</span>                &lt;/div&gt;
+<span class='ln'>149</span>                &lt;h3 className="text-xl font-black text-neo-ink mb-4 uppercase"&gt;QUALITY FIRST&lt;/h3&gt;
+<span class='ln'>150</span>                &lt;p className="text-neo-ink font-bold uppercase text-sm"&gt;WE NEVER COMPROMISE ON THE QUALITY OF MEDICINES AND ENSURE ALL PRODUCTS MEET INTERNATIONAL STANDARDS.&lt;/p&gt;
+<span class='ln'>151</span>              &lt;/Card&gt;
+<span class='ln'>152</span>            &lt;/motion.div&gt;
+<span class='ln'>153</span>
+<span class='ln'>154</span>            &lt;motion.div
+<span class='ln'>155</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>156</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>157</span>              transition={{ delay: 0.2 }}
+<span class='ln'>158</span>            &gt;
+<span class='ln'>159</span>              &lt;Card className="p-8 text-center bg-neo-secondary -rotate-1"&gt;
+<span class='ln'>160</span>                &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 rotate-12"&gt;
+<span class='ln'>161</span>                  &lt;Zap className="w-8 h-8 text-neo-ink stroke-[3px]" /&gt;
+<span class='ln'>162</span>                &lt;/div&gt;
+<span class='ln'>163</span>                &lt;h3 className="text-xl font-black text-neo-ink mb-4 uppercase"&gt;FAST DELIVERY&lt;/h3&gt;
+<span class='ln'>164</span>                &lt;p className="text-neo-ink font-bold uppercase text-sm"&gt;WE UNDERSTAND URGENCY IN HEALTHCARE AND STRIVE TO DELIVER MEDICINES AS QUICKLY AS POSSIBLE.&lt;/p&gt;
+<span class='ln'>165</span>              &lt;/Card&gt;
+<span class='ln'>166</span>            &lt;/motion.div&gt;
+<span class='ln'>167</span>
+<span class='ln'>168</span>            &lt;motion.div
+<span class='ln'>169</span>              initial={{ opacity: 0, y: 20 }}
+<span class='ln'>170</span>              animate={{ opacity: 1, y: 0 }}
+<span class='ln'>171</span>              transition={{ delay: 0.3 }}
+<span class='ln'>172</span>            &gt;
+<span class='ln'>173</span>              &lt;Card className="p-8 text-center bg-neo-muted rotate-1"&gt;
+<span class='ln'>174</span>                &lt;div className="w-16 h-16 bg-white border-4 border-neo-ink flex items-center justify-center mx-auto mb-6 -rotate-6"&gt;
+<span class='ln'>175</span>                  &lt;Clock className="w-8 h-8 text-neo-ink stroke-[3px]" /&gt;
+<span class='ln'>176</span>                &lt;/div&gt;
+<span class='ln'>177</span>                &lt;h3 className="text-xl font-black text-neo-ink mb-4 uppercase"&gt;CUSTOMER CARE&lt;/h3&gt;
+<span class='ln'>178</span>                &lt;p className="text-neo-ink font-bold uppercase text-sm"&gt;OUR DEDICATED SUPPORT TEAM IS AVAILABLE 24/7 TO ASSIST YOU WITH ANY HEALTHCARE NEEDS.&lt;/p&gt;
+<span class='ln'>179</span>              &lt;/Card&gt;
+<span class='ln'>180</span>            &lt;/motion.div&gt;
+<span class='ln'>181</span>          &lt;/div&gt;
+<span class='ln'>182</span>        &lt;/div&gt;
+<span class='ln'>183</span>      &lt;/div&gt;
+<span class='ln'>184</span>
+<span class='ln'>185</span>      {/* Team Section */}
+<span class='ln'>186</span>      &lt;div className="neo-section bg-neo-secondary border-y-4 border-neo-ink"&gt;
+<span class='ln'>187</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>188</span>          &lt;Card className="p-8 md:p-12 bg-white -rotate-1"&gt;
+<span class='ln'>189</span>            &lt;h2 className="text-3xl md:text-5xl font-black text-center text-neo-ink mb-12 uppercase rotate-1"&gt;MEET OUR TEAM&lt;/h2&gt;
+<span class='ln'>190</span>            &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-8"&gt;
+<span class='ln'>191</span>              {team.map((member, index) =&gt; (
+<span class='ln'>192</span>                &lt;motion.div
+<span class='ln'>193</span>                  key={index}
+<span class='ln'>194</span>                  initial={{ opacity: 0, y: 20 }}
+<span class='ln'>195</span>                  animate={{ opacity: 1, y: 0 }}
+<span class='ln'>196</span>                  transition={{ delay: index * 0.1 }}
+<span class='ln'>197</span>                  className="text-center"
+<span class='ln'>198</span>                &gt;
+<span class='ln'>199</span>                  &lt;Card className="p-6 bg-neo-muted" rotation={Math.random() &gt; 0.5 ? 1 : -1}&gt;
+<span class='ln'>200</span>                    &lt;div className="w-32 h-32 border-4 border-neo-ink mx-auto mb-6 overflow-hidden rotate-3"&gt;
+<span class='ln'>201</span>                      &lt;img 
+<span class='ln'>202</span>                        src={member.image} 
+<span class='ln'>203</span>                        alt={member.name}
+<span class='ln'>204</span>                        className="w-full h-full object-cover"
+<span class='ln'>205</span>                      /&gt;
+<span class='ln'>206</span>                    &lt;/div&gt;
+<span class='ln'>207</span>                    &lt;h3 className="text-xl font-black text-neo-ink mb-2 uppercase"&gt;{member.name}&lt;/h3&gt;
+<span class='ln'>208</span>                    &lt;p className="text-neo-accent font-bold mb-3 uppercase text-sm"&gt;{member.role}&lt;/p&gt;
+<span class='ln'>209</span>                    &lt;p className="text-neo-ink font-bold text-sm uppercase"&gt;{member.description}&lt;/p&gt;
+<span class='ln'>210</span>                  &lt;/Card&gt;
+<span class='ln'>211</span>                &lt;/motion.div&gt;
+<span class='ln'>212</span>              ))}
+<span class='ln'>213</span>            &lt;/div&gt;
+<span class='ln'>214</span>          &lt;/Card&gt;
+<span class='ln'>215</span>        &lt;/div&gt;
+<span class='ln'>216</span>      &lt;/div&gt;
+<span class='ln'>217</span>
+<span class='ln'>218</span>      {/* CTA Section */}
+<span class='ln'>219</span>      &lt;div className="neo-section bg-neo-ink border-y-4 border-neo-ink"&gt;
+<span class='ln'>220</span>        &lt;div className="neo-container text-center"&gt;
+<span class='ln'>221</span>          &lt;Card className="p-8 bg-neo-ink border-white rotate-1" hover={false}&gt;
+<span class='ln'>222</span>            &lt;h2 className="text-3xl md:text-5xl font-black text-white mb-6 uppercase -rotate-1"&gt;READY TO EXPERIENCE BETTER HEALTHCARE?&lt;/h2&gt;
+<span class='ln'>223</span>            &lt;p className="text-xl text-neo-ink font-bold mb-8 uppercase"&gt;JOIN THOUSANDS OF SATISFIED CUSTOMERS WHO TRUST genx FOR THEIR HEALTHCARE NEEDS.&lt;/p&gt;
+<span class='ln'>224</span>            &lt;div className="space-x-4"&gt;
+<span class='ln'>225</span>              &lt;Link 
+<span class='ln'>226</span>                to="/products"
+<span class='ln'>227</span>              &gt;
+<span class='ln'>228</span>                &lt;Button variant="secondary" size="lg" className="rotate-2"&gt;
+<span class='ln'>229</span>                  SHOP NOW
+<span class='ln'>230</span>                &lt;/Button&gt;
+<span class='ln'>231</span>              &lt;/Link&gt;
+<span class='ln'>232</span>              &lt;Link 
+<span class='ln'>233</span>                to="/contact"
+<span class='ln'>234</span>              &gt;
+<span class='ln'>235</span>                &lt;Button variant="outline" size="lg" className="-rotate-2"&gt;
+<span class='ln'>236</span>                  CONTACT US
+<span class='ln'>237</span>                &lt;/Button&gt;
+<span class='ln'>238</span>              &lt;/Link&gt;
+<span class='ln'>239</span>            &lt;/div&gt;
+<span class='ln'>240</span>          &lt;/Card&gt;
+<span class='ln'>241</span>        &lt;/div&gt;
+<span class='ln'>242</span>      &lt;/div&gt;
+<span class='ln'>243</span>    &lt;/motion.div&gt;
+<span class='ln'>244</span>  );
+<span class='ln'>245</span>}
+</pre></div></body></html>

@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/Navbar.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+<span class='ln'>2</span>import { useSelector, useDispatch } from 'react-redux';
+<span class='ln'>3</span>import { selectCartCount } from '../store/slices/cartSlice';
+<span class='ln'>4</span>import { selectUser } from '../store/slices/userSlice';
+<span class='ln'>5</span>import { useUser } from '../contexts/UserContext';
+<span class='ln'>6</span>import { useState, useRef, useEffect } from 'react';
+<span class='ln'>7</span>import { motion, AnimatePresence } from 'framer-motion';
+<span class='ln'>8</span>import LocationDetector from './LocationDetector';
+<span class='ln'>9</span>
+<span class='ln'>10</span>export default function Navbar() {
+<span class='ln'>11</span>  const user = useSelector(selectUser);
+<span class='ln'>12</span>  const { logout } = useUser();
+<span class='ln'>13</span>  const cartCount = useSelector(selectCartCount);
+<span class='ln'>14</span>  const [isProfileOpen, setIsProfileOpen] = useState(false);
+<span class='ln'>15</span>  const [searchQuery, setSearchQuery] = useState('');
+<span class='ln'>16</span>  const [isVisible, setIsVisible] = useState(true);
+<span class='ln'>17</span>  const [lastScrollY, setLastScrollY] = useState(0);
+<span class='ln'>18</span>  const navigate = useNavigate();
+<span class='ln'>19</span>  const location = useLocation();
+<span class='ln'>20</span>  const profileRef = useRef(null);
+<span class='ln'>21</span>
+<span class='ln'>22</span>  const isHomePage = location.pathname === '/';
+<span class='ln'>23</span>  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password' || location.pathname === '/reset-password';
+<span class='ln'>24</span>
+<span class='ln'>25</span>  useEffect(() =&gt; {
+<span class='ln'>26</span>    const handleClickOutside = (event) =&gt; {
+<span class='ln'>27</span>      if (profileRef.current &amp;&amp; !profileRef.current.contains(event.target)) {
+<span class='ln'>28</span>        setIsProfileOpen(false);
+<span class='ln'>29</span>      }
+<span class='ln'>30</span>    };
+<span class='ln'>31</span>
+<span class='ln'>32</span>    document.addEventListener('mousedown', handleClickOutside);
+<span class='ln'>33</span>    return () =&gt; document.removeEventListener('mousedown', handleClickOutside);
+<span class='ln'>34</span>  }, []);
+<span class='ln'>35</span>
+<span class='ln'>36</span>  // Desktop header scroll animation
+<span class='ln'>37</span>  useEffect(() =&gt; {
+<span class='ln'>38</span>    const controlNavbar = () =&gt; {
+<span class='ln'>39</span>      if (typeof window !== 'undefined') {
+<span class='ln'>40</span>        if (window.scrollY &gt; lastScrollY &amp;&amp; window.scrollY &gt; 100) {
+<span class='ln'>41</span>          // Scrolling down
+<span class='ln'>42</span>          setIsVisible(false);
+<span class='ln'>43</span>        } else {
+<span class='ln'>44</span>          // Scrolling up
+<span class='ln'>45</span>          setIsVisible(true);
+<span class='ln'>46</span>        }
+<span class='ln'>47</span>        setLastScrollY(window.scrollY);
+<span class='ln'>48</span>      }
+<span class='ln'>49</span>    };
+<span class='ln'>50</span>
+<span class='ln'>51</span>    if (typeof window !== 'undefined') {
+<span class='ln'>52</span>      window.addEventListener('scroll', controlNavbar);
+<span class='ln'>53</span>      return () =&gt; {
+<span class='ln'>54</span>        window.removeEventListener('scroll', controlNavbar);
+<span class='ln'>55</span>      };
+<span class='ln'>56</span>    }
+<span class='ln'>57</span>  }, [lastScrollY]);
+<span class='ln'>58</span>
+<span class='ln'>59</span>  const handleLogout = () =&gt; {
+<span class='ln'>60</span>    logout();
+<span class='ln'>61</span>    setIsProfileOpen(false);
+<span class='ln'>62</span>  };
+<span class='ln'>63</span>
+<span class='ln'>64</span>  const handleSearch = (e) =&gt; {
+<span class='ln'>65</span>    e.preventDefault();
+<span class='ln'>66</span>    if (searchQuery.trim()) {
+<span class='ln'>67</span>      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+<span class='ln'>68</span>      setSearchQuery(''); // Clear search after navigation
+<span class='ln'>69</span>    }
+<span class='ln'>70</span>  };
+<span class='ln'>71</span>
+<span class='ln'>72</span>  return (
+<span class='ln'>73</span>    &lt;&gt;
+<span class='ln'>74</span>      {/* Desktop Navbar */}
+<span class='ln'>75</span>      &lt;motion.nav 
+<span class='ln'>76</span>        initial={{ y: 0 }}
+<span class='ln'>77</span>        animate={{ y: isVisible ? 0 : -100 }}
+<span class='ln'>78</span>        transition={{ duration: 0.3, ease: 'easeInOut' }}
+<span class='ln'>79</span>        className="hidden sm:block bg-neo-canvas border-b-4 border-neo-ink fixed top-0 left-0 right-0 z-50"
+<span class='ln'>80</span>      &gt;
+<span class='ln'>81</span>        &lt;div className="neo-container"&gt;
+<span class='ln'>82</span>          &lt;div className="flex items-center justify-between h-16"&gt;
+<span class='ln'>83</span>            {/* Logo */}
+<span class='ln'>84</span>            &lt;Link to="/" className="flex items-center space-x-3"&gt;
+<span class='ln'>85</span>              &lt;div className="w-12 h-12 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3"&gt;
+<span class='ln'>86</span>                &lt;span className="font-black text-2xl"&gt;G&lt;/span&gt;
+<span class='ln'>87</span>              &lt;/div&gt;
+<span class='ln'>88</span>              &lt;span className="text-3xl font-black uppercase -rotate-1"&gt;genx&lt;/span&gt;
+<span class='ln'>89</span>            &lt;/Link&gt;
+<span class='ln'>90</span>            
+<span class='ln'>91</span>            {/* Search Bar */}
+<span class='ln'>92</span>            &lt;div className="flex-1 max-w-2xl mx-8"&gt;
+<span class='ln'>93</span>              &lt;form onSubmit={handleSearch} className="relative"&gt;
+<span class='ln'>94</span>                &lt;input
+<span class='ln'>95</span>                  type="text"
+<span class='ln'>96</span>                  value={searchQuery}
+<span class='ln'>97</span>                  onChange={(e) =&gt; setSearchQuery(e.target.value)}
+<span class='ln'>98</span>                  placeholder="Search for medicines, health products..."
+<span class='ln'>99</span>                  className="neo-input w-full pl-12 pr-4 placeholder:font-bold placeholder:uppercase"
+<span class='ln'>100</span>                /&gt;
+<span class='ln'>101</span>                &lt;button type="submit" className="absolute left-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-neo-secondary transition-colors duration-100"&gt;
+<span class='ln'>102</span>                  &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>103</span>                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>104</span>                  &lt;/svg&gt;
+<span class='ln'>105</span>                &lt;/button&gt;
+<span class='ln'>106</span>              &lt;/form&gt;
+<span class='ln'>107</span>            &lt;/div&gt;
+<span class='ln'>108</span>            
+<span class='ln'>109</span>            {/* Right Side Actions */}
+<span class='ln'>110</span>            &lt;div className="flex items-center space-x-6"&gt;
+<span class='ln'>111</span>              &lt;LocationDetector /&gt;
+<span class='ln'>112</span>              
+<span class='ln'>113</span>              {/* Cart */}
+<span class='ln'>114</span>              &lt;Link to="/cart" className="relative p-3 border-4 border-transparent hover:border-neo-ink hover:bg-neo-secondary transition-all duration-100"&gt;
+<span class='ln'>115</span>                &lt;svg className="h-6 w-6 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>116</span>                  &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /&gt;
+<span class='ln'>117</span>                &lt;/svg&gt;
+<span class='ln'>118</span>                {cartCount &gt; 0 &amp;&amp; (
+<span class='ln'>119</span>                  &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-accent rotate-12"&gt;
+<span class='ln'>120</span>                    {cartCount}
+<span class='ln'>121</span>                  &lt;/span&gt;
+<span class='ln'>122</span>                )}
+<span class='ln'>123</span>              &lt;/Link&gt;
+<span class='ln'>124</span>
+<span class='ln'>125</span>              {/* Profile Dropdown */}
+<span class='ln'>126</span>              {user ? (
+<span class='ln'>127</span>                &lt;div className="relative" ref={profileRef}&gt;
+<span class='ln'>128</span>                  &lt;button
+<span class='ln'>129</span>                    onClick={() =&gt; setIsProfileOpen(!isProfileOpen)}
+<span class='ln'>130</span>                    className="flex items-center space-x-2 p-3 border-4 border-transparent hover:border-neo-ink hover:bg-neo-muted transition-all duration-100"
+<span class='ln'>131</span>                  &gt;
+<span class='ln'>132</span>                    &lt;div className="w-8 h-8 bg-neo-accent border-2 border-neo-ink flex items-center justify-center"&gt;
+<span class='ln'>133</span>                      &lt;span className="font-black text-sm"&gt;
+<span class='ln'>134</span>                        {user.email?.charAt(0).toUpperCase()}
+<span class='ln'>135</span>                      &lt;/span&gt;
+<span class='ln'>136</span>                    &lt;/div&gt;
+<span class='ln'>137</span>                    &lt;svg className="w-4 h-4 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>138</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /&gt;
+<span class='ln'>139</span>                    &lt;/svg&gt;
+<span class='ln'>140</span>                  &lt;/button&gt;
+<span class='ln'>141</span>
+<span class='ln'>142</span>                  &lt;AnimatePresence&gt;
+<span class='ln'>143</span>                    {isProfileOpen &amp;&amp; (
+<span class='ln'>144</span>                      &lt;motion.div
+<span class='ln'>145</span>                        initial={{ opacity: 0, y: -10 }}
+<span class='ln'>146</span>                        animate={{ opacity: 1, y: 0 }}
+<span class='ln'>147</span>                        exit={{ opacity: 0, y: -10 }}
+<span class='ln'>148</span>                        className="absolute right-0 mt-2 w-48 bg-white border-4 border-neo-ink shadow-neo py-2"
+<span class='ln'>149</span>                      &gt;
+<span class='ln'>150</span>                        &lt;Link
+<span class='ln'>151</span>                          to="/profile"
+<span class='ln'>152</span>                          onClick={() =&gt; setIsProfileOpen(false)}
+<span class='ln'>153</span>                          className="flex items-center px-4 py-2 font-bold hover:bg-neo-secondary transition-colors duration-100"
+<span class='ln'>154</span>                        &gt;
+<span class='ln'>155</span>                          &lt;svg className="w-4 h-4 mr-3 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>156</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /&gt;
+<span class='ln'>157</span>                          &lt;/svg&gt;
+<span class='ln'>158</span>                          PROFILE
+<span class='ln'>159</span>                        &lt;/Link&gt;
+<span class='ln'>160</span>                        &lt;Link
+<span class='ln'>161</span>                          to="/orders"
+<span class='ln'>162</span>                          onClick={() =&gt; setIsProfileOpen(false)}
+<span class='ln'>163</span>                          className="flex items-center px-4 py-2 font-bold hover:bg-neo-secondary transition-colors duration-100"
+<span class='ln'>164</span>                        &gt;
+<span class='ln'>165</span>                          &lt;svg className="w-4 h-4 mr-3 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>166</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /&gt;
+<span class='ln'>167</span>                          &lt;/svg&gt;
+<span class='ln'>168</span>                          MY ORDERS
+<span class='ln'>169</span>                        &lt;/Link&gt;
+<span class='ln'>170</span>                        &lt;Link
+<span class='ln'>171</span>                          to="/how-to-order"
+<span class='ln'>172</span>                          onClick={() =&gt; setIsProfileOpen(false)}
+<span class='ln'>173</span>                          className="flex items-center px-4 py-2 font-bold hover:bg-neo-secondary transition-colors duration-100"
+<span class='ln'>174</span>                        &gt;
+<span class='ln'>175</span>                          &lt;svg className="w-4 h-4 mr-3 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>176</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /&gt;
+<span class='ln'>177</span>                          &lt;/svg&gt;
+<span class='ln'>178</span>                          HOW TO ORDER
+<span class='ln'>179</span>                        &lt;/Link&gt;
+<span class='ln'>180</span>                        &lt;hr className="my-2 border-t-2 border-neo-ink" /&gt;
+<span class='ln'>181</span>                        &lt;button
+<span class='ln'>182</span>                          onClick={handleLogout}
+<span class='ln'>183</span>                          className="flex items-center w-full px-4 py-2 font-bold text-neo-accent hover:bg-neo-accent hover:text-white transition-colors duration-100"
+<span class='ln'>184</span>                        &gt;
+<span class='ln'>185</span>                          &lt;svg className="w-4 h-4 mr-3 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>186</span>                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /&gt;
+<span class='ln'>187</span>                          &lt;/svg&gt;
+<span class='ln'>188</span>                          LOGOUT
+<span class='ln'>189</span>                        &lt;/button&gt;
+<span class='ln'>190</span>                      &lt;/motion.div&gt;
+<span class='ln'>191</span>                    )}
+<span class='ln'>192</span>                  &lt;/AnimatePresence&gt;
+<span class='ln'>193</span>                &lt;/div&gt;
+<span class='ln'>194</span>              ) : (
+<span class='ln'>195</span>                &lt;Link
+<span class='ln'>196</span>                  to="/login"
+<span class='ln'>197</span>                  className="neo-btn-primary"
+<span class='ln'>198</span>                &gt;
+<span class='ln'>199</span>                  LOGIN
+<span class='ln'>200</span>                &lt;/Link&gt;
+<span class='ln'>201</span>              )}
+<span class='ln'>202</span>            &lt;/div&gt;
+<span class='ln'>203</span>          &lt;/div&gt;
+<span class='ln'>204</span>        &lt;/div&gt;
+<span class='ln'>205</span>      &lt;/motion.nav&gt;
+<span class='ln'>206</span>
+<span class='ln'>207</span>      {/* Mobile Header */}
+<span class='ln'>208</span>      &lt;div className="sm:hidden"&gt;
+<span class='ln'>209</span>        {isHomePage ? (
+<span class='ln'>210</span>          /* Home page header with search and location */
+<span class='ln'>211</span>          &lt;nav className="bg-neo-canvas border-b-4 border-neo-ink sticky top-0 z-50"&gt;
+<span class='ln'>212</span>            &lt;div className="px-4 py-3"&gt;
+<span class='ln'>213</span>              &lt;div className="flex items-center justify-between"&gt;
+<span class='ln'>214</span>                &lt;Link to="/" className="flex items-center space-x-2"&gt;
+<span class='ln'>215</span>                  &lt;div className="w-10 h-10 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3"&gt;
+<span class='ln'>216</span>                    &lt;span className="font-black text-xl"&gt;W&lt;/span&gt;
+<span class='ln'>217</span>                  &lt;/div&gt;
+<span class='ln'>218</span>                  &lt;span className="text-2xl font-black uppercase -rotate-1"&gt;genx&lt;/span&gt;
+<span class='ln'>219</span>                &lt;/Link&gt;
+<span class='ln'>220</span>
+<span class='ln'>221</span>                &lt;div className="flex items-center space-x-4"&gt;
+<span class='ln'>222</span>                  &lt;Link to="/cart" className="relative p-2 border-2 border-transparent hover:border-neo-ink hover:bg-neo-secondary transition-all duration-100"&gt;
+<span class='ln'>223</span>                    &lt;svg className="h-6 w-6 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>224</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /&gt;
+<span class='ln'>225</span>                    &lt;/svg&gt;
+<span class='ln'>226</span>                    {cartCount &gt; 0 &amp;&amp; (
+<span class='ln'>227</span>                      &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-accent rotate-12"&gt;
+<span class='ln'>228</span>                        {cartCount}
+<span class='ln'>229</span>                      &lt;/span&gt;
+<span class='ln'>230</span>                    )}
+<span class='ln'>231</span>                  &lt;/Link&gt;
+<span class='ln'>232</span>
+<span class='ln'>233</span>                  {user ? (
+<span class='ln'>234</span>                    &lt;Link to="/profile" className="p-2 border-2 border-transparent hover:border-neo-ink hover:bg-neo-muted transition-all duration-100"&gt;
+<span class='ln'>235</span>                      &lt;div className="w-8 h-8 bg-neo-accent border-2 border-neo-ink flex items-center justify-center"&gt;
+<span class='ln'>236</span>                        &lt;span className="font-black text-sm"&gt;
+<span class='ln'>237</span>                          {user.email?.charAt(0).toUpperCase()}
+<span class='ln'>238</span>                          console.log('====================================');
+<span class='ln'>239</span>                          console.log({user.email?.charAt(0).toUpperCase()});
+<span class='ln'>240</span>                          console.log('====================================');
+<span class='ln'>241</span>                        &lt;/span&gt;
+<span class='ln'>242</span>                      &lt;/div&gt;
+<span class='ln'>243</span>                    &lt;/Link&gt;
+<span class='ln'>244</span>                  ) : (
+<span class='ln'>245</span>                    &lt;Link to="/login" className="neo-btn-primary text-sm px-3 py-2"&gt;
+<span class='ln'>246</span>                      LOGIN
+<span class='ln'>247</span>                    &lt;/Link&gt;
+<span class='ln'>248</span>                  )}
+<span class='ln'>249</span>                &lt;/div&gt;
+<span class='ln'>250</span>              &lt;/div&gt;
+<span class='ln'>251</span>
+<span class='ln'>252</span>              {/* Search Bar */}
+<span class='ln'>253</span>              &lt;div className="mt-3"&gt;
+<span class='ln'>254</span>                &lt;form onSubmit={handleSearch} className="relative"&gt;
+<span class='ln'>255</span>                  &lt;input
+<span class='ln'>256</span>                    type="text"
+<span class='ln'>257</span>                    value={searchQuery}
+<span class='ln'>258</span>                    onChange={(e) =&gt; setSearchQuery(e.target.value)}
+<span class='ln'>259</span>                    placeholder="Search medicines..."
+<span class='ln'>260</span>                    className="neo-input w-full pl-10 pr-4 placeholder:font-bold placeholder:uppercase"
+<span class='ln'>261</span>                  /&gt;
+<span class='ln'>262</span>                  &lt;button type="submit" className="absolute left-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-neo-secondary transition-colors duration-100"&gt;
+<span class='ln'>263</span>                    &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>264</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>265</span>                    &lt;/svg&gt;
+<span class='ln'>266</span>                  &lt;/button&gt;
+<span class='ln'>267</span>                &lt;/form&gt;
+<span class='ln'>268</span>              &lt;/div&gt;
+<span class='ln'>269</span>
+<span class='ln'>270</span>              {/* Location */}
+<span class='ln'>271</span>              &lt;div className="mt-3"&gt;
+<span class='ln'>272</span>                &lt;LocationDetector /&gt;
+<span class='ln'>273</span>              &lt;/div&gt;
+<span class='ln'>274</span>            &lt;/div&gt;
+<span class='ln'>275</span>          &lt;/nav&gt;
+<span class='ln'>276</span>        ) : !isAuthPage &amp;&amp; (
+<span class='ln'>277</span>          /* Other pages - just a simple header, breadcrumbs will be shown below */
+<span class='ln'>278</span>          &lt;nav className="bg-neo-canvas border-b-4 border-neo-ink sticky top-0 z-50"&gt;
+<span class='ln'>279</span>            &lt;div className="px-4 py-3"&gt;
+<span class='ln'>280</span>              &lt;div className="flex items-center justify-between"&gt;
+<span class='ln'>281</span>                &lt;Link to="/" className="flex items-center space-x-2"&gt;
+<span class='ln'>282</span>                  &lt;div className="w-10 h-10 bg-neo-accent border-4 border-neo-ink flex items-center justify-center rotate-3"&gt;
+<span class='ln'>283</span>                    &lt;span className="font-black text-xl"&gt;W&lt;/span&gt;
+<span class='ln'>284</span>                  &lt;/div&gt;
+<span class='ln'>285</span>                  &lt;span className="text-2xl font-black uppercase -rotate-1"&gt;genx&lt;/span&gt;
+<span class='ln'>286</span>                &lt;/Link&gt;
+<span class='ln'>287</span>
+<span class='ln'>288</span>                &lt;div className="flex items-center space-x-4"&gt;
+<span class='ln'>289</span>                  &lt;Link to="/cart" className="relative p-2 border-2 border-transparent hover:border-neo-ink hover:bg-neo-secondary transition-all duration-100"&gt;
+<span class='ln'>290</span>                    &lt;svg className="h-6 w-6 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>291</span>                      &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /&gt;
+<span class='ln'>292</span>                    &lt;/svg&gt;
+<span class='ln'>293</span>                    {cartCount &gt; 0 &amp;&amp; (
+<span class='ln'>294</span>                      &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-accent rotate-12"&gt;
+<span class='ln'>295</span>                        {cartCount}
+<span class='ln'>296</span>                      &lt;/span&gt;
+<span class='ln'>297</span>                    )}
+<span class='ln'>298</span>                  &lt;/Link&gt;
+<span class='ln'>299</span>
+<span class='ln'>300</span>                  {user ? (
+<span class='ln'>301</span>                    &lt;Link to="/profile" className="p-2 border-2 border-transparent hover:border-neo-ink hover:bg-neo-muted transition-all duration-100"&gt;
+<span class='ln'>302</span>                      &lt;div className="w-8 h-8 bg-neo-accent border-2 border-neo-ink flex items-center justify-center"&gt;
+<span class='ln'>303</span>                        &lt;span className="font-black text-sm"&gt;
+<span class='ln'>304</span>                          {user.email?.charAt(0).toUpperCase()}
+<span class='ln'>305</span>                        &lt;/span&gt;
+<span class='ln'>306</span>                      &lt;/div&gt;
+<span class='ln'>307</span>                    &lt;/Link&gt;
+<span class='ln'>308</span>                  ) : (
+<span class='ln'>309</span>                    &lt;Link to="/login" className="neo-btn-primary text-sm px-3 py-2"&gt;
+<span class='ln'>310</span>                      LOGIN
+<span class='ln'>311</span>                    &lt;/Link&gt;
+<span class='ln'>312</span>                  )}
+<span class='ln'>313</span>                &lt;/div&gt;
+<span class='ln'>314</span>              &lt;/div&gt;
+<span class='ln'>315</span>            &lt;/div&gt;
+<span class='ln'>316</span>          &lt;/nav&gt;
+<span class='ln'>317</span>        )}
+<span class='ln'>318</span>      &lt;/div&gt;
+<span class='ln'>319</span>
+<span class='ln'>320</span>      {/* Mobile Bottom Navigation */}
+<span class='ln'>321</span>      &lt;div className="md:hidden fixed bottom-0 left-0 right-0 bg-neo-canvas border-t-4 border-neo-ink z-50"&gt;
+<span class='ln'>322</span>        &lt;div className="grid grid-cols-5 h-16"&gt;
+<span class='ln'>323</span>          &lt;NavLink
+<span class='ln'>324</span>            to="/"
+<span class='ln'>325</span>            className={({ isActive }) =&gt;
+<span class='ln'>326</span>              `flex flex-col items-center justify-center space-y-1 font-bold ${
+<span class='ln'>327</span>                isActive ? 'text-neo-accent bg-neo-secondary' : ''
+<span class='ln'>328</span>              }`
+<span class='ln'>329</span>            }
+<span class='ln'>330</span>          &gt;
+<span class='ln'>331</span>            &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>332</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /&gt;
+<span class='ln'>333</span>            &lt;/svg&gt;
+<span class='ln'>334</span>            &lt;span className="text-xs font-black uppercase"&gt;HOME&lt;/span&gt;
+<span class='ln'>335</span>          &lt;/NavLink&gt;
+<span class='ln'>336</span>
+<span class='ln'>337</span>          &lt;NavLink
+<span class='ln'>338</span>            to="/products"
+<span class='ln'>339</span>            className={({ isActive }) =&gt;
+<span class='ln'>340</span>              `flex flex-col items-center justify-center space-y-1 font-bold ${
+<span class='ln'>341</span>                isActive ? 'text-neo-accent bg-neo-secondary' : ''
+<span class='ln'>342</span>              }`
+<span class='ln'>343</span>            }
+<span class='ln'>344</span>          &gt;
+<span class='ln'>345</span>            &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>346</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /&gt;
+<span class='ln'>347</span>            &lt;/svg&gt;
+<span class='ln'>348</span>            &lt;span className="text-xs font-black uppercase"&gt;PRODUCTS&lt;/span&gt;
+<span class='ln'>349</span>          &lt;/NavLink&gt;
+<span class='ln'>350</span>
+<span class='ln'>351</span>          &lt;NavLink
+<span class='ln'>352</span>            to="/cart"
+<span class='ln'>353</span>            className={({ isActive }) =&gt;
+<span class='ln'>354</span>              `flex flex-col items-center justify-center space-y-1 relative font-bold ${
+<span class='ln'>355</span>                isActive ? 'text-neo-accent bg-neo-secondary' : ''
+<span class='ln'>356</span>              }`
+<span class='ln'>357</span>            }
+<span class='ln'>358</span>          &gt;
+<span class='ln'>359</span>            &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>360</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /&gt;
+<span class='ln'>361</span>            &lt;/svg&gt;
+<span class='ln'>362</span>            {cartCount &gt; 0 &amp;&amp; (
+<span class='ln'>363</span>              &lt;span className="absolute -top-1 right-6 neo-badge bg-neo-accent text-xs rotate-12"&gt;
+<span class='ln'>364</span>                {cartCount}
+<span class='ln'>365</span>              &lt;/span&gt;
+<span class='ln'>366</span>            )}
+<span class='ln'>367</span>            &lt;span className="text-xs font-black uppercase"&gt;CART&lt;/span&gt;
+<span class='ln'>368</span>          &lt;/NavLink&gt;
+<span class='ln'>369</span>
+<span class='ln'>370</span>          &lt;NavLink
+<span class='ln'>371</span>            to="/orders"
+<span class='ln'>372</span>            className={({ isActive }) =&gt;
+<span class='ln'>373</span>              `flex flex-col items-center justify-center space-y-1 font-bold ${
+<span class='ln'>374</span>                isActive ? 'text-neo-accent bg-neo-secondary' : ''
+<span class='ln'>375</span>              }`
+<span class='ln'>376</span>            }
+<span class='ln'>377</span>          &gt;
+<span class='ln'>378</span>            &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>379</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /&gt;
+<span class='ln'>380</span>            &lt;/svg&gt;
+<span class='ln'>381</span>            &lt;span className="text-xs font-black uppercase"&gt;ORDERS&lt;/span&gt;
+<span class='ln'>382</span>          &lt;/NavLink&gt;
+<span class='ln'>383</span>
+<span class='ln'>384</span>          &lt;NavLink
+<span class='ln'>385</span>            to="/profile"
+<span class='ln'>386</span>            className={({ isActive }) =&gt;
+<span class='ln'>387</span>              `flex flex-col items-center justify-center space-y-1 font-bold ${
+<span class='ln'>388</span>                isActive ? 'text-neo-accent bg-neo-secondary' : ''
+<span class='ln'>389</span>              }`
+<span class='ln'>390</span>            }
+<span class='ln'>391</span>          &gt;
+<span class='ln'>392</span>            &lt;svg className="h-5 w-5 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>393</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /&gt;
+<span class='ln'>394</span>            &lt;/svg&gt;
+<span class='ln'>395</span>            &lt;span className="text-xs font-black uppercase"&gt;PROFILE&lt;/span&gt;
+<span class='ln'>396</span>          &lt;/NavLink&gt;
+<span class='ln'>397</span>        &lt;/div&gt;
+<span class='ln'>398</span>      &lt;/div&gt;
+<span class='ln'>399</span>    &lt;/&gt;
+<span class='ln'>400</span>  );
+<span class='ln'>401</span>}
+</pre></div></body></html>

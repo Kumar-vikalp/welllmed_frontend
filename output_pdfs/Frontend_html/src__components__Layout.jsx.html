@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/Layout.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { Outlet } from 'react-router-dom';
+<span class='ln'>2</span>import { Suspense } from 'react';
+<span class='ln'>3</span>import { motion } from 'framer-motion';
+<span class='ln'>4</span>import Navbar from './Navbar';
+<span class='ln'>5</span>import Footer from './Footer';
+<span class='ln'>6</span>import Breadcrumbs from './Breadcrumbs';
+<span class='ln'>7</span>import { useLocation } from 'react-router-dom';
+<span class='ln'>8</span>
+<span class='ln'>9</span>// Loading component for pages
+<span class='ln'>10</span>const PageLoader = () =&gt; (
+<span class='ln'>11</span>  &lt;motion.div 
+<span class='ln'>12</span>    initial={{ opacity: 0 }}
+<span class='ln'>13</span>    animate={{ opacity: 1 }}
+<span class='ln'>14</span>    className="flex items-center justify-center py-20"
+<span class='ln'>15</span>  &gt;
+<span class='ln'>16</span>    &lt;div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"&gt;&lt;/div&gt;
+<span class='ln'>17</span>  &lt;/motion.div&gt;
+<span class='ln'>18</span>);
+<span class='ln'>19</span>
+<span class='ln'>20</span>export default function Layout() {
+<span class='ln'>21</span>  const location = useLocation();
+<span class='ln'>22</span>
+<span class='ln'>23</span>  // Don't show breadcrumbs on home page or auth pages
+<span class='ln'>24</span>  const isAuthPage = location.pathname === '/login' ||
+<span class='ln'>25</span>                     location.pathname === '/signup' ||
+<span class='ln'>26</span>                     location.pathname === '/forgot-password' ||
+<span class='ln'>27</span>                     location.pathname === '/reset-password';
+<span class='ln'>28</span>  const showBreadcrumbs = location.pathname !== '/' &amp;&amp; !isAuthPage;
+<span class='ln'>29</span>
+<span class='ln'>30</span>  return (
+<span class='ln'>31</span>    &lt;div className="flex flex-col min-h-screen bg-gray-50 pt-0 md:pt-16"&gt;
+<span class='ln'>32</span>      &lt;Navbar /&gt;
+<span class='ln'>33</span>      {showBreadcrumbs &amp;&amp; &lt;Breadcrumbs /&gt;}
+<span class='ln'>34</span>      &lt;main className="flex-grow pb-20 md:pb-8 min-h-screen"&gt;
+<span class='ln'>35</span>        &lt;Suspense fallback={&lt;PageLoader /&gt;}&gt;
+<span class='ln'>36</span>          &lt;Outlet /&gt;
+<span class='ln'>37</span>        &lt;/Suspense&gt;
+<span class='ln'>38</span>      &lt;/main&gt;
+<span class='ln'>39</span>      &lt;Footer /&gt;
+<span class='ln'>40</span>    &lt;/div&gt;
+<span class='ln'>41</span>  );
+<span class='ln'>42</span>}
+<span class='ln'>43</span>
+</pre></div></body></html>

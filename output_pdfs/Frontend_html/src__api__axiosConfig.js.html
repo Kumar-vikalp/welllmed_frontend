@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/api/axiosConfig.js</span><span class='lang'>JS</span></div><div class='wrap'><pre><span class='ln'>1</span>import axios from 'axios';
+<span class='ln'>2</span>
+<span class='ln'>3</span>const api = axios.create({
+<span class='ln'>4</span>  baseURL: 'https://vello-alpha.vercel.app/api',
+<span class='ln'>5</span>  timeout: 15000, // 15 second timeout
+<span class='ln'>6</span>  headers: {
+<span class='ln'>7</span>    'Content-Type': 'application/json',
+<span class='ln'>8</span>    'Accept': 'application/json',
+<span class='ln'>9</span>  },
+<span class='ln'>10</span>});
+<span class='ln'>11</span>
+<span class='ln'>12</span>// Interceptor to add the access token to every request
+<span class='ln'>13</span>api.interceptors.request.use(
+<span class='ln'>14</span>  (config) =&gt; {
+<span class='ln'>15</span>    const token = localStorage.getItem('access_token');
+<span class='ln'>16</span>    if (token) {
+<span class='ln'>17</span>      config.headers['Authorization'] = `Bearer ${token}`;
+<span class='ln'>18</span>    }
+<span class='ln'>19</span>    return config;
+<span class='ln'>20</span>  },
+<span class='ln'>21</span>  (error) =&gt; {
+<span class='ln'>22</span>    return Promise.reject(error);
+<span class='ln'>23</span>  }
+<span class='ln'>24</span>);
+<span class='ln'>25</span>
+<span class='ln'>26</span>// Interceptor to handle token refreshment on 401 Unauthorized errors
+<span class='ln'>27</span>api.interceptors.response.use(
+<span class='ln'>28</span>  (response) =&gt; {
+<span class='ln'>29</span>    return response;
+<span class='ln'>30</span>  },
+<span class='ln'>31</span>  async (error) =&gt; {
+<span class='ln'>32</span>    // Handle timeout errors
+<span class='ln'>33</span>    if (error.code === 'ECONNABORTED') {
+<span class='ln'>34</span>      console.error('Request timeout');
+<span class='ln'>35</span>      return Promise.reject(new Error('Request timeout. Please try again.'));
+<span class='ln'>36</span>    }
+<span class='ln'>37</span>    
+<span class='ln'>38</span>    if (!error.response) {
+<span class='ln'>39</span>      console.error('Network error');
+<span class='ln'>40</span>      return Promise.reject(new Error('Network error. Please check your connection.'));
+<span class='ln'>41</span>    }
+<span class='ln'>42</span>    
+<span class='ln'>43</span>    const originalRequest = error.config;
+<span class='ln'>44</span>    // Check if the error is 401 and it's not a retry request
+<span class='ln'>45</span>    if (error.response.status === 401 &amp;&amp; !originalRequest._retry) {
+<span class='ln'>46</span>      originalRequest._retry = true;
+<span class='ln'>47</span>      const refreshToken = localStorage.getItem('refresh_token');
+<span class='ln'>48</span>
+<span class='ln'>49</span>      if (refreshToken) {
+<span class='ln'>50</span>        try {
+<span class='ln'>51</span>          const response = await axios.post('https://vello-alpha.vercel.app/api/token/refresh/', {
+<span class='ln'>52</span>            refresh: refreshToken,
+<span class='ln'>53</span>          });
+<span class='ln'>54</span>          const newAccessToken = response.data.access;
+<span class='ln'>55</span>
+<span class='ln'>56</span>          localStorage.setItem('access_token', newAccessToken);
+<span class='ln'>57</span>          
+<span class='ln'>58</span>          // Update the authorization header for the original request
+<span class='ln'>59</span>          api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+<span class='ln'>60</span>          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+<span class='ln'>61</span>          
+<span class='ln'>62</span>          return api(originalRequest);
+<span class='ln'>63</span>        } catch (refreshError) {
+<span class='ln'>64</span>          // If refresh fails, log out the user
+<span class='ln'>65</span>          console.error("Token refresh failed", refreshError);
+<span class='ln'>66</span>          // Here you might want to trigger a logout action
+<span class='ln'>67</span>          localStorage.removeItem('access_token');
+<span class='ln'>68</span>          localStorage.removeItem('refresh_token');
+<span class='ln'>69</span>          localStorage.removeItem('user');
+<span class='ln'>70</span>          window.location.href = '/login';
+<span class='ln'>71</span>          return Promise.reject(refreshError);
+<span class='ln'>72</span>        }
+<span class='ln'>73</span>      }
+<span class='ln'>74</span>    }
+<span class='ln'>75</span>    return Promise.reject(error);
+<span class='ln'>76</span>  }
+<span class='ln'>77</span>);
+<span class='ln'>78</span>
+<span class='ln'>79</span>export default api;
+<span class='ln'>80</span>
+</pre></div></body></html>

@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/Breadcrumbs.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { Link, useLocation } from 'react-router-dom';
+<span class='ln'>2</span>import { useSelector } from 'react-redux';
+<span class='ln'>3</span>import { selectCurrentProduct } from '../store/slices/productsSlice';
+<span class='ln'>4</span>
+<span class='ln'>5</span>export default function Breadcrumbs() {
+<span class='ln'>6</span>  const location = useLocation();
+<span class='ln'>7</span>  const currentProduct = useSelector(selectCurrentProduct);
+<span class='ln'>8</span>  const pathnames = location.pathname.split('/').filter((x) =&gt; x);
+<span class='ln'>9</span>
+<span class='ln'>10</span>  const breadcrumbNameMap = {
+<span class='ln'>11</span>    'products': 'Products',
+<span class='ln'>12</span>    'product': 'Product Details',
+<span class='ln'>13</span>    'cart': 'Shopping Cart',
+<span class='ln'>14</span>    'checkout': 'Checkout',
+<span class='ln'>15</span>    'profile': 'My Profile',
+<span class='ln'>16</span>    'orders': 'Order History',
+<span class='ln'>17</span>    'search': 'Search',
+<span class='ln'>18</span>    'generic-info': 'Generic Medicines',
+<span class='ln'>19</span>    'about': 'About Us',
+<span class='ln'>20</span>    'contact': 'Contact Us',
+<span class='ln'>21</span>    'privacy': 'Privacy Policy',
+<span class='ln'>22</span>    'terms': 'Terms of Service',
+<span class='ln'>23</span>    'help': 'Help Center',
+<span class='ln'>24</span>    'how-to-order': 'How to Order'
+<span class='ln'>25</span>  };
+<span class='ln'>26</span>
+<span class='ln'>27</span>  // Get display label for each breadcrumb
+<span class='ln'>28</span>  const getDisplayName = (name, index) =&gt; {
+<span class='ln'>29</span>    const isProductSlug =
+<span class='ln'>30</span>      pathnames[index - 1] === 'product' &amp;&amp;
+<span class='ln'>31</span>      currentProduct &amp;&amp;
+<span class='ln'>32</span>      index === pathnames.length - 1;
+<span class='ln'>33</span>
+<span class='ln'>34</span>    if (isProductSlug) {
+<span class='ln'>35</span>      return currentProduct.name;
+<span class='ln'>36</span>    }
+<span class='ln'>37</span>
+<span class='ln'>38</span>    if (breadcrumbNameMap[name]) {
+<span class='ln'>39</span>      return breadcrumbNameMap[name];
+<span class='ln'>40</span>    }
+<span class='ln'>41</span>
+<span class='ln'>42</span>    // Fallback: Humanize the slug
+<span class='ln'>43</span>    return name
+<span class='ln'>44</span>      .split('-')
+<span class='ln'>45</span>      .map((part) =&gt; part.charAt(0).toUpperCase() + part.slice(1))
+<span class='ln'>46</span>      .join(' ');
+<span class='ln'>47</span>  };
+<span class='ln'>48</span>
+<span class='ln'>49</span>  // Build breadcrumb path route
+<span class='ln'>50</span>  const getRouteForBreadcrumb = (name, index) =&gt; {
+<span class='ln'>51</span>    // Special handling for product routes
+<span class='ln'>52</span>    if (pathnames[index - 1] === 'product' &amp;&amp; index === pathnames.length - 1) {
+<span class='ln'>53</span>      return `/${pathnames.slice(0, index + 1).join('/')}`;
+<span class='ln'>54</span>    }
+<span class='ln'>55</span>    return `/${pathnames.slice(0, index + 1).join('/')}`;
+<span class='ln'>56</span>  };
+<span class='ln'>57</span>
+<span class='ln'>58</span>  // Don't render on homepage
+<span class='ln'>59</span>  if (pathnames.length === 0) return null;
+<span class='ln'>60</span>
+<span class='ln'>61</span>  return (
+<span class='ln'>62</span>    &lt;nav className="bg-gray-50 border-b border-gray-200"&gt;
+<span class='ln'>63</span>      &lt;div className="max-w-7xl mx-auto px-4 py-3"&gt;
+<span class='ln'>64</span>        &lt;ol className="flex items-center space-x-2 text-sm"&gt;
+<span class='ln'>65</span>          &lt;li&gt;
+<span class='ln'>66</span>            &lt;Link
+<span class='ln'>67</span>              to="/"
+<span class='ln'>68</span>              className="text-gray-500 hover:text-purple-600 transition-colors"
+<span class='ln'>69</span>            &gt;
+<span class='ln'>70</span>              &lt;svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"&gt;
+<span class='ln'>71</span>                &lt;path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /&gt;
+<span class='ln'>72</span>              &lt;/svg&gt;
+<span class='ln'>73</span>            &lt;/Link&gt;
+<span class='ln'>74</span>          &lt;/li&gt;
+<span class='ln'>75</span>          {pathnames.map((name, index) =&gt; {
+<span class='ln'>76</span>            const routeTo = getRouteForBreadcrumb(name, index);
+<span class='ln'>77</span>            const isLast = index === pathnames.length - 1;
+<span class='ln'>78</span>            const displayName = getDisplayName(name, index);
+<span class='ln'>79</span>
+<span class='ln'>80</span>            return (
+<span class='ln'>81</span>              &lt;li key={name} className="flex items-center"&gt;
+<span class='ln'>82</span>                &lt;svg
+<span class='ln'>83</span>                  className="w-4 h-4 text-gray-400 mx-2"
+<span class='ln'>84</span>                  fill="currentColor"
+<span class='ln'>85</span>                  viewBox="0 0 20 20"
+<span class='ln'>86</span>                &gt;
+<span class='ln'>87</span>                  &lt;path
+<span class='ln'>88</span>                    fillRule="evenodd"
+<span class='ln'>89</span>                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+<span class='ln'>90</span>                    clipRule="evenodd"
+<span class='ln'>91</span>                  /&gt;
+<span class='ln'>92</span>                &lt;/svg&gt;
+<span class='ln'>93</span>                {isLast ? (
+<span class='ln'>94</span>                  &lt;span className="text-gray-900 font-medium"&gt;
+<span class='ln'>95</span>                    {displayName}
+<span class='ln'>96</span>                  &lt;/span&gt;
+<span class='ln'>97</span>                ) : (
+<span class='ln'>98</span>                  &lt;Link
+<span class='ln'>99</span>                    to={routeTo}
+<span class='ln'>100</span>                    className="text-purple-600 hover:text-purple-800 transition-colors"
+<span class='ln'>101</span>                  &gt;
+<span class='ln'>102</span>                    {displayName}
+<span class='ln'>103</span>                  &lt;/Link&gt;
+<span class='ln'>104</span>                )}
+<span class='ln'>105</span>              &lt;/li&gt;
+<span class='ln'>106</span>            );
+<span class='ln'>107</span>          })}
+<span class='ln'>108</span>        &lt;/ol&gt;
+<span class='ln'>109</span>      &lt;/div&gt;
+<span class='ln'>110</span>    &lt;/nav&gt;
+<span class='ln'>111</span>  );
+<span class='ln'>112</span>}
+<span class='ln'>113</span>
+</pre></div></body></html>

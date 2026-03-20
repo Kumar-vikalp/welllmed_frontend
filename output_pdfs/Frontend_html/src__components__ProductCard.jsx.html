@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/ProductCard.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { motion } from 'framer-motion';
+<span class='ln'>2</span>import { Link } from 'react-router-dom';
+<span class='ln'>3</span>import { useDispatch, useSelector } from 'react-redux';
+<span class='ln'>4</span>import { addToCart, fetchCart, selectCartSyncing } from '../store/slices/cartSlice';
+<span class='ln'>5</span>import { selectUser } from '../store/slices/userSlice';
+<span class='ln'>6</span>import { useState, memo } from 'react';
+<span class='ln'>7</span>import LazyImage from './LazyImage';
+<span class='ln'>8</span>import Card from './Card';
+<span class='ln'>9</span>import Button from './Button';
+<span class='ln'>10</span>
+<span class='ln'>11</span>const ProductCard = memo(function ProductCard({ product }) {
+<span class='ln'>12</span>  const dispatch = useDispatch();
+<span class='ln'>13</span>  const user = useSelector(selectUser);
+<span class='ln'>14</span>  const syncing = useSelector(selectCartSyncing);
+<span class='ln'>15</span>  const [isAdding, setIsAdding] = useState(false);
+<span class='ln'>16</span>  const discountedPrice = product.discounted_price;
+<span class='ln'>17</span>
+<span class='ln'>18</span>  const handleAddToCart = async (e) =&gt; {
+<span class='ln'>19</span>    e.preventDefault();
+<span class='ln'>20</span>    e.stopPropagation();
+<span class='ln'>21</span>    
+<span class='ln'>22</span>    if (!user) {
+<span class='ln'>23</span>      alert('Please login to add items to cart');
+<span class='ln'>24</span>      return;
+<span class='ln'>25</span>    }
+<span class='ln'>26</span>    
+<span class='ln'>27</span>    if (product.available_stock &lt;= 0) return;
+<span class='ln'>28</span>    
+<span class='ln'>29</span>    setIsAdding(true);
+<span class='ln'>30</span>    try {
+<span class='ln'>31</span>      // Add to cart via API
+<span class='ln'>32</span>      await dispatch(addToCart({ 
+<span class='ln'>33</span>        product_id: product.product_id, 
+<span class='ln'>34</span>        quantity: 1 
+<span class='ln'>35</span>      })).unwrap();
+<span class='ln'>36</span>      
+<span class='ln'>37</span>      // Refresh cart to get updated data
+<span class='ln'>38</span>      await dispatch(fetchCart());
+<span class='ln'>39</span>      
+<span class='ln'>40</span>    } catch (error) {
+<span class='ln'>41</span>      console.error('Failed to add to cart:', error);
+<span class='ln'>42</span>      alert('Failed to add item to cart. Please try again.');
+<span class='ln'>43</span>    } finally {
+<span class='ln'>44</span>      setIsAdding(false);
+<span class='ln'>45</span>    }
+<span class='ln'>46</span>  };
+<span class='ln'>47</span>
+<span class='ln'>48</span>  return (
+<span class='ln'>49</span>    &lt;Card
+<span class='ln'>50</span>      layout
+<span class='ln'>51</span>      className="overflow-hidden flex flex-col"
+<span class='ln'>52</span>      rotation={Math.random() &gt; 0.7 ? (Math.random() &gt; 0.5 ? 1 : -1) : 0}
+<span class='ln'>53</span>    &gt;
+<span class='ln'>54</span>      &lt;Link to={`/product/${product.slug}`} className="block flex-grow" onClick={(e) =&gt; e.stopPropagation()}&gt;
+<span class='ln'>55</span>        &lt;div className="relative"&gt;
+<span class='ln'>56</span>          &lt;LazyImage 
+<span class='ln'>57</span>            src={product.images[0]} 
+<span class='ln'>58</span>            alt={product.name} 
+<span class='ln'>59</span>            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink" 
+<span class='ln'>60</span>          /&gt;
+<span class='ln'>61</span>          {product.trending &amp;&amp; (
+<span class='ln'>62</span>            &lt;span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10"&gt;
+<span class='ln'>63</span>              🔥 HOT
+<span class='ln'>64</span>            &lt;/span&gt;
+<span class='ln'>65</span>          )}
+<span class='ln'>66</span>          {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>67</span>            &lt;span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10"&gt;
+<span class='ln'>68</span>              {product.discount}% OFF
+<span class='ln'>69</span>            &lt;/span&gt;
+<span class='ln'>70</span>          )}
+<span class='ln'>71</span>        &lt;/div&gt;
+<span class='ln'>72</span>        &lt;div className="p-3 md:p-4 flex-grow"&gt;
+<span class='ln'>73</span>          &lt;p className="text-xs md:text-sm font-bold uppercase tracking-wide"&gt;{product.company}&lt;/p&gt;
+<span class='ln'>74</span>          &lt;h3 className="text-sm md:text-base font-black mt-1 mb-2 line-clamp-2 leading-tight"&gt;
+<span class='ln'>75</span>            {product.name}
+<span class='ln'>76</span>          &lt;/h3&gt;
+<span class='ln'>77</span>          &lt;div className="flex justify-between items-center mb-3"&gt;
+<span class='ln'>78</span>            &lt;div&gt;
+<span class='ln'>79</span>              &lt;p className="text-lg md:text-xl font-black"&gt;₹{discountedPrice.toFixed(2)}&lt;/p&gt;
+<span class='ln'>80</span>              {product.discount &gt; 0 &amp;&amp; (
+<span class='ln'>81</span>                &lt;p className="text-xs md:text-sm font-bold line-through opacity-60"&gt;₹{product.mrp.toFixed(2)}&lt;/p&gt;
+<span class='ln'>82</span>              )}
+<span class='ln'>83</span>            &lt;/div&gt;
+<span class='ln'>84</span>            &lt;span className={`neo-badge rotate-2 ${
+<span class='ln'>85</span>              product.available_stock &gt; 0 
+<span class='ln'>86</span>                ? 'bg-neo-secondary' 
+<span class='ln'>87</span>                : 'bg-neo-accent'
+<span class='ln'>88</span>            }`}&gt;
+<span class='ln'>89</span>              {product.available_stock &gt; 0 ? 'IN STOCK' : 'OUT OF STOCK'}
+<span class='ln'>90</span>            &lt;/span&gt;
+<span class='ln'>91</span>          &lt;/div&gt;
+<span class='ln'>92</span>        &lt;/div&gt;
+<span class='ln'>93</span>      &lt;/Link&gt;
+<span class='ln'>94</span>      
+<span class='ln'>95</span>      {/* Add to Cart Button */}
+<span class='ln'>96</span>      &lt;div className="p-3 md:p-4 pt-0"&gt;
+<span class='ln'>97</span>        &lt;Button
+<span class='ln'>98</span>          variant={product.available_stock &gt; 0 &amp;&amp; user ? 'primary' : 'outline'}
+<span class='ln'>99</span>          size="sm"
+<span class='ln'>100</span>          className="w-full"
+<span class='ln'>101</span>          onClick={handleAddToCart}
+<span class='ln'>102</span>          disabled={product.available_stock &lt;= 0 || isAdding || syncing || !user}
+<span class='ln'>103</span>        &gt;
+<span class='ln'>104</span>          {isAdding || syncing ? (
+<span class='ln'>105</span>            'ADDING...'
+<span class='ln'>106</span>          ) : !user ? (
+<span class='ln'>107</span>            'LOGIN TO ADD'
+<span class='ln'>108</span>          ) : product.available_stock &gt; 0 ? (
+<span class='ln'>109</span>            'ADD TO CART'
+<span class='ln'>110</span>          ) : (
+<span class='ln'>111</span>            'OUT OF STOCK'
+<span class='ln'>112</span>          )}
+<span class='ln'>113</span>        &lt;/Button&gt;
+<span class='ln'>114</span>      &lt;/div&gt;
+<span class='ln'>115</span>    &lt;/Card&gt;
+<span class='ln'>116</span>  );
+<span class='ln'>117</span>});
+<span class='ln'>118</span>
+<span class='ln'>119</span>export default ProductCard;
+</pre></div></body></html>

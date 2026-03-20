@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/HeroCarousel.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState, useEffect } from 'react'
+<span class='ln'>2</span>import { motion, AnimatePresence } from 'framer-motion'
+<span class='ln'>3</span>import { Link } from 'react-router-dom'
+<span class='ln'>4</span>import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+<span class='ln'>5</span>import Button from './Button'
+<span class='ln'>6</span>import Card from './Card'
+<span class='ln'>7</span>
+<span class='ln'>8</span>export default function HeroCarousel() {
+<span class='ln'>9</span>  const [currentSlide, setCurrentSlide] = useState(0)
+<span class='ln'>10</span>
+<span class='ln'>11</span>  const slides = [
+<span class='ln'>12</span>    {
+<span class='ln'>13</span>      id: 1,
+<span class='ln'>14</span>      tag: "⚡ EXPRESS DELIVERY",
+<span class='ln'>15</span>      title: "MEDICINE IN 10 MIN",
+<span class='ln'>16</span>      subtitle: "Emergency essentials or daily refills, we've got you covered with authentic medicines at your doorstep.",
+<span class='ln'>17</span>      cta: "ORDER NOW",
+<span class='ln'>18</span>      link: "/products",
+<span class='ln'>19</span>      bg: "bg-neo-accent",
+<span class='ln'>20</span>      accent: "bg-red-500",
+<span class='ln'>21</span>      images: {
+<span class='ln'>22</span>        mobile: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400&amp;h=300&amp;fit=crop",
+<span class='ln'>23</span>        tablet: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=600&amp;h=400&amp;fit=crop",
+<span class='ln'>24</span>        desktop: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop"
+<span class='ln'>25</span>      }
+<span class='ln'>26</span>    },
+<span class='ln'>27</span>    {
+<span class='ln'>28</span>      id: 2,
+<span class='ln'>29</span>      tag: "🔥 LIMITED OFFER",
+<span class='ln'>30</span>      title: "FLAT 80% OFF",
+<span class='ln'>31</span>      subtitle: "Your first step towards affordable healthcare starts here. Quality medicines at unbeatable prices.",
+<span class='ln'>32</span>      cta: "CLAIM DISCOUNT",
+<span class='ln'>33</span>      link: "/products?trending=true",
+<span class='ln'>34</span>      bg: "bg-neo-secondary",
+<span class='ln'>35</span>      accent: "bg-yellow-400",
+<span class='ln'>36</span>      images: {
+<span class='ln'>37</span>        mobile: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400&amp;h=300&amp;fit=crop",
+<span class='ln'>38</span>        tablet: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=600&amp;h=400&amp;fit=crop",
+<span class='ln'>39</span>        desktop: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop"
+<span class='ln'>40</span>      }
+<span class='ln'>41</span>    },
+<span class='ln'>42</span>    {
+<span class='ln'>43</span>      id: 3,
+<span class='ln'>44</span>      tag: "🛡️ 100% AUTHENTIC",
+<span class='ln'>45</span>      title: "TRUSTED PHARMACY",
+<span class='ln'>46</span>      subtitle: "All medicines sourced directly from licensed manufacturers. Your health, our priority.",
+<span class='ln'>47</span>      cta: "BROWSE MEDICINES",
+<span class='ln'>48</span>      link: "/products",
+<span class='ln'>49</span>      bg: "bg-neo-muted",
+<span class='ln'>50</span>      accent: "bg-purple-400",
+<span class='ln'>51</span>      images: {
+<span class='ln'>52</span>        mobile: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400&amp;h=300&amp;fit=crop",
+<span class='ln'>53</span>        tablet: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=600&amp;h=400&amp;fit=crop",
+<span class='ln'>54</span>        desktop: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop"
+<span class='ln'>55</span>      }
+<span class='ln'>56</span>    }
+<span class='ln'>57</span>  ]
+<span class='ln'>58</span>
+<span class='ln'>59</span>  useEffect(() =&gt; {
+<span class='ln'>60</span>    const timer = setInterval(() =&gt; {
+<span class='ln'>61</span>      setCurrentSlide((prev) =&gt; (prev + 1) % slides.length)
+<span class='ln'>62</span>    }, 6000)
+<span class='ln'>63</span>    return () =&gt; clearInterval(timer)
+<span class='ln'>64</span>  }, [slides.length])
+<span class='ln'>65</span>
+<span class='ln'>66</span>  const nextSlide = () =&gt; {
+<span class='ln'>67</span>    setCurrentSlide((prev) =&gt; (prev + 1) % slides.length)
+<span class='ln'>68</span>  }
+<span class='ln'>69</span>
+<span class='ln'>70</span>  const prevSlide = () =&gt; {
+<span class='ln'>71</span>    setCurrentSlide((prev) =&gt; (prev - 1 + slides.length) % slides.length)
+<span class='ln'>72</span>  }
+<span class='ln'>73</span>
+<span class='ln'>74</span>  return (
+<span class='ln'>75</span>    &lt;div className="relative overflow-hidden bg-neo-canvas border-y-4 border-neo-ink"&gt;
+<span class='ln'>76</span>      {/* Background Pattern */}
+<span class='ln'>77</span>      &lt;div className="absolute inset-0 bg-neo-grid opacity-20"&gt;&lt;/div&gt;
+<span class='ln'>78</span>      
+<span class='ln'>79</span>      {/* Floating Decorative Elements */}
+<span class='ln'>80</span>      &lt;div className="absolute top-20 left-10 rotate-12 z-10"&gt;
+<span class='ln'>81</span>        &lt;Star className="w-8 h-8 md:w-12 md:h-12 fill-neo-accent text-neo-accent animate-spin-slow" /&gt;
+<span class='ln'>82</span>      &lt;/div&gt;
+<span class='ln'>83</span>      &lt;div className="absolute top-40 right-20 -rotate-12 z-10"&gt;
+<span class='ln'>84</span>        &lt;Zap className="w-10 h-10 md:w-16 md:h-16 fill-neo-secondary text-neo-secondary animate-bounce-slow" /&gt;
+<span class='ln'>85</span>      &lt;/div&gt;
+<span class='ln'>86</span>      &lt;div className="absolute bottom-32 left-32 rotate-45 z-10 hidden md:block"&gt;
+<span class='ln'>87</span>        &lt;Shield className="w-8 h-8 fill-neo-muted text-neo-muted" /&gt;
+<span class='ln'>88</span>      &lt;/div&gt;
+<span class='ln'>89</span>
+<span class='ln'>90</span>      &lt;div className="neo-container relative z-20"&gt;
+<span class='ln'>91</span>        &lt;div className="relative h-[400px] md:h-[500px] lg:h-[600px]"&gt;
+<span class='ln'>92</span>          &lt;AnimatePresence mode="wait"&gt;
+<span class='ln'>93</span>            &lt;motion.div
+<span class='ln'>94</span>              key={currentSlide}
+<span class='ln'>95</span>              initial={{ opacity: 0, x: 100 }}
+<span class='ln'>96</span>              animate={{ opacity: 1, x: 0 }}
+<span class='ln'>97</span>              exit={{ opacity: 0, x: -100 }}
+<span class='ln'>98</span>              transition={{ duration: 0.5, ease: "easeOut" }}
+<span class='ln'>99</span>              className={`absolute inset-0 ${slides[currentSlide].bg} border-4 border-neo-ink shadow-neo-xl`}
+<span class='ln'>100</span>            &gt;
+<span class='ln'>101</span>              {/* Decorative Accent Shapes */}
+<span class='ln'>102</span>              &lt;div className={`absolute -top-24 -right-24 w-48 h-48 md:w-96 md:h-96 rounded-full blur-3xl opacity-30 ${slides[currentSlide].accent}`} /&gt;
+<span class='ln'>103</span>              &lt;div className={`absolute -bottom-24 -left-24 w-32 h-32 md:w-72 md:h-72 rounded-full blur-3xl opacity-20 ${slides[currentSlide].accent}`} /&gt;
+<span class='ln'>104</span>
+<span class='ln'>105</span>              &lt;div className="relative h-full flex items-center px-6 md:px-12 lg:px-16"&gt;
+<span class='ln'>106</span>                &lt;div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full"&gt;
+<span class='ln'>107</span>                  
+<span class='ln'>108</span>                  {/* Text Content */}
+<span class='ln'>109</span>                  &lt;div className="lg:col-span-7 z-10 text-center lg:text-left"&gt;
+<span class='ln'>110</span>                    &lt;motion.div
+<span class='ln'>111</span>                      initial={{ opacity: 0, y: 20 }}
+<span class='ln'>112</span>                      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>113</span>                      transition={{ delay: 0.2 }}
+<span class='ln'>114</span>                      className="inline-block mb-4"
+<span class='ln'>115</span>                    &gt;
+<span class='ln'>116</span>                      &lt;span className="neo-badge rotate-1 bg-neo-ink text-white"&gt;
+<span class='ln'>117</span>                        {slides[currentSlide].tag}
+<span class='ln'>118</span>                      &lt;/span&gt;
+<span class='ln'>119</span>                    &lt;/motion.div&gt;
+<span class='ln'>120</span>                    
+<span class='ln'>121</span>                    &lt;motion.h1 
+<span class='ln'>122</span>                      initial={{ opacity: 0, y: 30 }}
+<span class='ln'>123</span>                      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>124</span>                      transition={{ delay: 0.3 }}
+<span class='ln'>125</span>                      className="text-4xl md:text-6xl lg:text-8xl font-black leading-none mb-6"
+<span class='ln'>126</span>                    &gt;
+<span class='ln'>127</span>                      &lt;span className="block -rotate-1"&gt;{slides[currentSlide].title.split(' ')[0]}&lt;/span&gt;
+<span class='ln'>128</span>                      &lt;span className="block rotate-1 text-neo-ink text-stroke"&gt;
+<span class='ln'>129</span>                        {slides[currentSlide].title.split(' ').slice(1).join(' ')}
+<span class='ln'>130</span>                      &lt;/span&gt;
+<span class='ln'>131</span>                    &lt;/motion.h1&gt;
+<span class='ln'>132</span>                    
+<span class='ln'>133</span>                    &lt;motion.p 
+<span class='ln'>134</span>                      initial={{ opacity: 0 }}
+<span class='ln'>135</span>                      animate={{ opacity: 1 }}
+<span class='ln'>136</span>                      transition={{ delay: 0.4 }}
+<span class='ln'>137</span>                      className="text-lg md:text-xl font-bold max-w-lg mb-8 mx-auto lg:mx-0"
+<span class='ln'>138</span>                    &gt;
+<span class='ln'>139</span>                      {slides[currentSlide].subtitle}
+<span class='ln'>140</span>                    &lt;/motion.p&gt;
+<span class='ln'>141</span>                    
+<span class='ln'>142</span>                    &lt;motion.div 
+<span class='ln'>143</span>                      initial={{ opacity: 0, scale: 0.9 }}
+<span class='ln'>144</span>                      animate={{ opacity: 1, scale: 1 }}
+<span class='ln'>145</span>                      transition={{ delay: 0.5 }}
+<span class='ln'>146</span>                      className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+<span class='ln'>147</span>                    &gt;
+<span class='ln'>148</span>                      &lt;Link to={slides[currentSlide].link}&gt;
+<span class='ln'>149</span>                        &lt;Button size="lg" className="rotate-1 w-full sm:w-auto"&gt;
+<span class='ln'>150</span>                          {slides[currentSlide].cta}
+<span class='ln'>151</span>                        &lt;/Button&gt;
+<span class='ln'>152</span>                      &lt;/Link&gt;
+<span class='ln'>153</span>                      &lt;Button variant="outline" size="lg" className="-rotate-1 w-full sm:w-auto"&gt;
+<span class='ln'>154</span>                        LEARN MORE
+<span class='ln'>155</span>                      &lt;/Button&gt;
+<span class='ln'>156</span>                    &lt;/motion.div&gt;
+<span class='ln'>157</span>                  &lt;/div&gt;
+<span class='ln'>158</span>
+<span class='ln'>159</span>                  {/* Image Content - Responsive */}
+<span class='ln'>160</span>                  &lt;div className="lg:col-span-5 relative hidden lg:block"&gt;
+<span class='ln'>161</span>                    &lt;motion.div
+<span class='ln'>162</span>                      initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+<span class='ln'>163</span>                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+<span class='ln'>164</span>                      transition={{ duration: 0.8, ease: "easeOut" }}
+<span class='ln'>165</span>                      className="relative z-10"
+<span class='ln'>166</span>                    &gt;
+<span class='ln'>167</span>                      {/* Desktop Image */}
+<span class='ln'>168</span>                      &lt;Card className="overflow-hidden rotate-3" hover={false}&gt;
+<span class='ln'>169</span>                        &lt;picture&gt;
+<span class='ln'>170</span>                          &lt;source media="(min-width: 1024px)" srcSet={slides[currentSlide].images.desktop} /&gt;
+<span class='ln'>171</span>                          &lt;source media="(min-width: 768px)" srcSet={slides[currentSlide].images.tablet} /&gt;
+<span class='ln'>172</span>                          &lt;img
+<span class='ln'>173</span>                            src={slides[currentSlide].images.mobile}
+<span class='ln'>174</span>                            alt={slides[currentSlide].title}
+<span class='ln'>175</span>                            className="w-full h-[300px] lg:h-[400px] object-cover"
+<span class='ln'>176</span>                            loading="lazy"
+<span class='ln'>177</span>                          /&gt;
+<span class='ln'>178</span>                        &lt;/picture&gt;
+<span class='ln'>179</span>                      &lt;/Card&gt;
+<span class='ln'>180</span>                      
+<span class='ln'>181</span>                      {/* Floating Trust Badges */}
+<span class='ln'>182</span>                      &lt;motion.div
+<span class='ln'>183</span>                        initial={{ opacity: 0, x: -20 }}
+<span class='ln'>184</span>                        animate={{ opacity: 1, x: 0 }}
+<span class='ln'>185</span>                        transition={{ delay: 0.8 }}
+<span class='ln'>186</span>                        className="absolute -bottom-6 -left-6"
+<span class='ln'>187</span>                      &gt;
+<span class='ln'>188</span>                        &lt;Card className="p-4 bg-white -rotate-6" hover={false}&gt;
+<span class='ln'>189</span>                          &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>190</span>                            &lt;div className="w-8 h-8 bg-green-100 border-2 border-neo-ink flex items-center justify-center"&gt;
+<span class='ln'>191</span>                              &lt;svg className="w-5 h-5 text-green-600 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>192</span>                                &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /&gt;
+<span class='ln'>193</span>                              &lt;/svg&gt;
+<span class='ln'>194</span>                            &lt;/div&gt;
+<span class='ln'>195</span>                            &lt;div&gt;
+<span class='ln'>196</span>                              &lt;p className="text-xs text-neo-ink font-black uppercase"&gt;Verified&lt;/p&gt;
+<span class='ln'>197</span>                              &lt;p className="text-sm font-black text-neo-ink uppercase"&gt;100% Genuine&lt;/p&gt;
+<span class='ln'>198</span>                            &lt;/div&gt;
+<span class='ln'>199</span>                          &lt;/div&gt;
+<span class='ln'>200</span>                        &lt;/Card&gt;
+<span class='ln'>201</span>                      &lt;/motion.div&gt;
+<span class='ln'>202</span>
+<span class='ln'>203</span>                      &lt;motion.div
+<span class='ln'>204</span>                        initial={{ opacity: 0, x: 20 }}
+<span class='ln'>205</span>                        animate={{ opacity: 1, x: 0 }}
+<span class='ln'>206</span>                        transition={{ delay: 1 }}
+<span class='ln'>207</span>                        className="absolute -top-6 -right-6"
+<span class='ln'>208</span>                      &gt;
+<span class='ln'>209</span>                        &lt;Card className="p-4 bg-neo-secondary rotate-12" hover={false}&gt;
+<span class='ln'>210</span>                          &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>211</span>                            &lt;Clock className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>212</span>                            &lt;div&gt;
+<span class='ln'>213</span>                              &lt;p className="text-xs text-neo-ink font-black uppercase"&gt;24/7&lt;/p&gt;
+<span class='ln'>214</span>                              &lt;p className="text-sm font-black text-neo-ink uppercase"&gt;Support&lt;/p&gt;
+<span class='ln'>215</span>                            &lt;/div&gt;
+<span class='ln'>216</span>                          &lt;/div&gt;
+<span class='ln'>217</span>                        &lt;/Card&gt;
+<span class='ln'>218</span>                      &lt;/motion.div&gt;
+<span class='ln'>219</span>                    &lt;/motion.div&gt;
+<span class='ln'>220</span>                  &lt;/div&gt;
+<span class='ln'>221</span>
+<span class='ln'>222</span>                &lt;/div&gt;
+<span class='ln'>223</span>              &lt;/div&gt;
+<span class='ln'>224</span>
+<span class='ln'>225</span>              {/* Background Numbers */}
+<span class='ln'>226</span>              &lt;div className="absolute bottom-0 left-0 text-6xl md:text-9xl font-black text-neo-ink opacity-10 -rotate-12 pointer-events-none"&gt;
+<span class='ln'>227</span>                Genx
+<span class='ln'>228</span>              &lt;/div&gt;
+<span class='ln'>229</span>              &lt;div className="absolute top-20 right-20 text-4xl md:text-6xl font-black text-neo-ink opacity-20 rotate-12 pointer-events-none hidden md:block"&gt;
+<span class='ln'>230</span>                Medicos
+<span class='ln'>231</span>              &lt;/div&gt;
+<span class='ln'>232</span>            &lt;/motion.div&gt;
+<span class='ln'>233</span>          &lt;/AnimatePresence&gt;
+<span class='ln'>234</span>
+<span class='ln'>235</span>          {/* Navigation Controls */}
+<span class='ln'>236</span>          &lt;div className="absolute inset-y-0 left-4 flex items-center z-30"&gt;
+<span class='ln'>237</span>            &lt;Button 
+<span class='ln'>238</span>              variant="ghost" 
+<span class='ln'>239</span>              size="sm" 
+<span class='ln'>240</span>              className="rotate-1 bg-white/90 hover:bg-white"
+<span class='ln'>241</span>              onClick={prevSlide}
+<span class='ln'>242</span>            &gt;
+<span class='ln'>243</span>              &lt;ChevronLeft className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>244</span>            &lt;/Button&gt;
+<span class='ln'>245</span>          &lt;/div&gt;
+<span class='ln'>246</span>          
+<span class='ln'>247</span>          &lt;div className="absolute inset-y-0 right-4 flex items-center z-30"&gt;
+<span class='ln'>248</span>            &lt;Button 
+<span class='ln'>249</span>              variant="ghost" 
+<span class='ln'>250</span>              size="sm" 
+<span class='ln'>251</span>              className="-rotate-1 bg-white/90 hover:bg-white"
+<span class='ln'>252</span>              onClick={nextSlide}
+<span class='ln'>253</span>            &gt;
+<span class='ln'>254</span>              &lt;ChevronRight className="w-6 h-6 stroke-[3px]" /&gt;
+<span class='ln'>255</span>            &lt;/Button&gt;
+<span class='ln'>256</span>          &lt;/div&gt;
+<span class='ln'>257</span>
+<span class='ln'>258</span>          {/* Slide Indicators */}
+<span class='ln'>259</span>          &lt;div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-30"&gt;
+<span class='ln'>260</span>            {slides.map((_, index) =&gt; (
+<span class='ln'>261</span>              &lt;button
+<span class='ln'>262</span>                key={index}
+<span class='ln'>263</span>                onClick={() =&gt; setCurrentSlide(index)}
+<span class='ln'>264</span>                className={`transition-all duration-200 border-2 border-neo-ink ${
+<span class='ln'>265</span>                  index === currentSlide 
+<span class='ln'>266</span>                    ? 'w-8 h-4 bg-neo-ink rotate-1' 
+<span class='ln'>267</span>                    : 'w-4 h-4 bg-white hover:bg-neo-secondary -rotate-1'
+<span class='ln'>268</span>                }`}
+<span class='ln'>269</span>              /&gt;
+<span class='ln'>270</span>            ))}
+<span class='ln'>271</span>          &lt;/div&gt;
+<span class='ln'>272</span>        &lt;/div&gt;
+<span class='ln'>273</span>      &lt;/div&gt;
+<span class='ln'>274</span>
+<span class='ln'>275</span>      {/* Mobile Image Section */}
+<span class='ln'>276</span>      &lt;div className="lg:hidden relative"&gt;
+<span class='ln'>277</span>        &lt;motion.div
+<span class='ln'>278</span>          key={`mobile-${currentSlide}`}
+<span class='ln'>279</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>280</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>281</span>          transition={{ duration: 0.5 }}
+<span class='ln'>282</span>          className="neo-container py-8"
+<span class='ln'>283</span>        &gt;
+<span class='ln'>284</span>          &lt;Card className="overflow-hidden rotate-1" hover={false}&gt;
+<span class='ln'>285</span>            &lt;picture&gt;
+<span class='ln'>286</span>              &lt;source media="(min-width: 768px)" srcSet={slides[currentSlide].images.tablet} /&gt;
+<span class='ln'>287</span>              &lt;img
+<span class='ln'>288</span>                src={slides[currentSlide].images.mobile}
+<span class='ln'>289</span>                alt={slides[currentSlide].title}
+<span class='ln'>290</span>                className="w-full h-[200px] sm:h-[250px] object-cover"
+<span class='ln'>291</span>                loading="lazy"
+<span class='ln'>292</span>              /&gt;
+<span class='ln'>293</span>            &lt;/picture&gt;
+<span class='ln'>294</span>          &lt;/Card&gt;
+<span class='ln'>295</span>        &lt;/motion.div&gt;
+<span class='ln'>296</span>      &lt;/div&gt;
+<span class='ln'>297</span>    &lt;/div&gt;
+<span class='ln'>298</span>  )
+<span class='ln'>299</span>}
+</pre></div></body></html>

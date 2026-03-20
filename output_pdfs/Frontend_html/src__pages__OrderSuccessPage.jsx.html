@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/pages/OrderSuccessPage.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useEffect } from 'react';
+<span class='ln'>2</span>import { Link, useLocation, useNavigate } from 'react-router-dom';
+<span class='ln'>3</span>import { motion } from 'framer-motion';
+<span class='ln'>4</span>
+<span class='ln'>5</span>export default function OrderSuccessPage() {
+<span class='ln'>6</span>  const navigate = useNavigate();
+<span class='ln'>7</span>  const location = useLocation();
+<span class='ln'>8</span>  const orderId = location.state?.orderId;
+<span class='ln'>9</span>
+<span class='ln'>10</span>  // If someone lands here directly without an order, redirect them home.
+<span class='ln'>11</span>  useEffect(() =&gt; {
+<span class='ln'>12</span>    if (!orderId) {
+<span class='ln'>13</span>      navigate('/');
+<span class='ln'>14</span>    }
+<span class='ln'>15</span>  }, [orderId, navigate]);
+<span class='ln'>16</span>
+<span class='ln'>17</span>  return (
+<span class='ln'>18</span>    &lt;div className="min-h-screen bg-[#FFFDF5] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden"&gt;
+<span class='ln'>19</span>      {/* Background Pattern */}
+<span class='ln'>20</span>      &lt;div 
+<span class='ln'>21</span>        className="absolute inset-0 opacity-10"
+<span class='ln'>22</span>        style={{
+<span class='ln'>23</span>          backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
+<span class='ln'>24</span>          backgroundSize: '20px 20px'
+<span class='ln'>25</span>        }}
+<span class='ln'>26</span>      &gt;&lt;/div&gt;
+<span class='ln'>27</span>      
+<span class='ln'>28</span>      {/* Floating Decorative Elements - Stars and Shapes */}
+<span class='ln'>29</span>      &lt;div className="absolute top-10 left-10 rotate-12"&gt;
+<span class='ln'>30</span>        &lt;div className="w-8 h-8 bg-[#FFD93D] border-4 border-black animate-spin-slow"&gt;&lt;/div&gt;
+<span class='ln'>31</span>      &lt;/div&gt;
+<span class='ln'>32</span>      &lt;div className="absolute top-20 right-20 -rotate-12"&gt;
+<span class='ln'>33</span>        &lt;div className="w-6 h-6 bg-[#FF6B6B] border-2 border-black animate-bounce"&gt;&lt;/div&gt;
+<span class='ln'>34</span>      &lt;/div&gt;
+<span class='ln'>35</span>      &lt;div className="absolute bottom-20 left-20 rotate-45"&gt;
+<span class='ln'>36</span>        &lt;div className="w-10 h-10 bg-[#C4B5FD] border-4 border-black"&gt;&lt;/div&gt;
+<span class='ln'>37</span>      &lt;/div&gt;
+<span class='ln'>38</span>      &lt;div className="absolute bottom-32 right-32 -rotate-12"&gt;
+<span class='ln'>39</span>        &lt;div className="text-4xl font-black"&gt;★&lt;/div&gt;
+<span class='ln'>40</span>      &lt;/div&gt;
+<span class='ln'>41</span>      &lt;div className="absolute top-32 left-1/4 rotate-45"&gt;
+<span class='ln'>42</span>        &lt;div className="text-2xl font-black"&gt;★&lt;/div&gt;
+<span class='ln'>43</span>      &lt;/div&gt;
+<span class='ln'>44</span>      &lt;div className="absolute bottom-40 right-1/4 -rotate-45"&gt;
+<span class='ln'>45</span>        &lt;div className="text-3xl font-black"&gt;★&lt;/div&gt;
+<span class='ln'>46</span>      &lt;/div&gt;
+<span class='ln'>47</span>
+<span class='ln'>48</span>      &lt;motion.div
+<span class='ln'>49</span>        initial={{ scale: 0.5, opacity: 0 }}
+<span class='ln'>50</span>        animate={{ scale: 1, opacity: 1 }}
+<span class='ln'>51</span>        transition={{ duration: 0.5, type: 'spring' }}
+<span class='ln'>52</span>        className="relative z-10 max-w-2xl mx-auto"
+<span class='ln'>53</span>      &gt;
+<span class='ln'>54</span>        {/* Success Checkmark */}
+<span class='ln'>55</span>        &lt;motion.div
+<span class='ln'>56</span>          initial={{ scale: 0 }}
+<span class='ln'>57</span>          animate={{ scale: 1 }}
+<span class='ln'>58</span>          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+<span class='ln'>59</span>          className="w-32 h-32 sm:w-40 sm:h-40 bg-black border-8 border-black shadow-[12px_12px_0px_0px_#000] mx-auto mb-8 flex items-center justify-center -rotate-3"
+<span class='ln'>60</span>        &gt;
+<span class='ln'>61</span>          &lt;svg className="w-16 h-16 sm:w-20 sm:h-20 text-white stroke-[6px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"&gt;
+<span class='ln'>62</span>            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="6" d="M5 13l4 4L19 7" /&gt;
+<span class='ln'>63</span>          &lt;/svg&gt;
+<span class='ln'>64</span>        &lt;/motion.div&gt;
+<span class='ln'>65</span>
+<span class='ln'>66</span>        {/* Success Message */}
+<span class='ln'>67</span>        &lt;motion.h1 
+<span class='ln'>68</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>69</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>70</span>          transition={{ delay: 0.4 }}
+<span class='ln'>71</span>          className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight mb-6 rotate-1"
+<span class='ln'>72</span>        &gt;
+<span class='ln'>73</span>          ORDER CONFIRMED!
+<span class='ln'>74</span>        &lt;/motion.h1&gt;
+<span class='ln'>75</span>
+<span class='ln'>76</span>        &lt;motion.div
+<span class='ln'>77</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>78</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>79</span>          transition={{ delay: 0.6 }}
+<span class='ln'>80</span>          className="mb-8"
+<span class='ln'>81</span>        &gt;
+<span class='ln'>82</span>          &lt;div className="bg-[#FFD93D] border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_#000] -rotate-1 inline-block mb-4"&gt;
+<span class='ln'>83</span>            &lt;p className="font-bold uppercase tracking-wide text-base sm:text-lg"&gt;THANK YOU FOR YOUR PURCHASE!&lt;/p&gt;
+<span class='ln'>84</span>          &lt;/div&gt;
+<span class='ln'>85</span>          
+<span class='ln'>86</span>          {/* Order ID */}
+<span class='ln'>87</span>          &lt;div className="bg-white border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_#000] rotate-1 inline-block"&gt;
+<span class='ln'>88</span>            &lt;p className="font-bold uppercase tracking-wide text-sm mb-2"&gt;YOUR ORDER ID IS:&lt;/p&gt;
+<span class='ln'>89</span>            &lt;p className="font-black text-xl sm:text-2xl uppercase tracking-tight text-[#FF6B6B]"&gt;{orderId}&lt;/p&gt;
+<span class='ln'>90</span>          &lt;/div&gt;
+<span class='ln'>91</span>        &lt;/motion.div&gt;
+<span class='ln'>92</span>
+<span class='ln'>93</span>        {/* Action Buttons */}
+<span class='ln'>94</span>        &lt;motion.div
+<span class='ln'>95</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>96</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>97</span>          transition={{ delay: 0.8 }}
+<span class='ln'>98</span>          className="flex flex-col sm:flex-row gap-4 justify-center"
+<span class='ln'>99</span>        &gt;
+<span class='ln'>100</span>          &lt;Link
+<span class='ln'>101</span>            to="/orders"
+<span class='ln'>102</span>            className="bg-[#FF6B6B] border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>103</span>              text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center
+<span class='ln'>104</span>              shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>105</span>              hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>106</span>              active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>107</span>              transition-all duration-100 rotate-1"
+<span class='ln'>108</span>          &gt;
+<span class='ln'>109</span>            VIEW MY ORDERS
+<span class='ln'>110</span>          &lt;/Link&gt;
+<span class='ln'>111</span>          &lt;Link
+<span class='ln'>112</span>            to="/"
+<span class='ln'>113</span>            className="bg-white border-4 border-black font-black uppercase tracking-widest 
+<span class='ln'>114</span>              text-sm px-6 py-4 h-14 w-full sm:w-auto inline-block text-center
+<span class='ln'>115</span>              shadow-[6px_6px_0px_0px_#000]
+<span class='ln'>116</span>              hover:bg-[#C4B5FD] hover:shadow-[3px_3px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px]
+<span class='ln'>117</span>              active:shadow-none active:translate-x-[6px] active:translate-y-[6px]
+<span class='ln'>118</span>              transition-all duration-100 -rotate-1"
+<span class='ln'>119</span>          &gt;
+<span class='ln'>120</span>            CONTINUE SHOPPING
+<span class='ln'>121</span>          &lt;/Link&gt;
+<span class='ln'>122</span>        &lt;/motion.div&gt;
+<span class='ln'>123</span>
+<span class='ln'>124</span>        {/* Additional Info */}
+<span class='ln'>125</span>        &lt;motion.div
+<span class='ln'>126</span>          initial={{ opacity: 0, y: 20 }}
+<span class='ln'>127</span>          animate={{ opacity: 1, y: 0 }}
+<span class='ln'>128</span>          transition={{ delay: 1.0 }}
+<span class='ln'>129</span>          className="mt-8"
+<span class='ln'>130</span>        &gt;
+<span class='ln'>131</span>          &lt;div className="bg-[#C4B5FD] border-4 border-black p-4 sm:p-6 shadow-[6px_6px_0px_0px_#000] rotate-1"&gt;
+<span class='ln'>132</span>            &lt;h3 className="font-black uppercase tracking-widest text-sm mb-3"&gt;WHAT HAPPENS NEXT?&lt;/h3&gt;
+<span class='ln'>133</span>            &lt;div className="space-y-2 text-left"&gt;
+<span class='ln'>134</span>              &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>135</span>                &lt;div className="w-6 h-6 bg-black border-2 border-black flex items-center justify-center text-white font-black text-xs"&gt;1&lt;/div&gt;
+<span class='ln'>136</span>                &lt;span className="font-bold uppercase tracking-wide text-sm"&gt;WE PREPARE YOUR ORDER&lt;/span&gt;
+<span class='ln'>137</span>              &lt;/div&gt;
+<span class='ln'>138</span>              &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>139</span>                &lt;div className="w-6 h-6 bg-black border-2 border-black flex items-center justify-center text-white font-black text-xs"&gt;2&lt;/div&gt;
+<span class='ln'>140</span>                &lt;span className="font-bold uppercase tracking-wide text-sm"&gt;QUALITY CHECK &amp; PACKAGING&lt;/span&gt;
+<span class='ln'>141</span>              &lt;/div&gt;
+<span class='ln'>142</span>              &lt;div className="flex items-center gap-3"&gt;
+<span class='ln'>143</span>                &lt;div className="w-6 h-6 bg-black border-2 border-black flex items-center justify-center text-white font-black text-xs"&gt;3&lt;/div&gt;
+<span class='ln'>144</span>                &lt;span className="font-bold uppercase tracking-wide text-sm"&gt;FAST DELIVERY TO YOUR DOOR&lt;/span&gt;
+<span class='ln'>145</span>              &lt;/div&gt;
+<span class='ln'>146</span>            &lt;/div&gt;
+<span class='ln'>147</span>          &lt;/div&gt;
+<span class='ln'>148</span>        &lt;/motion.div&gt;
+<span class='ln'>149</span>      &lt;/motion.div&gt;
+<span class='ln'>150</span>    &lt;/div&gt;
+<span class='ln'>151</span>  );
+<span class='ln'>152</span>}
+</pre></div></body></html>

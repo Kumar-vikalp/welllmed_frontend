@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/SearchBar.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { useState } from 'react';
+<span class='ln'>2</span>import { motion } from 'framer-motion';
+<span class='ln'>3</span>
+<span class='ln'>4</span>export default function SearchBar({ onSearch, placeholder = "Search medicines, health products..." }) {
+<span class='ln'>5</span>  const [searchTerm, setSearchTerm] = useState('');
+<span class='ln'>6</span>
+<span class='ln'>7</span>  const handleSubmit = (e) =&gt; {
+<span class='ln'>8</span>    e.preventDefault();
+<span class='ln'>9</span>    onSearch(searchTerm);
+<span class='ln'>10</span>  };
+<span class='ln'>11</span>
+<span class='ln'>12</span>  const handleClear = () =&gt; {
+<span class='ln'>13</span>    setSearchTerm('');
+<span class='ln'>14</span>    onSearch('');
+<span class='ln'>15</span>  };
+<span class='ln'>16</span>
+<span class='ln'>17</span>  return (
+<span class='ln'>18</span>    &lt;motion.form 
+<span class='ln'>19</span>      onSubmit={handleSubmit}
+<span class='ln'>20</span>      className="relative max-w-2xl mx-auto"
+<span class='ln'>21</span>      initial={{ opacity: 0, y: 20 }}
+<span class='ln'>22</span>      animate={{ opacity: 1, y: 0 }}
+<span class='ln'>23</span>      transition={{ delay: 0.2 }}
+<span class='ln'>24</span>    &gt;
+<span class='ln'>25</span>      &lt;div className="relative"&gt;
+<span class='ln'>26</span>        &lt;input
+<span class='ln'>27</span>          type="text"
+<span class='ln'>28</span>          value={searchTerm}
+<span class='ln'>29</span>          onChange={(e) =&gt; setSearchTerm(e.target.value)}
+<span class='ln'>30</span>          placeholder={placeholder}
+<span class='ln'>31</span>          className="w-full px-6 py-4 text-lg bg-white text-gray-800 rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-teal-300 focus:ring-opacity-50 pr-24"
+<span class='ln'>32</span>        /&gt;
+<span class='ln'>33</span>        
+<span class='ln'>34</span>        {searchTerm &amp;&amp; (
+<span class='ln'>35</span>          &lt;button
+<span class='ln'>36</span>            type="button"
+<span class='ln'>37</span>            onClick={handleClear}
+<span class='ln'>38</span>            className="absolute right-16 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+<span class='ln'>39</span>          &gt;
+<span class='ln'>40</span>            &lt;svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>41</span>              &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /&gt;
+<span class='ln'>42</span>            &lt;/svg&gt;
+<span class='ln'>43</span>          &lt;/button&gt;
+<span class='ln'>44</span>        )}
+<span class='ln'>45</span>        
+<span class='ln'>46</span>        &lt;button
+<span class='ln'>47</span>          type="submit"
+<span class='ln'>48</span>          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full transition-colors duration-200 shadow-lg"
+<span class='ln'>49</span>        &gt;
+<span class='ln'>50</span>          &lt;svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+<span class='ln'>51</span>            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /&gt;
+<span class='ln'>52</span>          &lt;/svg&gt;
+<span class='ln'>53</span>        &lt;/button&gt;
+<span class='ln'>54</span>      &lt;/div&gt;
+<span class='ln'>55</span>      
+<span class='ln'>56</span>      {/* Search suggestions could go here */}
+<span class='ln'>57</span>    &lt;/motion.form&gt;
+<span class='ln'>58</span>  );
+<span class='ln'>59</span>}
+</pre></div></body></html>

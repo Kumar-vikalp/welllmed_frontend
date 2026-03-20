@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html><html><head><meta charset='UTF-8'><style>* { margin:0; padding:0; box-sizing:border-box; }body { font-family: Segoe UI, sans-serif; background:#fff; }.header { background:#1e293b; color:#e2e8f0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }.path { font-family: Consolas, monospace; font-size:12px; color:#93c5fd; }.lang { font-size:10px; background:#334155; color:#94a3b8; padding:2px 8px; border-radius:4px; }.wrap { padding:16px; background:#f8fafc; }pre { font-family: Consolas, monospace; font-size:8px; line-height:1.3; white-space:pre-wrap; word-break:break-all; }.ln { display:inline-block; width:36px; color:#94a3b8; text-align:right; margin-right:12px; border-right:1px solid #e2e8f0; padding-right:8px; user-select:none; }@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }</style></head><body><div class='header'><span class='path'>src/components/Modal.jsx</span><span class='lang'>JSX</span></div><div class='wrap'><pre><span class='ln'>1</span>import { AnimatePresence, motion } from 'framer-motion';
+<span class='ln'>2</span>
+<span class='ln'>3</span>export default function Modal({ isOpen, onClose, children }) {
+<span class='ln'>4</span>  return (
+<span class='ln'>5</span>    &lt;AnimatePresence&gt;
+<span class='ln'>6</span>      {isOpen &amp;&amp; (
+<span class='ln'>7</span>        &lt;motion.div
+<span class='ln'>8</span>          initial={{ opacity: 0 }}
+<span class='ln'>9</span>          animate={{ opacity: 1 }}
+<span class='ln'>10</span>          exit={{ opacity: 0 }}
+<span class='ln'>11</span>          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+<span class='ln'>12</span>          onClick={onClose}
+<span class='ln'>13</span>        &gt;
+<span class='ln'>14</span>          &lt;motion.div
+<span class='ln'>15</span>            initial={{ y: -50, opacity: 0 }}
+<span class='ln'>16</span>            animate={{ y: 0, opacity: 1 }}
+<span class='ln'>17</span>            exit={{ y: 50, opacity: 0 }}
+<span class='ln'>18</span>            className="bg-gray-800 text-white rounded-lg shadow-xl p-8 max-w-md w-full"
+<span class='ln'>19</span>            onClick={(e) =&gt; e.stopPropagation()} // Prevent closing when clicking inside
+<span class='ln'>20</span>          &gt;
+<span class='ln'>21</span>            {children}
+<span class='ln'>22</span>          &lt;/motion.div&gt;
+<span class='ln'>23</span>        &lt;/motion.div&gt;
+<span class='ln'>24</span>      )}
+<span class='ln'>25</span>    &lt;/AnimatePresence&gt;
+<span class='ln'>26</span>  );
+<span class='ln'>27</span>}
+<span class='ln'>28</span>
+</pre></div></body></html>
