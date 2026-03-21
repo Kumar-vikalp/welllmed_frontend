@@ -45,31 +45,31 @@ export default function Home() {
     },
     {
       name: 'Heart & BP',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/4.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/v9gLrSp55r51vYJDVoT4.svg',
       count: 15,
       color: 'bg-neo-accent'
     },
     {
       name: 'Vitamins',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/5.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/sXW5Sz9beMxojt1pLKfe.svg',
       count: 30,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Antibiotics',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/6.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/M3YTKjyFNie6xoeUX4sx.svg',
       count: 12,
       color: 'bg-neo-muted'
     },
     {
       name: 'Skin Care',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/7.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/7w1shqV90E8VyZ7BgSHU.svg',
       count: 20,
       color: 'bg-neo-accent'
     },
     {
       name: 'Women\'s Health',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/8.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/A071oYXqhvoG8eKocITM.svg',
       count: 16,
       color: 'bg-neo-secondary'
     }
@@ -233,14 +233,14 @@ export default function Home() {
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                       <div className="absolute inset-0 flex flex-col justify-end p-4">
-                        {/* <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
+                        <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
                           <h3 className="text-lg font-black uppercase text-center leading-tight">
                             {category.name}
                           </h3>
-                          <p className="text-sm font-bold text-center mt-1">
+                          {/* <p className="text-sm font-bold text-center mt-1">
                             {category.count} ITEMS
-                          </p>
-                        </div> */}
+                          </p> */}
+                        </div>
                       </div>
                     </div>
                   </Card>
