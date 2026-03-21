@@ -140,7 +140,7 @@ export default function Home() {
     mrp: parseFloat(product.mrp),
     discount: product.discount,
     discounted_price: parseFloat(product.discounted_price),
-    images: product.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
+    images: product.images?.map(img => img.stream_url) || ['/images/placeholder.svg'],
     trending: product.trending,
     available_stock: product.available_stock || 100,
     description: product.description || `${product.name} from ${product.company}. Effective treatment for ${product.disease_category}.`

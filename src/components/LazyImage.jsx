@@ -5,7 +5,7 @@ export default function LazyImage({
   src, 
   alt, 
   className = '', 
-  placeholder = '/images/placeholder.jpg',
+  placeholder = '/images/placeholder.svg',
   ...props 
 }) {
   const [imageSrc, setImageSrc] = useState(placeholder)

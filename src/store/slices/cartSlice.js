@@ -20,7 +20,7 @@ export const fetchCart = createAsyncThunk(
         disease_category: item.product.disease_category,
         mrp: parseFloat(item.product.mrp),
         discount: item.product.discount,
-        images: item.product.images?.map(img => img.stream_url) || ['/images/placeholder.jpg'],
+        images: item.product.images?.map(img => img.stream_url) || ['/images/placeholder.svg'],
         trending: item.product.trending,
         slug: item.product.slug,
         qty: item.quantity,
