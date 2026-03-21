@@ -60,9 +60,9 @@ export default function App() {
 
   return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes location={location} key={location.pathname}>
         {/* Public Routes with Layout */}
-        <ScrollToTop />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="products" element={<ProductsPage />} />
