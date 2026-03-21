@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { 
-  fetchProducts, 
-  selectProducts, 
-  selectProductsLoading, 
+import {
+  fetchProducts,
+  selectProducts,
+  selectProductsLoading,
   selectTotalPages,
   setFilters,
   clearFilters,
@@ -31,7 +31,7 @@ export default function ProductsPage() {
   useEffect(() => {
     // Clear any existing filters and products when component mounts
     dispatch(clearFilters())
-    
+
     // Initialize filters from URL params
     const urlFilters = {
       category: searchParams.get('category') || '',
@@ -40,7 +40,7 @@ export default function ProductsPage() {
       ordering: searchParams.get('ordering') || '',
       trending: searchParams.get('trending') || ''
     }
-    
+
     dispatch(setFilters(urlFilters))
   }, [searchParams, dispatch])
 
@@ -50,15 +50,15 @@ export default function ProductsPage() {
       page,
       page_size: pageSize
     }
-    
+
     // Remove empty values
     Object.keys(params).forEach(key => {
       if (!params[key]) delete params[key]
     })
-    
+
     dispatch(fetchProducts(params))
   }, [filters, page, pageSize, dispatch])
-  
+
   const handleSearch = (searchTerm) => {
     dispatch(setFilters({ search: searchTerm }))
     setPage(1)
@@ -80,21 +80,21 @@ export default function ProductsPage() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Buy Medicines Online - Best Prices & Fast Delivery | WellMed"
         description="Buy medicines online at best prices with free home delivery. Authentic medicines from top brands. Order now for fast delivery."
         keywords="buy medicine online, pharmacy, medicines, healthcare, online pharmacy, prescription drugs"
         type="website"
         link="https://wellmed.com/products"
       />
-      
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         className="min-h-screen bg-[#FFFDF5]"
       >
         {/* Background Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
@@ -113,7 +113,7 @@ export default function ProductsPage() {
                 FIND THE RIGHT MEDICINE FOR YOUR NEEDS
               </p>
             </div>
-            
+
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto">
               <div className="relative">
@@ -148,12 +148,12 @@ export default function ProductsPage() {
               <div className="bg-[#FFD93D] border-b-4 border-black p-4">
                 <h3 className="font-black uppercase tracking-widest text-sm">FILTERS</h3>
               </div>
-              
+
               <div className="p-4 space-y-6">
                 {/* Sort By */}
                 <div>
                   <label className="block font-black uppercase tracking-widest text-xs mb-2">SORT BY</label>
-                  <select 
+                  <select
                     className="w-full border-4 border-black bg-white font-bold text-sm h-12 px-4
                       focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
                     value={filters.ordering}
@@ -170,28 +170,28 @@ export default function ProductsPage() {
                 {/* Category */}
                 <div>
                   <label className="block font-black uppercase tracking-widest text-xs mb-2">CATEGORY</label>
-                  <select 
+                  <select
                     className="w-full border-4 border-black bg-white font-bold text-sm h-12 px-4
                       focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
                     value={filters.category}
                     onChange={e => handleFilterChange('category', e.target.value)}
                   >
                     <option value="">ALL CATEGORIES</option>
-                    {categories.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
+                    {categories.map(c => <option key={c} value={c}>{(c || "UNCATEGORIZED").toUpperCase()}</option>)}
                   </select>
                 </div>
 
                 {/* Company */}
                 <div>
                   <label className="block font-black uppercase tracking-widest text-xs mb-2">COMPANY</label>
-                  <select 
+                  <select
                     className="w-full border-4 border-black bg-white font-bold text-sm h-12 px-4
                       focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
                     value={filters.company}
                     onChange={e => handleFilterChange('company', e.target.value)}
                   >
                     <option value="">ALL COMPANIES</option>
-                    {companies.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
+                    {companies.map(c => <option key={c} value={c}>{(c || "UNKNOWN COMPANY").toUpperCase()}</option>)}
                   </select>
                 </div>
 
@@ -199,15 +199,14 @@ export default function ProductsPage() {
                 <div>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <div className="relative">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={filters.trending === 'true'}
                         onChange={e => handleFilterChange('trending', e.target.checked ? 'true' : '')}
                         className="sr-only"
                       />
-                      <div className={`w-6 h-6 border-4 border-black ${
-                        filters.trending === 'true' ? 'bg-[#FF6B6B]' : 'bg-white'
-                      } transition-colors duration-100`}>
+                      <div className={`w-6 h-6 border-4 border-black ${filters.trending === 'true' ? 'bg-[#FF6B6B]' : 'bg-white'
+                        } transition-colors duration-100`}>
                         {filters.trending === 'true' && (
                           <svg className="w-4 h-4 text-white stroke-[3px] absolute inset-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
@@ -220,7 +219,7 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Clear Filters */}
-                <button 
+                <button
                   className="w-full bg-white border-4 border-black font-black uppercase tracking-widest 
                     text-xs py-3 h-12 shadow-[4px_4px_0px_0px_#000]
                     hover:bg-[#C4B5FD] hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
@@ -257,7 +256,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="p-4 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <select 
+                    <select
                       className="border-4 border-black bg-white font-bold text-sm h-12 px-4
                         focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
                       value={filters.ordering}
@@ -268,17 +267,17 @@ export default function ProductsPage() {
                       <option value="-mrp">PRICE ↓</option>
                       <option value="-discount">DISCOUNT ↓</option>
                     </select>
-                    <select 
+                    <select
                       className="border-4 border-black bg-white font-bold text-sm h-12 px-4
                         focus-visible:bg-[#FFD93D] focus-visible:outline-none transition-colors duration-100"
                       value={filters.category}
                       onChange={e => handleFilterChange('category', e.target.value)}
                     >
                       <option value="">CATEGORY</option>
-                      {categories.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
+                      {categories.map(c => <option key={c} value={c}>{(c || "CATEGORY").toUpperCase()}</option>)}
                     </select>
                   </div>
-                  <button 
+                  <button
                     className="bg-white border-4 border-black font-black uppercase tracking-widest 
                       text-xs px-4 py-2 h-10 shadow-[2px_2px_0px_0px_#000]
                       hover:bg-[#C4B5FD] transition-colors duration-100"
@@ -289,7 +288,7 @@ export default function ProductsPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Results Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
@@ -301,13 +300,13 @@ export default function ProductsPage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Product Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
               {loading
                 ? Array(pageSize).fill(0).map((_, i) => (
-                    <div key={i} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] h-80"></div>
-                  ))
+                  <div key={i} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] h-80"></div>
+                ))
                 : products.map(product =>
                   <div key={product.product_id}>
                     <ProductCard product={product} />
@@ -315,7 +314,7 @@ export default function ProductsPage() {
                 )
               }
             </div>
-            
+
             {/* Empty State */}
             {!loading && products.length === 0 && (
               <div className="text-center py-16">
@@ -340,11 +339,11 @@ export default function ProductsPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Pagination */}
             {!loading && totalPages > 1 && (
               <div className="flex justify-center mt-12 gap-2">
-                <button 
+                <button
                   disabled={page === 1}
                   className="px-4 py-3 h-12 border-4 border-black bg-white font-black uppercase tracking-widest text-xs
                     disabled:opacity-50 disabled:cursor-not-allowed
@@ -356,28 +355,27 @@ export default function ProductsPage() {
                 >
                   PREVIOUS
                 </button>
-                
+
                 {Array(Math.min(5, totalPages)).fill(0).map((_, i) => {
                   const pageNum = i + 1;
                   return (
-                    <button 
-                      key={i} 
+                    <button
+                      key={i}
                       className={`w-12 h-12 border-4 border-black font-black text-sm shadow-[4px_4px_0px_0px_#000]
                         hover:shadow-[2px_2px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px]
                         active:shadow-none active:translate-x-[4px] active:translate-y-[4px]
-                        transition-all duration-100 ${
-                        page === pageNum 
-                          ? 'bg-black text-white' 
+                        transition-all duration-100 ${page === pageNum
+                          ? 'bg-black text-white'
                           : 'bg-white hover:bg-[#FFD93D]'
-                      }`}
+                        }`}
                       onClick={() => setPage(pageNum)}
                     >
                       {pageNum}
                     </button>
                   );
                 })}
-                
-                <button 
+
+                <button
                   disabled={page === totalPages}
                   className="px-4 py-3 h-12 border-4 border-black bg-white font-black uppercase tracking-widest text-xs
                     disabled:opacity-50 disabled:cursor-not-allowed
