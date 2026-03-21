@@ -187,17 +187,17 @@ export default function Home() {
               SHOP BY CATEGORY
             </h2>
             <div className="flex gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="rotate-1"
                 onClick={() => scrollCarousel(categoryCarouselRef, 'left')}
               >
                 <ChevronLeft className="w-6 h-6 stroke-[3px]" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="-rotate-1"
                 onClick={() => scrollCarousel(categoryCarouselRef, 'right')}
               >
@@ -205,9 +205,9 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          
+
           <div className="relative">
-            <div 
+            <div
               ref={categoryCarouselRef}
               className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
               style={{ scrollBehavior: 'smooth' }}
@@ -226,9 +226,9 @@ export default function Home() {
                     onClick={() => handleCategoryClick(category.name)}
                   >
                     <div className="relative h-full">
-                      <img 
-                        src={category.icon} 
-                        alt={category.name} 
+                      <img
+                        src={category.icon}
+                        alt={category.name}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -264,17 +264,17 @@ export default function Home() {
                 <p className="text-lg font-bold uppercase tracking-wide">LIMITED TIME OFFERS</p>
               </div>
               <div className="flex gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="rotate-2"
                   onClick={() => scrollCarousel(flashDealsRef, 'left')}
                 >
                   <ChevronLeft className="w-6 h-6 stroke-[3px]" />
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="-rotate-2"
                   onClick={() => scrollCarousel(flashDealsRef, 'right')}
                 >
@@ -285,14 +285,14 @@ export default function Home() {
                 ENDS SOON!
               </div>
             </div>
-            
+
             {featuredLoading ? (
               <div className="flex gap-4 overflow-x-auto">
                 {Array(4).fill(0).map((_, i) => <Skeleton key={i} type="trending" />)}
               </div>
             ) : (
               <div className="relative">
-                <div 
+                <div
                   ref={flashDealsRef}
                   className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
                   style={{ scrollBehavior: 'smooth' }}
@@ -307,10 +307,10 @@ export default function Home() {
                     >
                       <Card className="overflow-hidden" rotation={Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0}>
                         <div className="relative">
-                          <img 
-                            src={product.images[0]} 
-                            alt={product.name} 
-                            className="w-full h-40 object-cover border-b-4 border-neo-ink" 
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-full h-40 object-cover border-b-4 border-neo-ink"
                           />
                           {product.trending && (
                             <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
@@ -375,25 +375,77 @@ export default function Home() {
         />
 
         {/* Hero Content */}
-        <div className="relative z-20 flex flex-col items-center justify-center min-h-[50vh] px-6 py-12 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
-            Dr Das PathLabs
+        <div className="relative z-20 flex flex-col items-center justify-center min-h-[60vh] px-4 sm:px-6 py-12 text-center bg-neo-bg">
+
+          {/* HEADLINE */}
+          <h1 className="flex flex-col items-center gap-2 leading-none">
+
+            <span className="
+      text-3xl sm:text-4xl md:text-6xl lg:text-7xl
+      font-black uppercase
+      bg-neo-accent
+      border-4 border-black
+      px-4 py-2
+      shadow-[6px_6px_0px_0px_#000]
+      rotate-[-2deg]
+    ">
+              Dr Das
+            </span>
+
+            <span className="
+      text-3xl sm:text-4xl md:text-6xl lg:text-7xl
+      font-black uppercase
+      bg-neo-secondary
+      border-4 border-black
+      px-4 py-2
+      shadow-[6px_6px_0px_0px_#000]
+      rotate-[2deg]
+    ">
+              PathLabs
+            </span>
+
           </h1>
-          <p className="text-lg sm:text-xl text-gray-200 mb-8">
+
+          {/* SUBTEXT */}
+          <p className="
+    mt-6 max-w-xl
+    text-base sm:text-lg md:text-xl
+    font-bold
+    border-4 border-black
+    bg-white
+    px-4 py-3
+    shadow-[4px_4px_0px_0px_#000]
+  ">
             Tests you can trust — Advanced diagnostics at your doorstep
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {/* CTA */}
+          <div className="mt-8 w-full flex justify-center">
             <Link
               to="/lab"
-              className="bg-white text-purple-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+              className="
+        w-full sm:w-auto
+        bg-neo-accent
+        text-black
+        font-bold uppercase tracking-wide
+
+        px-8 py-4
+        border-4 border-black
+
+        shadow-[6px_6px_0px_0px_#000]
+        transition-all duration-100
+
+        hover:translate-x-[2px] hover:translate-y-[2px]
+        hover:shadow-none
+
+        active:translate-x-[4px] active:translate-y-[4px]
+        active:shadow-none
+      "
             >
               Book Lab Tests
             </Link>
-            <button className="border-2 border-white text-white font-bold py-3 px-8 rounded-xl hover:bg-white hover:text-purple-700 transition-colors">
-              Home Collection
-            </button>
           </div>
+
         </div>
       </div>
 
@@ -410,17 +462,17 @@ export default function Home() {
                 <p className="text-lg font-bold uppercase tracking-wide">HANDPICKED FOR YOU</p>
               </div>
               <div className="flex gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="rotate-2"
                   onClick={() => scrollCarousel(featuredCarouselRef, 'left')}
                 >
                   <ChevronLeft className="w-6 h-6 stroke-[3px]" />
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="-rotate-2"
                   onClick={() => scrollCarousel(featuredCarouselRef, 'right')}
                 >
@@ -428,14 +480,14 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            
+
             {featuredLoading ? (
               <div className="flex gap-4 overflow-x-auto">
                 {Array(5).fill(0).map((_, i) => <Skeleton key={i} />)}
               </div>
             ) : (
               <div className="relative">
-                <div 
+                <div
                   ref={featuredCarouselRef}
                   className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
                   style={{ scrollBehavior: 'smooth' }}
@@ -466,17 +518,17 @@ export default function Home() {
               BROWSE BY HEALTH CONDITIONS
             </h2>
             <div className="flex gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="rotate-1"
                 onClick={() => scrollCarousel(healthConditionsRef, 'left')}
               >
                 <ChevronLeft className="w-6 h-6 stroke-[3px]" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="-rotate-1"
                 onClick={() => scrollCarousel(healthConditionsRef, 'right')}
               >
@@ -484,9 +536,9 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          
+
           <div className="relative">
-            <div 
+            <div
               ref={healthConditionsRef}
               className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
               style={{ scrollBehavior: 'smooth' }}
@@ -505,9 +557,9 @@ export default function Home() {
                       rotation={Math.random() > 0.5 ? 1 : -1}
                     >
                       <div className="relative h-full">
-                        <img 
-                          src={condition.icon} 
-                          alt={condition.name} 
+                        <img
+                          src={condition.icon}
+                          alt={condition.name}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -540,7 +592,7 @@ export default function Home() {
                 HOT PICKS!
               </div>
             </div>
-            
+
             {trendingLoading ? (
               <div className="flex gap-4 overflow-x-auto">
                 {Array(5).fill(0).map((_, i) => <Skeleton key={i} type="trending" />)}
