@@ -80,7 +80,7 @@ export default function Home() {
     { name: 'Cardiac Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/ZGQE2B9yCMmDZF3YSoFqGC.svg', link: '/products?condition=cardiac' },
     { name: 'Stomach Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/sBxV30yCKAJ7I9fIYjsk.svg', link: '/products?condition=stomach' },
     { name: 'Pain Relief', icon: 'https://storage.googleapis.com/pictographic/pictocache/OE8zCfk7lhTN2uR2zB1Y.svg', link: '/products?condition=pain' },
-    { name: 'Liver Care', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=200&h=200&fit=crop', link: '/products?condition=liver' },
+    { name: 'Hair Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/gxqteSJmk29ihVmc8RpY.svg', link: '/products?condition=hair' },
     { name: 'Oral Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/gCKPtKnnczdHHygbpNST.svg', link: '/products?condition=oral' },
     { name: 'Respiratory', icon: 'https://storage.googleapis.com/pictographic/pictocache/aKTFhvC0Caf8nBkkz8Ym.svg', link: '/products?condition=respiratory' },
     { name: 'Sexual Health', icon: 'https://storage.googleapis.com/pictographic/pictocache/Rw9pJd67z3V2GyaEZVmX.svg', link: '/products?condition=sexual' },
