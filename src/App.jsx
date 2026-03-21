@@ -6,6 +6,7 @@ import { selectUser } from './store/slices/userSlice';
 import { Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchCart } from './store/slices/cartSlice';
+import ScrollToTop from './components/ScrollToTop';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -61,6 +62,7 @@ export default function App() {
     <Suspense fallback={<PageLoader />}>
       <Routes location={location} key={location.pathname}>
         {/* Public Routes with Layout */}
+        <ScrollToTop />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="products" element={<ProductsPage />} />
