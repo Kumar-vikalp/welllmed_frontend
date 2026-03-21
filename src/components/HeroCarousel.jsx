@@ -234,25 +234,25 @@ export default function HeroCarousel() {
 
           {/* Navigation Controls */}
           <div className="absolute inset-y-0 left-4 flex items-center z-30">
-            <Button 
+            {/* <Button 
               variant="ghost" 
               size="sm" 
               className="rotate-1 bg-white/90 hover:bg-white"
               onClick={prevSlide}
             >
               <ChevronLeft className="w-6 h-6 stroke-[3px]" />
-            </Button>
+            </Button> */}
           </div>
           
           <div className="absolute inset-y-0 right-4 flex items-center z-30">
-            <Button 
+            {/* <Button 
               variant="ghost" 
               size="sm" 
               className="-rotate-1 bg-white/90 hover:bg-white"
               onClick={nextSlide}
             >
               <ChevronRight className="w-6 h-6 stroke-[3px]" />
-            </Button>
+            </Button> */}
           </div>
 
           {/* Slide Indicators */}
