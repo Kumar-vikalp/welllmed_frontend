@@ -231,7 +231,7 @@ export default function Home() {
                         alt={category.name}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+                      {/* <div className="absolute inset-0 bg-black bg-opacity-40"></div> */}
                       <div className="absolute inset-0 flex flex-col justify-end p-4">
                         <div className={`${category.color} border-4 border-neo-ink p-3 -rotate-2`}>
                           <h3 className="text-lg font-black uppercase text-center leading-tight">
@@ -562,7 +562,7 @@ export default function Home() {
                           alt={condition.name}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+                        {/* <div className="absolute inset-0 bg-black bg-opacity-40"></div> */}
                         <div className="absolute inset-0 flex flex-col justify-end p-4">
                           <div className="bg-white border-4 border-neo-ink p-3 rotate-2">
                             <h3 className="text-lg font-black uppercase text-center leading-tight">
