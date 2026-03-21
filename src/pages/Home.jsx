@@ -27,19 +27,19 @@ export default function Home() {
   const categories = useMemo(() => [
     {
       name: 'Fever & Pain',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/1.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/18JBwRCLf5r7u3O6UvrK.svg',
       count: 25,
       color: 'bg-neo-accent'
     },
     {
       name: 'Allergy & Cold',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/2.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/yLT8SHXWrV3O1FJBOjKt.svg',
       count: 18,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Digestive Health',
-      icon: 'https://rmigvtefdeitvrstdmkt.supabase.co/storage/v1/object/public/media/ctg/3.png',
+      icon: 'https://storage.googleapis.com/pictographic/pictocache/VPnSKjowaoPWhW0QcJ99.svg',
       count: 22,
       color: 'bg-neo-muted'
     },
