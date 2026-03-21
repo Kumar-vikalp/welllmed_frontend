@@ -19,9 +19,9 @@ export default function HeroCarousel() {
       bg: "bg-neo-accent",
       accent: "bg-red-500",
       images: {
-        mobile: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop",
-        tablet: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
-        desktop: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop"
+        mobile: "https://storage.googleapis.com/pictographic/pictocache/YZ5NdBy88jsH7t4I1CN2.svg",
+        tablet: "https://storage.googleapis.com/pictographic/pictocache/YZ5NdBy88jsH7t4I1CN2.svg",
+        desktop: "https://storage.googleapis.com/pictographic/pictocache/YZ5NdBy88jsH7t4I1CN2.svg"
       }
     },
     {
@@ -34,9 +34,9 @@ export default function HeroCarousel() {
       bg: "bg-neo-secondary",
       accent: "bg-yellow-400",
       images: {
-        mobile: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop",
-        tablet: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
-        desktop: "https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop"
+        mobile: "https://storage.googleapis.com/pictographic/pictocache/C4dbARY6yG2iqiXNKxej.svg",
+        tablet: "https://storage.googleapis.com/pictographic/pictocache/C4dbARY6yG2iqiXNKxej.svg",
+        desktop: "https://storage.googleapis.com/pictographic/pictocache/C4dbARY6yG2iqiXNKxej.svg"
       }
     },
     {
@@ -49,9 +49,9 @@ export default function HeroCarousel() {
       bg: "bg-neo-muted",
       accent: "bg-purple-400",
       images: {
-        mobile: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop",
-        tablet: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
-        desktop: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop"
+        mobile: "https://storage.googleapis.com/pictographic/pictocache/XmABsaLYzA2zPs7wZjks3A.svg",
+        tablet: "https://storage.googleapis.com/pictographic/pictocache/XmABsaLYzA2zPs7wZjks3A.svg",
+        desktop: "https://storage.googleapis.com/pictographic/pictocache/XmABsaLYzA2zPs7wZjks3A.svg"
       }
     }
   ]
