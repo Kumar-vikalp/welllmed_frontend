@@ -21,7 +21,7 @@ const Card = forwardRef(({
   
   const variantClasses = variants[variant] || variants.default;
   const hoverClasses = hover ? 'card-lift' : '';
-  const rotationClass = rotation ? `rotate-${rotation}` : '';
+  const rotationClass = rotation !== 0 ? (rotation > 0 ? `rotate-${Math.abs(rotation)}` : `-rotate-${Math.abs(rotation)}`) : '';
 
   return (
     <motion.div

@@ -91,18 +91,18 @@ export default function TrendingCarousel({ products, title = "Trending Products"
             <Button 
               variant="ghost" 
               size="sm" 
-              className="rotate-1"
+              className="rotate-2"
               onClick={() => scrollCarousel('left')}
             >
-              <ChevronLeft className="w-6 h-6 stroke-[3px]" />
+              <ChevronLeft className="w-6 h-6 stroke-[4px]" />
             </Button>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="-rotate-1"
+              className="-rotate-2"
               onClick={() => scrollCarousel('right')}
             >
-              <ChevronRight className="w-6 h-6 stroke-[3px]" />
+              <ChevronRight className="w-6 h-6 stroke-[4px]" />
             </Button>
           </div>
         </div>
@@ -160,11 +160,11 @@ export default function TrendingCarousel({ products, title = "Trending Products"
                       <p className="text-sm font-bold line-through opacity-60">₹{product.mrp.toFixed(2)}</p>
                     )}
                   </div>
-                  <span className="neo-badge bg-neo-secondary rotate-3">
+                  <span className="neo-badge bg-neo-secondary rotate-6">
                     {product.discount}% OFF
                   </span>
                 </div>
-                <Button variant="primary" size="sm" className="w-full">
+                <Button variant="primary" size="sm" className="w-full rotate-1">
                   ADD TO CART
                 </Button>
               </div>

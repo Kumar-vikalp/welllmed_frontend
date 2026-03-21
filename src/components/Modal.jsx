@@ -8,7 +8,7 @@ export default function Modal({ isOpen, onClose, children }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+          className="bg-white border-4 border-neo-ink shadow-[12px_12px_0px_0px_#000] p-8 max-w-md w-full"
           onClick={onClose}
         >
           <motion.div

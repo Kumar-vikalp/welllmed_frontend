@@ -59,15 +59,15 @@ export default function Breadcrumbs() {
   if (pathnames.length === 0) return null;
 
   return (
-    <nav className="bg-gray-50 border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        <ol className="flex items-center space-x-2 text-sm">
+    <nav className="bg-neo-canvas border-b-4 border-neo-ink">
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <ol className="flex items-center space-x-3 text-sm">
           <li>
             <Link
               to="/"
-              className="text-gray-500 hover:text-purple-600 transition-colors"
+              className="text-neo-ink hover:bg-neo-secondary hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold uppercase"
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 stroke-[3px]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
             </Link>
@@ -80,7 +80,7 @@ export default function Breadcrumbs() {
             return (
               <li key={name} className="flex items-center">
                 <svg
-                  className="w-4 h-4 text-gray-400 mx-2"
+                  className="w-5 h-5 text-neo-ink mx-3 stroke-[3px]"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -91,13 +91,13 @@ export default function Breadcrumbs() {
                   />
                 </svg>
                 {isLast ? (
-                  <span className="text-gray-900 font-medium">
+                  <span className="text-neo-ink font-black uppercase tracking-wide">
                     {displayName}
                   </span>
                 ) : (
                   <Link
                     to={routeTo}
-                    className="text-purple-600 hover:text-purple-800 transition-colors"
+                    className="text-neo-ink hover:bg-neo-accent hover:text-white hover:px-2 hover:shadow-neo-sm transition-all duration-100 font-bold uppercase"
                   >
                     {displayName}
                   </Link>

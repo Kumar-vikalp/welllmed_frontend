@@ -28,7 +28,7 @@ export default function Layout() {
   const showBreadcrumbs = location.pathname !== '/' && !isAuthPage;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 pt-0 md:pt-16">
+    <div className="flex flex-col min-h-screen bg-neo-canvas pt-0 md:pt-16">
       <Navbar />
       {showBreadcrumbs && <Breadcrumbs />}
       <main className="flex-grow pb-20 md:pb-8 min-h-screen">

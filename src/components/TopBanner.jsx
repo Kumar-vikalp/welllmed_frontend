@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Button from './Button';
 
 export default function TopBanner({
   title = "New Release",
@@ -47,24 +48,24 @@ export default function TopBanner({
           exit="exit"
           className="relative z-[100] px-4 pt-4"
         >
-          <div className="mx-auto max-w-7xl relative overflow-hidden bg-gray-900/95 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
+          <div className="mx-auto max-w-7xl relative overflow-hidden bg-neo-ink border-4 border-neo-ink shadow-[8px_8px_0px_0px_#000]">
             
-            {/* Top accent glow line */}
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+            {/* Top accent line */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-neo-accent" />
 
-            <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
+            <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
               
               <div className="flex items-center gap-3 min-w-0">
                 {/* 1. Animated Icon */}
-                <motion.div variants={itemVariants} className="hidden md:flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                  <Sparkles size={16} />
+                <motion.div variants={itemVariants} className="hidden md:flex h-10 w-10 items-center justify-center bg-neo-accent border-4 border-white text-white">
+                  <Sparkles size={20} className="stroke-[3px]" />
                 </motion.div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 overflow-hidden">
                   {/* 2. Animated Tag */}
                   <motion.span 
                     variants={itemVariants}
-                    className="text-[10px] uppercase tracking-[0.15em] font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded w-fit whitespace-nowrap"
+                    className="neo-badge bg-neo-secondary text-neo-ink rotate-1 whitespace-nowrap"
                   >
                     {title}
                   </motion.span>
@@ -72,7 +73,7 @@ export default function TopBanner({
                   {/* 3. Animated Message */}
                   <motion.p 
                     variants={itemVariants}
-                    className="text-sm text-gray-300 font-medium truncate sm:whitespace-normal"
+                    className="text-sm text-white font-bold uppercase tracking-wide truncate sm:whitespace-normal"
                   >
                     {message}
                   </motion.p>
@@ -82,25 +83,29 @@ export default function TopBanner({
               <div className="flex items-center gap-3">
                 {/* 4. Animated CTA (Hidden on Mobile) */}
                 <motion.div variants={itemVariants} className="hidden sm:block">
-                  <a
-                    href={ctaLink}
-                    className="group flex items-center gap-2 text-sm font-bold text-white hover:text-purple-300 transition-colors whitespace-nowrap"
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="rotate-1"
+                    onClick={() => window.open(ctaLink, '_blank')}
                   >
                     {ctaText}
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </a>
+                    <ArrowRight size={16} className="ml-2 stroke-[3px]" />
+                  </Button>
                 </motion.div>
 
-                <div className="h-4 w-px bg-white/10 mx-1 hidden sm:block" />
+                <div className="h-6 w-1 bg-white mx-1 hidden sm:block" />
 
                 {/* 5. Dismiss Button (Always Visible) */}
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="border-2 border-white text-white hover:bg-white hover:text-neo-ink -rotate-1"
                   onClick={handleDismiss}
-                  className="p-1.5 text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-all active:scale-90"
                   aria-label="Dismiss"
                 >
-                  <X size={18} />
-                </button>
+                  <X size={18} className="stroke-[3px]" />
+                </Button>
               </div>
             </div>
           </div>

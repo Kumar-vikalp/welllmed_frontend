@@ -17,7 +17,7 @@ const Button = forwardRef(({
     primary: 'neo-btn-primary',
     secondary: 'neo-btn-secondary', 
     outline: 'neo-btn-outline',
-    ghost: 'border-2 border-transparent hover:border-neo-ink hover:bg-neo-canvas hover:shadow-neo-sm text-neo-ink font-black uppercase tracking-wide px-4 py-2'
+    ghost: 'border-2 border-transparent hover:border-neo-ink hover:bg-neo-canvas hover:shadow-neo-sm text-neo-ink font-black uppercase tracking-wide px-4 py-2 focus:ring-2 focus:ring-neo-ink focus:ring-offset-2'
   };
   
   const sizes = {
@@ -34,7 +34,7 @@ const Button = forwardRef(({
     <motion.button
       ref={ref}
       type={type}
-      className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`}
+      className={`${baseClasses} ${variantClasses} ${sizeClasses} focus:ring-2 focus:ring-neo-ink focus:ring-offset-2 ${className}`}
       disabled={disabled}
       onClick={onClick}
       whileTap={{ scale: 0.98 }}

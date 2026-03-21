@@ -27,6 +27,9 @@ import HelpPage from './pages/HelpPage';
 import HowToOrderPage from './pages/HowToOrderPage';
 import LabTestsPage from './pages/LabTestsPage';
 import PrescriptionUploadPage from './pages/PrescriptionUploadPage';
+import LabTestDetailsPage from './pages/LabTestDetailsPage';
+import HealthPackageDetailsPage from './pages/HealthPackageDetailsPage';
+import MyLabBookingsPage from './pages/MyLabBookingsPage';
 
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -69,6 +72,8 @@ export default function App() {
           <Route path="how-to-order" element={<HowToOrderPage />} />
           <Route path="lab" element={<LabTestsPage />} />
           <Route path="upload-prescription" element={<PrescriptionUploadPage />} />
+          <Route path="lab/test/:slug" element={<LabTestDetailsPage />} />
+          <Route path="lab/package/:slug" element={<HealthPackageDetailsPage />} />
           <Route path="product/:slug" element={<ProductDetails />} />
           <Route path="cart" element={<CartPage />} />
           
@@ -76,6 +81,7 @@ export default function App() {
           <Route path="checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
           <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
+          <Route path="lab/bookings" element={<ProtectedRoute><MyLabBookingsPage /></ProtectedRoute>} />
         </Route>
         
         {/* Routes without the main layout */}

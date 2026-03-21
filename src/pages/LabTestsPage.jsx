@@ -1,8 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import api from '../api/axiosConfig';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser } from '../store/slices/userSlice';
+import {
+  fetchCategories,
+  fetchLabTests,
+  fetchHealthPackages,
+  createLabBooking,
+  selectCategories,
+  selectLabTests,
+  selectHealthPackages,
+  selectCategoriesLoading,
+  selectTestsLoading,
+  selectPackagesLoading,
+  selectCreatingBooking,
+  selectLabTestsError,
+  clearError
+} from '../store/slices/labTestsSlice';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Toast from '../components/Toast';
@@ -10,14 +25,23 @@ import { Star, Zap, Shield, Clock, ChevronLeft, ChevronRight, Calendar, MapPin, 
 
 export default function LabTestsPage() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  
+  // Redux state
+  const categories = useSelector(selectCategories);
+  const dailyOffers = useSelector(selectLabTests);
+  const packages = useSelector(selectHealthPackages);
+  const categoriesLoading = useSelector(selectCategoriesLoading);
+  const testsLoading = useSelector(selectTestsLoading);
+  const packagesLoading = useSelector(selectPackagesLoading);
+  const creatingBooking = useSelector(selectCreatingBooking);
+  const error = useSelector(selectLabTestsError);
+  
+  // Local state
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [categories, setCategories] = useState([]);
-  const [dailyOffers, setDailyOffers] = useState([]);
-  const [packages, setPackages] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState({ message: '', type: 'info' });
   
   const [formData, setFormData] = useState({
@@ -62,37 +86,27 @@ export default function LabTestsPage() {
   ];
 
   useEffect(() => {
-    fetchData();
+    // Fetch all data on component mount
+    dispatch(fetchCategories());
+    dispatch(fetchLabTests({ daily_offer: true }));
+    dispatch(fetchHealthPackages());
+    
+    // Clear any previous errors
+    dispatch(clearError());
+    
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [bannerSlides.length]);
+  }, [dispatch, bannerSlides.length]);
 
-const fetchData = async () => {
-    try {
-      setLoading(true);
-      
-      // 1. Update Categories
-      const categoriesResponse = await api.get('/lab/categories/');
-      // Extract the array from the results key
-      setCategories(categoriesResponse.data.results || []);
-      
-      // 2. Update Daily Offers
-      const offersResponse = await api.get('/lab/tests/?daily_offer=true');
-      setDailyOffers(offersResponse.data.results || []);
-      
-      // 3. Update Packages
-      const packagesResponse = await api.get('/lab/packages/');
-      setPackages(packagesResponse.data.results || []);
-      
-    } catch (error) {
-      console.error('Failed to fetch lab data:', error);
-      setToast({ message: 'Failed to load lab tests data', type: 'error' });
-    } finally {
-      setLoading(false);
+  // Handle Redux errors
+  useEffect(() => {
+    if (error) {
+      setToast({ message: error.detail || error.message || 'An error occurred', type: 'error' });
+      dispatch(clearError());
     }
-  };
+  }, [error, dispatch]);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -122,10 +136,10 @@ const fetchData = async () => {
         bookingData.package = selectedPackage.id;
       }
 
-      const response = await api.post('/lab/bookings/', bookingData);
+      const response = await dispatch(createLabBooking(bookingData)).unwrap();
       
       setToast({ 
-        message: `Booking confirmed! Booking ID: ${response.data.booking_id}`, 
+        message: `Booking confirmed! Booking ID: ${response.booking_id}`, 
         type: 'success' 
       });
       
@@ -148,7 +162,7 @@ const fetchData = async () => {
     } catch (error) {
       console.error('Booking failed:', error);
       setToast({ 
-        message: error.response?.data?.detail || 'Booking failed. Please try again.', 
+        message: error.detail || error.message || 'Booking failed. Please try again.', 
         type: 'error' 
       });
     }
@@ -162,6 +176,8 @@ const fetchData = async () => {
     }));
     setShowBookingForm(true);
   };
+
+  const loading = categoriesLoading || testsLoading || packagesLoading;
 
   if (loading) {
     return (
@@ -769,8 +785,9 @@ const fetchData = async () => {
                     type="submit"
                     variant="primary"
                     className="flex-1"
+                    disabled={creatingBooking}
                   >
-                    CONFIRM BOOKING
+                    {creatingBooking ? 'BOOKING...' : 'CONFIRM BOOKING'}
                   </Button>
                 </div>
               </form>

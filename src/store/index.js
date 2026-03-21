@@ -7,19 +7,21 @@ import cartSlice from './slices/cartSlice'
 import productsSlice from './slices/productsSlice'
 import userSlice from './slices/userSlice'
 import ordersSlice from './slices/ordersSlice'
+import labTestsSlice from './slices/labTestsSlice'
 
 const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['cart', 'user'], // Only persist cart and user data
-  blacklist: ['products', 'orders'] // Don't persist products and orders as they should be fresh
+  blacklist: ['products', 'orders', 'labTests'] // Don't persist products, orders, and labTests as they should be fresh
 }
 
 const rootReducer = combineReducers({
   cart: cartSlice,
   products: productsSlice,
   user: userSlice,
-  orders: ordersSlice
+  orders: ordersSlice,
+  labTests: labTestsSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

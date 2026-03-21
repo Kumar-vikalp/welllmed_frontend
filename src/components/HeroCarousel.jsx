@@ -78,13 +78,13 @@ export default function HeroCarousel() {
       
       {/* Floating Decorative Elements */}
       <div className="absolute top-20 left-10 rotate-12 z-10">
-        <Star className="w-8 h-8 md:w-12 md:h-12 fill-neo-accent text-neo-accent animate-spin-slow" />
+        <Star className="w-10 h-10 md:w-16 md:h-16 fill-neo-accent text-neo-accent animate-spin-slow" />
       </div>
       <div className="absolute top-40 right-20 -rotate-12 z-10">
-        <Zap className="w-10 h-10 md:w-16 md:h-16 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
+        <Zap className="w-12 h-12 md:w-20 md:h-20 fill-neo-secondary text-neo-secondary animate-bounce-slow" />
       </div>
       <div className="absolute bottom-32 left-32 rotate-45 z-10 hidden md:block">
-        <Shield className="w-8 h-8 fill-neo-muted text-neo-muted" />
+        <Shield className="w-10 h-10 fill-neo-muted text-neo-muted" />
       </div>
 
       <div className="neo-container relative z-20">
@@ -188,7 +188,7 @@ export default function HeroCarousel() {
                         <Card className="p-4 bg-white -rotate-6" hover={false}>
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 bg-green-100 border-2 border-neo-ink flex items-center justify-center">
-                              <svg className="w-5 h-5 text-green-600 stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-5 h-5 text-green-600 stroke-[4px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
@@ -208,7 +208,7 @@ export default function HeroCarousel() {
                       >
                         <Card className="p-4 bg-neo-secondary rotate-12" hover={false}>
                           <div className="flex items-center gap-3">
-                            <Clock className="w-6 h-6 stroke-[3px]" />
+                            <Clock className="w-6 h-6 stroke-[4px]" />
                             <div>
                               <p className="text-xs text-neo-ink font-black uppercase">24/7</p>
                               <p className="text-sm font-black text-neo-ink uppercase">Support</p>

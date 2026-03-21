@@ -56,7 +56,7 @@ const ProductCard = memo(function ProductCard({ product }) {
           <LazyImage 
             src={product.images[0]} 
             alt={product.name} 
-            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink" 
+            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink transition-transform duration-200 hover:scale-105" 
           />
           {product.trending && (
             <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
@@ -81,7 +81,7 @@ const ProductCard = memo(function ProductCard({ product }) {
                 <p className="text-xs md:text-sm font-bold line-through opacity-60">₹{product.mrp.toFixed(2)}</p>
               )}
             </div>
-            <span className={`neo-badge rotate-2 ${
+            <span className={`neo-badge rotate-3 ${
               product.available_stock > 0 
                 ? 'bg-neo-secondary' 
                 : 'bg-neo-accent'
@@ -97,7 +97,7 @@ const ProductCard = memo(function ProductCard({ product }) {
         <Button
           variant={product.available_stock > 0 && user ? 'primary' : 'outline'}
           size="sm"
-          className="w-full"
+          className="w-full rotate-1"
           onClick={handleAddToCart}
           disabled={product.available_stock <= 0 || isAdding || syncing || !user}
         >

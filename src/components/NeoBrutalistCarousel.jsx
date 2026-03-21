@@ -130,20 +130,20 @@ export default function NeoBrutalistCarousel({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={`rotate-1 ${!canScrollLeft ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`rotate-2 ${!canScrollLeft ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => scrollCarousel('left')}
                 disabled={!canScrollLeft}
               >
-                <ChevronLeft className="w-6 h-6 stroke-[3px]" />
+                <ChevronLeft className="w-6 h-6 stroke-[4px]" />
               </Button>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={`-rotate-1 ${!canScrollRight ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`-rotate-2 ${!canScrollRight ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => scrollCarousel('right')}
                 disabled={!canScrollRight}
               >
-                <ChevronRight className="w-6 h-6 stroke-[3px]" />
+                <ChevronRight className="w-6 h-6 stroke-[4px]" />
               </Button>
             </div>
           )}
@@ -178,7 +178,7 @@ export default function NeoBrutalistCarousel({
           {Array.from({ length: Math.ceil(children?.length / 2) || 0 }).map((_, index) => (
             <div
               key={index}
-              className="w-2 h-2 bg-neo-ink border border-neo-ink opacity-30"
+              className="w-3 h-3 bg-neo-ink border-2 border-neo-ink opacity-30 rotate-45"
             />
           ))}
         </div>
