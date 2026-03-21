@@ -523,7 +523,7 @@ export default function LabTestsPage() {
           {/* How to Book Section */}
           <div className="mb-8 sm:mb-12">
             <div className="bg-black border-4 border-black shadow-[8px_8px_0px_0px_#000] text-white p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-center mb-6 sm:mb-8 uppercase rotate-1">
+              <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-black text-center mb-6 sm:mb-8 uppercase rotate-1">
                 HOW TO BOOK A LAB TEST IN 3 SIMPLE STEPS
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -531,8 +531,8 @@ export default function LabTestsPage() {
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FFD93D] border-4 border-white mx-auto mb-4 flex items-center justify-center">
                     <span className="text-xl sm:text-2xl font-black text-black">1</span>
                   </div>
-                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">CHOOSE TEST</h3>
-                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                  <h3 className=" text-white font-black mb-2 uppercase text-sm sm:text-base">CHOOSE TEST</h3>
+                  <p className="text-white text-xs sm:text-sm font-bold opacity-90 uppercase">
                     SELECT FROM OUR WIDE RANGE OF TESTS
                   </p>
                 </div>
@@ -540,8 +540,8 @@ export default function LabTestsPage() {
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FF6B6B] border-4 border-white mx-auto mb-4 flex items-center justify-center">
                     <span className="text-xl sm:text-2xl font-black text-white">2</span>
                   </div>
-                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">BOOK SLOT</h3>
-                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                  <h3 className="text-white font-black mb-2 uppercase text-sm sm:text-base">BOOK SLOT</h3>
+                  <p className="text-white text-xs sm:text-sm font-bold opacity-90 uppercase">
                     PICK YOUR CONVENIENT TIME
                   </p>
                 </div>
@@ -549,8 +549,8 @@ export default function LabTestsPage() {
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#C4B5FD] border-4 border-white mx-auto mb-4 flex items-center justify-center">
                     <span className="text-xl sm:text-2xl font-black text-black">3</span>
                   </div>
-                  <h3 className="font-black mb-2 uppercase text-sm sm:text-base">GET RESULTS</h3>
-                  <p className="text-xs sm:text-sm font-bold opacity-90 uppercase">
+                  <h3 className="text-white font-black mb-2 uppercase text-sm sm:text-base">GET RESULTS</h3>
+                  <p className="text-white text-xs sm:text-sm font-bold opacity-90 uppercase">
                     RECEIVE REPORTS ONLINE
                   </p>
                 </div>

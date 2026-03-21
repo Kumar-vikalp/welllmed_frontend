@@ -153,7 +153,7 @@ export default function Footer() {
             className="mt-8 text-center"
           >
             <Card className="p-6 bg-neo-ink border-white -rotate-1" hover={false}>
-              <p className="text-white font-bold text-sm leading-relaxed uppercase tracking-wide">
+              <p className="text-black font-bold text-sm leading-relaxed uppercase tracking-wide">
                 DISCLAIMER: THIS WEBSITE IS FOR INFORMATIONAL PURPOSES ONLY. ALWAYS CONSULT WITH A HEALTHCARE PROFESSIONAL BEFORE TAKING ANY MEDICATION.
                 genx IS COMMITTED TO PROVIDING SAFE, EFFECTIVE, AND AFFORDABLE HEALTHCARE SOLUTIONS.
               </p>
