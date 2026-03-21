@@ -76,16 +76,16 @@ export default function Home() {
   ], [])
 
   const healthConditions = [
-    { name: 'Diabetes Care', icon: 'https://images.unsplash.com/photo-1615461065929-4f8ffed6ca40?w=200&h=200&fit=crop', link: '/products?condition=diabetes' },
-    { name: 'Cardiac Care', icon: 'https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=200&h=200&fit=crop', link: '/products?condition=cardiac' },
-    { name: 'Stomach Care', icon: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&h=200&fit=crop', link: '/products?condition=stomach' },
-    { name: 'Pain Relief', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop', link: '/products?condition=pain' },
+    { name: 'Diabetes Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/x4Xcqejsvu132mg7rudQ.svg', link: '/products?condition=diabetes' },
+    { name: 'Cardiac Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/ZGQE2B9yCMmDZF3YSoFqGC.svg', link: '/products?condition=cardiac' },
+    { name: 'Stomach Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/sBxV30yCKAJ7I9fIYjsk.svg', link: '/products?condition=stomach' },
+    { name: 'Pain Relief', icon: 'https://storage.googleapis.com/pictographic/pictocache/OE8zCfk7lhTN2uR2zB1Y.svg', link: '/products?condition=pain' },
     { name: 'Liver Care', icon: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=200&h=200&fit=crop', link: '/products?condition=liver' },
-    { name: 'Oral Care', icon: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=200&h=200&fit=crop', link: '/products?condition=oral' },
-    { name: 'Respiratory', icon: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop', link: '/products?condition=respiratory' },
-    { name: 'Sexual Health', icon: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop', link: '/products?condition=sexual' },
-    { name: 'Elderly Care', icon: 'https://images.unsplash.com/photo-1581579186913-45ac3e648364?w=200&h=200&fit=crop', link: '/products?condition=elderly' },
-    { name: 'Cold & Immunity', icon: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=200&h=200&fit=crop', link: '/products?condition=immunity' }
+    { name: 'Oral Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/gCKPtKnnczdHHygbpNST.svg', link: '/products?condition=oral' },
+    { name: 'Respiratory', icon: 'https://storage.googleapis.com/pictographic/pictocache/aKTFhvC0Caf8nBkkz8Ym.svg', link: '/products?condition=respiratory' },
+    { name: 'Sexual Health', icon: 'https://storage.googleapis.com/pictographic/pictocache/Rw9pJd67z3V2GyaEZVmX.svg', link: '/products?condition=sexual' },
+    { name: 'Elderly Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/wJifcrEiVHqvrTYB57Tm.svg', link: '/products?condition=elderly' },
+    { name: 'Cold & Immunity', icon: 'https://storage.googleapis.com/pictographic/pictocache/hEfyhWEpjXoGpxZGVQon.svg', link: '/products?condition=immunity' }
   ]
 
   useEffect(() => {
