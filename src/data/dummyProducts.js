@@ -113,6 +113,6 @@ export const dummyProducts = [
     description: "Supports bone health and strength with a combination of Calcium and Vitamin D3 for better absorption."
   }
 ];
-
+export const dummyFlashProducts = dummyProducts.filter(p => p.trending).slice(0, 8);
 export const dummyFeaturedProducts = dummyProducts.filter(p => p.trending).slice(0, 8);
 export const dummyTrendingProducts = dummyProducts.filter(p => p.trending);

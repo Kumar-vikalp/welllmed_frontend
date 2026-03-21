@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import api from '../api/axiosConfig'
 import ProductCard from '../components/ProductCard'
 import Skeleton from '../components/Skeleton'
-import { dummyProducts, dummyFeaturedProducts, dummyTrendingProducts } from '../data/dummyProducts'
+import { dummyProducts, dummyFeaturedProducts, dummyTrendingProducts, dummyFlashProducts } from '../data/dummyProducts'
 import { motion } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import TrendingCarousel from '../components/TrendingCarousel'
@@ -89,9 +89,29 @@ export default function Home() {
   ]
 
   useEffect(() => {
+    fetchFlashProducts()
     fetchTrendingProducts()
     fetchFeaturedProducts()
   }, [])
+
+  const fetchFlashProducts = async () => {
+    setFlashLoading(true)
+    try {
+      const response = await api.get('/products/?flash=true&page_size=10', {
+        timeout: 30000
+      })
+      const data = response.data
+      const productsData = data.results || (Array.isArray(data) ? data : [data])
+
+      const transformedProducts = productsData.map(transformProduct)
+      setFlashProducts(transformedProducts)
+    } catch (error) {
+      console.error('Failed to fetch Flash products', error)
+      setFlashProducts(dummyFlashProducts)
+    } finally {
+      setFlashLoading(false)
+    }
+  }
 
   const fetchTrendingProducts = async () => {
     setTrendingLoading(true)
