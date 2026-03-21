@@ -273,7 +273,7 @@ export default function HeroCarousel() {
       </div>
 
       {/* Mobile Image Section */}
-      <div className="hidden lg:block relative">
+      <div className="hidden">
         <motion.div
           key={`mobile-${currentSlide}`}
           initial={{ opacity: 0, y: 20 }}
