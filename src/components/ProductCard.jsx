@@ -18,25 +18,25 @@ const ProductCard = memo(function ProductCard({ product }) {
   const handleAddToCart = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!user) {
       alert('Please login to add items to cart');
       return;
     }
-    
+
     if (product.available_stock <= 0) return;
-    
+
     setIsAdding(true);
     try {
       // Add to cart via API
-      await dispatch(addToCart({ 
-        product_id: product.product_id, 
-        quantity: 1 
+      await dispatch(addToCart({
+        product_id: product.product_id,
+        quantity: 1
       })).unwrap();
-      
+
       // Refresh cart to get updated data
       await dispatch(fetchCart());
-      
+
     } catch (error) {
       console.error('Failed to add to cart:', error);
       alert('Failed to add item to cart. Please try again.');
@@ -53,14 +53,15 @@ const ProductCard = memo(function ProductCard({ product }) {
     >
       <Link to={`/product/${product.slug}`} className="block flex-grow" onClick={(e) => e.stopPropagation()}>
         <div className="relative">
-          <LazyImage 
-            src={product.images[0]} 
-            alt={product.name} 
-            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink transition-transform duration-200 hover:scale-105" 
+          <LazyImage
+            src={product.images[0]}
+            alt={product.name}
+            className="w-full h-32 md:h-48 object-cover border-b-4 border-neo-ink transition-transform duration-200 hover:scale-105"
           />
           {product.trending && (
             <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
-              🔥 HOT
+              <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" />
+              HOT
             </span>
           )}
           {product.discount > 0 && (
@@ -81,17 +82,16 @@ const ProductCard = memo(function ProductCard({ product }) {
                 <p className="text-xs md:text-sm font-bold line-through opacity-60">₹{product.mrp.toFixed(2)}</p>
               )}
             </div>
-            <span className={`neo-badge rotate-3 ${
-              product.available_stock > 0 
-                ? 'bg-neo-secondary' 
+            <span className={`neo-badge rotate-3 ${product.available_stock > 0
+                ? 'bg-neo-secondary'
                 : 'bg-neo-accent'
-            }`}>
+              }`}>
               {product.available_stock > 0 ? 'IN STOCK' : 'OUT OF STOCK'}
             </span>
           </div>
         </div>
       </Link>
-      
+
       {/* Add to Cart Button */}
       <div className="p-3 md:p-4 pt-0">
         <Button

@@ -309,7 +309,7 @@ export default function Home() {
                       <Card className="overflow-hidden" rotation={Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0}>
                         <div className="relative">
                           <img src={product.images[0]} alt={product.name} className="w-full h-40 object-cover border-b-4 border-neo-ink" />
-                          {product.trending && <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">🔥 HOT</span>}
+                          {product.trending && <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10"><img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" /> HOT</span>}
                           {product.discount > 0 && <span className="absolute -top-2 -right-2 neo-badge bg-neo-secondary -rotate-12 z-10">{product.discount}% OFF</span>}
                         </div>
                         <div className="p-4">
