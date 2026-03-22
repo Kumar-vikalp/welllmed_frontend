@@ -27,7 +27,7 @@ export default function LabTestsPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-
+  
   // Redux state
   const categories = useSelector(selectCategories);
   const dailyOffers = useSelector(selectLabTests);
@@ -37,13 +37,13 @@ export default function LabTestsPage() {
   const packagesLoading = useSelector(selectPackagesLoading);
   const creatingBooking = useSelector(selectCreatingBooking);
   const error = useSelector(selectLabTestsError);
-
+  
   // Local state
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [toast, setToast] = useState({ message: '', type: 'info' });
-
+  
   const [formData, setFormData] = useState({
     patient_name: '',
     patient_age: '',
@@ -90,10 +90,10 @@ export default function LabTestsPage() {
     dispatch(fetchCategories());
     dispatch(fetchLabTests({ daily_offer: true }));
     dispatch(fetchHealthPackages());
-
+    
     // Clear any previous errors
     dispatch(clearError());
-
+    
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
     }, 5000);
@@ -107,7 +107,7 @@ export default function LabTestsPage() {
       dispatch(clearError());
     }
   }, [error, dispatch]);
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -118,7 +118,7 @@ export default function LabTestsPage() {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!user) {
       setToast({ message: 'Please login to book lab tests', type: 'error' });
       navigate('/login');
@@ -137,12 +137,12 @@ export default function LabTestsPage() {
       }
 
       const response = await dispatch(createLabBooking(bookingData)).unwrap();
-
-      setToast({
-        message: `Booking confirmed! Booking ID: ${response.booking_id}`,
-        type: 'success'
+      
+      setToast({ 
+        message: `Booking confirmed! Booking ID: ${response.booking_id}`, 
+        type: 'success' 
       });
-
+      
       setShowBookingForm(false);
       setSelectedPackage(null);
       setFormData({
@@ -158,12 +158,12 @@ export default function LabTestsPage() {
         preferred_slot: '08:00-10:00',
         amount: ''
       });
-
+      
     } catch (error) {
       console.error('Booking failed:', error);
-      setToast({
-        message: error.detail || error.message || 'Booking failed. Please try again.',
-        type: 'error'
+      setToast({ 
+        message: error.detail || error.message || 'Booking failed. Please try again.', 
+        type: 'error' 
       });
     }
   };
@@ -193,14 +193,14 @@ export default function LabTestsPage() {
   return (
     <>
       <Toast message={toast.message} type={toast.type} />
-
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-[#FFFDF5] min-h-screen relative overflow-hidden"
       >
         {/* Background Pattern */}
-        <div
+        <div 
           className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)',
@@ -222,7 +222,7 @@ export default function LabTestsPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
           {/* Hero Section */}
           <div className="text-center mb-8 sm:mb-12">
-            <motion.h1
+            <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight mb-4 sm:mb-6"
@@ -232,7 +232,7 @@ export default function LabTestsPage() {
                 PATHLABS
               </span>
             </motion.h1>
-            <motion.p
+            <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -264,10 +264,11 @@ export default function LabTestsPage() {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 border-2 border-black transition-all ${currentSlide === index
-                      ? 'bg-[#FFD93D] w-6'
+                  className={`w-3 h-3 border-2 border-black transition-all ${
+                    currentSlide === index 
+                      ? 'bg-[#FFD93D] w-6' 
                       : 'bg-white'
-                    }`}
+                  }`}
                 />
               ))}
             </div>
@@ -293,31 +294,31 @@ export default function LabTestsPage() {
                   {categories
                     .filter(category => category.category_type === 'doctor_created')
                     .map((category, index) => (
-                      <motion.div
-                        key={category.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={`/lab-tests/category/${category.slug}`}
+                        className="block group"
                       >
-                        <Link
-                          to={`/lab-tests/category/${category.slug}`}
-                          className="block group"
-                        >
-                          <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#FFD93D] flex items-center justify-center">
-                              {category.icon_url ? (
-                                <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
-                              ) : (
-                                <span className="text-lg sm:text-xl font-black">🔬</span>
-                              )}
-                            </div>
-                            <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
-                              {category.name}
-                            </p>
+                        <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#FFD93D] flex items-center justify-center">
+                            {category.icon_url ? (
+                              <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-lg sm:text-xl font-black">🔬</span>
+                            )}
                           </div>
-                        </Link>
-                      </motion.div>
-                    ))}
+                          <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
+                            {category.name}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -328,10 +329,7 @@ export default function LabTestsPage() {
             <div className="bg-[#FFD93D] border-4 border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden">
               <div className="bg-black border-b-4 border-black p-4 sm:p-6">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white rotate-1">
-                  <span>
-                    <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" />
-                    DAILY OFFERS - LIMITED TIME!
-                  </span>
+                  🔥 DAILY OFFERS - LIMITED TIME!
                 </h2>
               </div>
               <div className="p-4 sm:p-6">
@@ -393,31 +391,31 @@ export default function LabTestsPage() {
                   {categories
                     .filter(category => category.category_type === 'vital_organ')
                     .map((category, index) => (
-                      <motion.div
-                        key={category.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={`/lab-tests/category/${category.slug}`}
+                        className="block group"
                       >
-                        <Link
-                          to={`/lab-tests/category/${category.slug}`}
-                          className="block group"
-                        >
-                          <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#C4B5FD] flex items-center justify-center">
-                              {category.icon_url ? (
-                                <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
-                              ) : (
-                                <span className="text-lg sm:text-xl font-black">❤️</span>
-                              )}
-                            </div>
-                            <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
-                              {category.name}
-                            </p>
+                        <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 p-4 text-center">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 mx-auto border-4 border-black bg-[#C4B5FD] flex items-center justify-center">
+                            {category.icon_url ? (
+                              <img src={category.icon_url} alt={category.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-lg sm:text-xl font-black">❤️</span>
+                            )}
                           </div>
-                        </Link>
-                      </motion.div>
-                    ))}
+                          <p className="text-xs sm:text-sm font-black uppercase tracking-wide leading-tight">
+                            {category.name}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -433,7 +431,7 @@ export default function LabTestsPage() {
                 COMPREHENSIVE HEALTH SCREENING AT UNBEATABLE PRICES
               </p>
             </div>
-
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {packages.map((pkg, index) => (
                 <motion.div
@@ -448,7 +446,7 @@ export default function LabTestsPage() {
                         {pkg.badge}
                       </span>
                     )}
-
+                    
                     <div className="bg-[#FFD93D] border-b-4 border-black p-4">
                       <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight leading-tight">
                         {pkg.name}
@@ -457,7 +455,7 @@ export default function LabTestsPage() {
                         {pkg.tagline}
                       </p>
                     </div>
-
+                    
                     <div className="p-4 sm:p-6">
                       <div className="text-center mb-4">
                         <div className="text-2xl sm:text-3xl font-black text-[#FF6B6B] mb-1">
@@ -477,7 +475,7 @@ export default function LabTestsPage() {
                           {pkg.total_tests} TESTS INCLUDED
                         </p>
                       </div>
-
+                      
                       <div className="space-y-2 mb-4">
                         <div className="flex items-center justify-between text-xs font-bold">
                           <span>🏠 HOME COLLECTION:</span>
@@ -496,7 +494,7 @@ export default function LabTestsPage() {
                           </div>
                         )}
                       </div>
-
+                      
                       <div className="flex gap-2">
                         <Button
                           variant="primary"
@@ -580,7 +578,7 @@ export default function LabTestsPage() {
                   ✕
                 </button>
               </div>
-
+              
               <form onSubmit={handleBookingSubmit} className="p-4 sm:p-6 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -597,7 +595,7 @@ export default function LabTestsPage() {
                       placeholder="ENTER PATIENT NAME"
                     />
                   </div>
-
+                  
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">
                       AGE *
@@ -621,8 +619,9 @@ export default function LabTestsPage() {
                     GENDER *
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${formData.patient_gender === 'male' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
-                      }`}>
+                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+                      formData.patient_gender === 'male' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+                    }`}>
                       <input
                         type="radio"
                         name="patient_gender"
@@ -633,8 +632,9 @@ export default function LabTestsPage() {
                       />
                       MALE
                     </label>
-                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${formData.patient_gender === 'female' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
-                      }`}>
+                    <label className={`border-4 border-black p-3 cursor-pointer font-bold text-center transition-all ${
+                      formData.patient_gender === 'female' ? 'bg-[#FFD93D]' : 'bg-white hover:bg-gray-50'
+                    }`}>
                       <input
                         type="radio"
                         name="patient_gender"
@@ -663,7 +663,7 @@ export default function LabTestsPage() {
                       placeholder="PHONE NUMBER"
                     />
                   </div>
-
+                  
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">
                       EMAIL *
@@ -710,7 +710,7 @@ export default function LabTestsPage() {
                       placeholder="CITY"
                     />
                   </div>
-
+                  
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">
                       PINCODE *
@@ -743,7 +743,7 @@ export default function LabTestsPage() {
                       className="w-full border-4 border-black bg-white font-bold text-sm sm:text-base h-12 px-4 focus-visible:bg-[#FFD93D] focus-visible:shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-0 transition-all duration-100"
                     />
                   </div>
-
+                  
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">
                       TIME SLOT *

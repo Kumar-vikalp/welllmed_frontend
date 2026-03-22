@@ -88,17 +88,17 @@ export default function TrendingCarousel({ products, title = "Trending Products"
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl md:text-3xl font-black uppercase -rotate-1">{title}</h2>
           <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
+            <Button 
+              variant="ghost" 
+              size="sm" 
               className="rotate-2"
               onClick={() => scrollCarousel('left')}
             >
               <ChevronLeft className="w-6 h-6 stroke-[4px]" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
+            <Button 
+              variant="ghost" 
+              size="sm" 
               className="-rotate-2"
               onClick={() => scrollCarousel('right')}
             >
@@ -108,10 +108,10 @@ export default function TrendingCarousel({ products, title = "Trending Products"
         </div>
       )}
 
-      <div
+      <div 
         ref={carouselRef}
         className="flex gap-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing pb-4"
-        style={{
+        style={{ 
           scrollBehavior: 'smooth',
           userSelect: 'none'
         }}
@@ -131,16 +131,15 @@ export default function TrendingCarousel({ products, title = "Trending Products"
               onMouseDown={(e) => e.preventDefault()}
             >
               <div className="relative">
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
+                <img 
+                  src={product.images[0]} 
+                  alt={product.name} 
                   className="w-full h-40 object-cover border-b-4 border-neo-ink"
                   loading="lazy"
                 />
                 {product.trending && (
                   <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
-                    <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" />
-                    HOT
+                    🔥 HOT
                   </span>
                 )}
                 {product.discount > 0 && (
