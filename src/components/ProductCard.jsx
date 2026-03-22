@@ -61,6 +61,7 @@ const ProductCard = memo(function ProductCard({ product }) {
           {product.trending && (
             <span className="absolute -top-2 -left-2 neo-badge bg-neo-accent rotate-12 z-10">
               <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" />
+              HOT
             </span>
           )}
           {product.discount > 0 && (
