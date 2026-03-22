@@ -569,8 +569,7 @@ export default function Home() {
           <Card className="p-8 bg-neo-accent -rotate-1">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl md:text-5xl font-black uppercase rotate-1">
-                <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" />
-                <span>TRENDING NOW</span>
+                <img src="/icons/svg/hot.svg" alt="Hot" className="w-8 h-8 md:w-12 md:h-12" /><span>TRENDING NOW</span>
               </h2>
               <div className="neo-badge bg-white animate-bounce -rotate-3">
                 HOT PICKS!
