@@ -29,65 +29,65 @@ export default function Home() {
   const categories = useMemo(() => [
     {
       name: 'Fever & Pain',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/18JBwRCLf5r7u3O6UvrK.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/18JBwRCLf5r7u3O6UvrK.svg',
       count: 25,
       color: 'bg-neo-accent'
     },
     {
       name: 'Allergy & Cold',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/yLT8SHXWrV3O1FJBOjKt.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/yLT8SHXWrV3O1FJBOjKt.svg',
       count: 18,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Digestive Health',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/VPnSKjowaoPWhW0QcJ99.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/VPnSKjowaoPWhW0QcJ99.svg',
       count: 22,
       color: 'bg-neo-muted'
     },
     {
       name: 'Heart & BP',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/v9gLrSp55r51vYJDVoT4.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/v9gLrSp55r51vYJDVoT4.svg',
       count: 15,
       color: 'bg-neo-accent'
     },
     {
       name: 'Vitamins',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/sXW5Sz9beMxojt1pLKfe.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/sXW5Sz9beMxojt1pLKfe.svg',
       count: 30,
       color: 'bg-neo-secondary'
     },
     {
       name: 'Antibiotics',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/M3YTKjyFNie6xoeUX4sx.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/M3YTKjyFNie6xoeUX4sx.svg',
       count: 12,
       color: 'bg-neo-muted'
     },
     {
       name: 'Skin Care',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/7w1shqV90E8VyZ7BgSHU.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/7w1shqV90E8VyZ7BgSHU.svg',
       count: 20,
       color: 'bg-neo-accent'
     },
     {
       name: 'Women\'s Health',
-      icon: 'https://storage.googleapis.com/pictographic/pictocache/A071oYXqhvoG8eKocITM.svg',
+      icon: 'https://r2-cdn.pictographic.ai/pictocache/A071oYXqhvoG8eKocITM.svg',
       count: 16,
       color: 'bg-neo-secondary'
     }
   ], [])
 
   const healthConditions = [
-    { name: 'Diabetes Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/x4Xcqejsvu132mg7rudQ.svg', link: '/products?condition=diabetes' },
-    { name: 'Cardiac Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/ZGQE2B9yCMmDZF3YSoFqGC.svg', link: '/products?condition=cardiac' },
-    { name: 'Stomach Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/sBxV30yCKAJ7I9fIYjsk.svg', link: '/products?condition=stomach' },
-    { name: 'Pain Relief', icon: 'https://storage.googleapis.com/pictographic/pictocache/OE8zCfk7lhTN2uR2zB1Y.svg', link: '/products?condition=pain' },
-    { name: 'Hair Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/gxqteSJmk29ihVmc8RpY.svg', link: '/products?condition=hair' },
-    { name: 'Oral Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/gCKPtKnnczdHHygbpNST.svg', link: '/products?condition=oral' },
-    { name: 'Respiratory', icon: 'https://storage.googleapis.com/pictographic/pictocache/aKTFhvC0Caf8nBkkz8Ym.svg', link: '/products?condition=respiratory' },
-    { name: 'Sexual Health', icon: 'https://storage.googleapis.com/pictographic/pictocache/Rw9pJd67z3V2GyaEZVmX.svg', link: '/products?condition=sexual' },
-    { name: 'Elderly Care', icon: 'https://storage.googleapis.com/pictographic/pictocache/wJifcrEiVHqvrTYB57Tm.svg', link: '/products?condition=elderly' },
-    { name: 'Cold & Immunity', icon: 'https://storage.googleapis.com/pictographic/pictocache/hEfyhWEpjXoGpxZGVQon.svg', link: '/products?condition=immunity' }
+    { name: 'Diabetes Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/x4Xcqejsvu132mg7rudQ.svg', link: '/products?condition=diabetes' },
+    { name: 'Cardiac Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/ZGQE2B9yCMmDZF3YSoFqGC.svg', link: '/products?condition=cardiac' },
+    { name: 'Stomach Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/sBxV30yCKAJ7I9fIYjsk.svg', link: '/products?condition=stomach' },
+    { name: 'Pain Relief', icon: 'https://r2-cdn.pictographic.ai/pictocache/OE8zCfk7lhTN2uR2zB1Y.svg', link: '/products?condition=pain' },
+    { name: 'Hair Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/gxqteSJmk29ihVmc8RpY.svg', link: '/products?condition=hair' },
+    { name: 'Oral Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/gCKPtKnnczdHHygbpNST.svg', link: '/products?condition=oral' },
+    { name: 'Respiratory', icon: 'https://r2-cdn.pictographic.ai/pictocache/aKTFhvC0Caf8nBkkz8Ym.svg', link: '/products?condition=respiratory' },
+    { name: 'Sexual Health', icon: 'https://r2-cdn.pictographic.ai/pictocache/Rw9pJd67z3V2GyaEZVmX.svg', link: '/products?condition=sexual' },
+    { name: 'Elderly Care', icon: 'https://r2-cdn.pictographic.ai/pictocache/wJifcrEiVHqvrTYB57Tm.svg', link: '/products?condition=elderly' },
+    { name: 'Cold & Immunity', icon: 'https://r2-cdn.pictographic.ai/pictocache/hEfyhWEpjXoGpxZGVQon.svg', link: '/products?condition=immunity' }
   ]
 
   useEffect(() => {
